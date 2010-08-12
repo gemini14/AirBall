@@ -13,10 +13,95 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Header Files\Utility">
+      <UniqueIdentifier>{61760155-3fe9-4458-89af-9a7bb3ebbed2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Utility">
+      <UniqueIdentifier>{329db685-e31c-4718-9da8-f22af8319927}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\StateMachine">
+      <UniqueIdentifier>{4ae66f03-21c5-4e74-ab73-b11b2fa234d1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Utility\StateMachine">
+      <UniqueIdentifier>{0e846951-2010-4c74-957c-b15e3f1f496f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\StateMachine\States">
+      <UniqueIdentifier>{68615566-18b0-4a69-889f-57edd12e3cd3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Utility\StateMachine\States">
+      <UniqueIdentifier>{26c97d62-08fb-4a62-a4df-7c9316ce7540}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Event Receivers">
+      <UniqueIdentifier>{c3424044-b538-4558-a275-31283bfd4168}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Event Receivers">
+      <UniqueIdentifier>{11557612-3f74-4bb6-ae42-71750891157a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="IrrManager.cpp">
+      <Filter>Source Files\Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="Game.cpp">
+      <Filter>Source Files\Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="GameExit.cpp">
+      <Filter>Source Files\Utility\StateMachine\States</Filter>
+    </ClCompile>
+    <ClCompile Include="MainMenu.cpp">
+      <Filter>Source Files\Utility\StateMachine\States</Filter>
+    </ClCompile>
+    <ClCompile Include="GameState.cpp">
+      <Filter>Source Files\Utility\StateMachine\States</Filter>
+    </ClCompile>
+    <ClCompile Include="MainMenuEventReceiver.cpp">
+      <Filter>Source Files\Event Receivers</Filter>
+    </ClCompile>
+    <ClCompile Include="GameStateEventReceiver.cpp">
+      <Filter>Source Files\Event Receivers</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="IrrManager.h">
+      <Filter>Header Files\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="Game.h">
+      <Filter>Header Files\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="Entity.h">
+      <Filter>Header Files\StateMachine</Filter>
+    </ClInclude>
+    <ClInclude Include="State.h">
+      <Filter>Header Files\StateMachine</Filter>
+    </ClInclude>
+    <ClInclude Include="StateMachine.h">
+      <Filter>Header Files\StateMachine</Filter>
+    </ClInclude>
+    <ClInclude Include="GameExit.h">
+      <Filter>Header Files\StateMachine\States</Filter>
+    </ClInclude>
+    <ClInclude Include="MainMenu.h">
+      <Filter>Header Files\StateMachine\States</Filter>
+    </ClInclude>
+    <ClInclude Include="GameState.h">
+      <Filter>Header Files\StateMachine\States</Filter>
+    </ClInclude>
+    <ClInclude Include="MainMenuEventReceiver.h">
+      <Filter>Header Files\Event Receivers</Filter>
+    </ClInclude>
+    <ClInclude Include="GameStateEventReceiver.h">
+      <Filter>Header Files\Event Receivers</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="media.zip">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Irrlicht.dll">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

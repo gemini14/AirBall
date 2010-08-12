@@ -54,6 +54,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>irrlicht.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -74,7 +75,30 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Game.cpp" />
+    <ClCompile Include="GameExit.cpp" />
+    <ClCompile Include="GameState.cpp" />
+    <ClCompile Include="GameStateEventReceiver.cpp" />
+    <ClCompile Include="IrrManager.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="MainMenu.cpp" />
+    <ClCompile Include="MainMenuEventReceiver.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Entity.h" />
+    <ClInclude Include="Game.h" />
+    <ClInclude Include="GameExit.h" />
+    <ClInclude Include="GameState.h" />
+    <ClInclude Include="GameStateEventReceiver.h" />
+    <ClInclude Include="IrrManager.h" />
+    <ClInclude Include="MainMenu.h" />
+    <ClInclude Include="MainMenuEventReceiver.h" />
+    <ClInclude Include="State.h" />
+    <ClInclude Include="StateMachine.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Irrlicht.dll" />
+    <None Include="media.zip" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
