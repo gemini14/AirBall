@@ -4,9 +4,8 @@
 namespace Tuatara
 {
 
-	MainMenu::MainMenu() : menuBackground( nullptr )
+	MainMenu::MainMenu() : menuBackground( nullptr ), menuEventRcvr( new MainMenuEventReceiver )
 	{
-		menuEventRcvr = new MainMenuEventReceiver();
 	}
 
 	MainMenu* MainMenu::Instance()
@@ -21,7 +20,7 @@ namespace Tuatara
 
 		// set event receiver on entry (replaces any current receiver)
 		menuEventRcvr->SetGame( game );
-		game->manager->device->setEventReceiver( menuEventRcvr );
+		game->manager->device->setEventReceiver( menuEventRcvr.get() );
 
 		// if menu background texture hasn't been loaded, load it
 		if( menuBackground == nullptr )
@@ -85,7 +84,6 @@ namespace Tuatara
 
 	MainMenu::~MainMenu()
 	{
-		delete menuEventRcvr;
 	}
 
 }

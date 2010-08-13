@@ -3,6 +3,8 @@
 
 
 #include <boost/noncopyable.hpp>
+#include <irrlicht.h>
+#include <memory>
 
 #include "IrrManager.h"
 #include "MainMenu.h"
@@ -24,15 +26,16 @@ namespace Tuatara
 	
 	public:
 
-		Game( Tuatara::IrrManager *manager );
+		Game( irr::IrrlichtDevice *device, irr::video::IVideoDriver *driver, irr::scene::ISceneManager *smgr,
+			irr::gui::IGUIEnvironment *guienv );
 		~Game();
 
-		StateMachine<Game> *stateMachine;
-		IrrManager *manager;
+		std::shared_ptr<StateMachine<Game>> stateMachine;
+		std::shared_ptr<IrrManager> manager;
 		
-		inline irr::u32 GetWinWidth() { return windowWidth; }
-		inline irr::u32 GetWinHeight() { return windowHeight; }
-		inline irr::core::rect<irr::s32> GetWindowRect() { return windowRect; }
+		inline const irr::u32& GetWinWidth() { return windowWidth; }
+		inline const irr::u32& GetWinHeight() { return windowHeight; }
+		inline const irr::core::rect<irr::s32>& GetWindowRect() { return windowRect; }
 		void Update();		
 
 	};

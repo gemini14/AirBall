@@ -95,6 +95,9 @@
     <ClInclude Include="GameStateEventReceiver.h">
       <Filter>Header Files\Event Receivers</Filter>
     </ClInclude>
+    <ClInclude Include="EnumsConstants.h">
+      <Filter>Header Files\Utility</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="media.zip">

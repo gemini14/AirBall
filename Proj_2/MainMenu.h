@@ -4,6 +4,7 @@
 
 #include <boost/noncopyable.hpp>
 #include <irrlicht.h>
+#include <memory>
 
 #include "EnumsConstants.h"
 #include "Game.h"
@@ -31,7 +32,7 @@ namespace Tuatara
 		irr::gui::IGUIButton *newGameButton;
 		irr::gui::IGUIButton *exitButton;
 
-		MainMenuEventReceiver *menuEventRcvr;
+		std::shared_ptr<MainMenuEventReceiver> menuEventRcvr;
 
 	public:
 

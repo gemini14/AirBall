@@ -21,7 +21,6 @@
 
 #include "Game.h"
 #include "GameExit.h"
-#include "IrrManager.h"
 
 
 namespace Tuatara
@@ -62,7 +61,7 @@ int main()
 	}
 
 	// note: no need to drop device at program end, it will be dropped automatically through Game
-	Game game( new IrrManager( device, driver, smgr, guienv ) );
+	Game game( device, driver, smgr, guienv );
 
 	// continue running FSM until exit state is reached
 	while( !game.stateMachine->isInState( (*GameExit::Instance()) ) )

@@ -86,6 +86,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Entity.h" />
+    <ClInclude Include="EnumsConstants.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameExit.h" />
     <ClInclude Include="GameState.h" />

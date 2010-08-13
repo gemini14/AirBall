@@ -4,6 +4,7 @@
 
 #include <boost/noncopyable.hpp>
 #include <irrlicht.h>
+#include <memory>
 
 #include "Game.h"
 #include "GameStateEventReceiver.h"
@@ -22,7 +23,7 @@ namespace Tuatara
 		GameState();
 		~GameState();
 		
-		GameStateEventReceiver *gameEventRcvr;
+		std::shared_ptr<GameStateEventReceiver> gameEventRcvr;
 
 	public:
 

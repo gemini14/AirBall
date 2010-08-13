@@ -4,8 +4,9 @@
 namespace Tuatara
 {
 
-	Game::Game( Tuatara::IrrManager *manager )
-		: manager( manager )
+	Game::Game( irr::IrrlichtDevice *device, irr::video::IVideoDriver *driver, irr::scene::ISceneManager *smgr,
+			irr::gui::IGUIEnvironment *guienv )
+			: manager( std::make_shared<IrrManager>( device, driver, smgr, guienv ) )
 	{
 		// set the current window width and height (this could be pulled out later into a function if needed)
 		windowWidth = manager->driver->getScreenSize().Width;
@@ -16,19 +17,17 @@ namespace Tuatara
 		manager->device->getFileSystem()->addFileArchive( "media.zip", true, true );
 
 		// create the FSM
-		stateMachine = new StateMachine<Game>( this );
+		stateMachine = std::make_shared<StateMachine<Game>>( this );
 		stateMachine->ChangeState( MainMenu::Instance() );
 	}
 
 	Game::~Game()
 	{
-		delete stateMachine;
-		delete manager;
 	}
 
 	void Game::Update()
 	{
-		if( stateMachine != nullptr )
+		if( stateMachine.get() != nullptr )
 		{
 			// run the FSM
 			stateMachine->Update();

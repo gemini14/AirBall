@@ -4,14 +4,12 @@
 namespace Tuatara
 {
 
-	GameState::GameState()
+	GameState::GameState() : gameEventRcvr( new GameStateEventReceiver )
 	{
-		gameEventRcvr = new GameStateEventReceiver();
 	}
 
 	GameState::~GameState()
 	{
-		delete gameEventRcvr;
 	}
 
 	GameState* GameState::Instance()
@@ -26,7 +24,7 @@ namespace Tuatara
 
 		// set event receiver on entry (replaces any current receiver)
 		gameEventRcvr->SetGame( game );
-		game->manager->device->setEventReceiver( gameEventRcvr );
+		game->manager->device->setEventReceiver( gameEventRcvr.get() );
 	}
 
 	void GameState::Execute( Game *game )
