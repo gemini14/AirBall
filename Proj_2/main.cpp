@@ -5,7 +5,7 @@
 // Ashlea Dugan
 // Ted Hess
 // Tarik Sturm-Dahal
-// Amos Dylan Vance
+// Dylan Vance
 
 // CRT memory leak checker
 #ifdef _DEBUG
