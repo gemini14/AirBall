@@ -37,6 +37,12 @@
     <Filter Include="Source Files\Event Receivers">
       <UniqueIdentifier>{11557612-3f74-4bb6-ae42-71750891157a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Utility\Font">
+      <UniqueIdentifier>{48c99b3d-ddf7-44d4-9442-16c502cd8db5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Utility\Font">
+      <UniqueIdentifier>{7dd8e89c-738c-4b02-a0ea-f191300d0fc1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -62,6 +68,12 @@
     </ClCompile>
     <ClCompile Include="GameStateEventReceiver.cpp">
       <Filter>Source Files\Event Receivers</Filter>
+    </ClCompile>
+    <ClCompile Include="TTF_Irr.cpp">
+      <Filter>Source Files\Utility\Font</Filter>
+    </ClCompile>
+    <ClCompile Include="FontHandler.cpp">
+      <Filter>Source Files\Utility\Font</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -97,6 +109,12 @@
     </ClInclude>
     <ClInclude Include="EnumsConstants.h">
       <Filter>Header Files\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="TTF_Irr.h">
+      <Filter>Header Files\Utility\Font</Filter>
+    </ClInclude>
+    <ClInclude Include="FontHandler.h">
+      <Filter>Header Files\Utility\Font</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

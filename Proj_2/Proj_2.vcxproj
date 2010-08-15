@@ -54,7 +54,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>irrlicht.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>irrlicht.lib;freetype242_D.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -72,13 +72,16 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>irrlicht.lib;freetype242.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="FontHandler.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameExit.cpp" />
     <ClCompile Include="GameState.cpp" />
     <ClCompile Include="GameStateEventReceiver.cpp" />
+    <ClCompile Include="TTF_Irr.cpp" />
     <ClCompile Include="IrrManager.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainMenu.cpp" />
@@ -87,10 +90,12 @@
   <ItemGroup>
     <ClInclude Include="Entity.h" />
     <ClInclude Include="EnumsConstants.h" />
+    <ClInclude Include="FontHandler.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameExit.h" />
     <ClInclude Include="GameState.h" />
     <ClInclude Include="GameStateEventReceiver.h" />
+    <ClInclude Include="TTF_Irr.h" />
     <ClInclude Include="IrrManager.h" />
     <ClInclude Include="MainMenu.h" />
     <ClInclude Include="MainMenuEventReceiver.h" />
