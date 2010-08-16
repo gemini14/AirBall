@@ -25,7 +25,7 @@ namespace Tuatara
 		// if menu background texture hasn't been loaded, load it
 		if( menuBackground == nullptr )
 		{
-			menuBackground = game->manager->driver->getTexture( "menuBackground.png" );
+			menuBackground = game->manager->driver->getTexture( "menuBackground.jpg" );
 		}
 
 		// add new game button to gui environment, set its image, scale it, and turn on alpha
