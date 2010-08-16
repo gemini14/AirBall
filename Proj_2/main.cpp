@@ -16,11 +16,16 @@
 
 // Visual Leak Detector (http://sites.google.com/site/dmoulding/vld) There's a 2.0 version, but I had problems
 // with it a few months back.
-#include <vld.h>
+//#include <vld.h>
 #include <irrlicht.h>
 
 #include "Game.h"
 #include "GameExit.h"
+
+#ifdef _IRR_WINDOWS_
+#pragma comment(lib, "Irrlicht.lib")
+#pragma comment(linker, "/subsystem:windows /ENTRY:mainCRTStartup")
+#endif
 
 
 namespace Tuatara
