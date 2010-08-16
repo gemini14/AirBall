@@ -45,6 +45,12 @@ namespace Tuatara
 		exitButton->setImage( game->manager->driver->getTexture( "exitButton.png" ) );
 		exitButton->setScaleImage( true );
 		exitButton->setUseAlphaChannel( true );
+
+		game->manager->font->ChangeFontSize( 72 );
+		gameTitle = game->manager->guienv->addStaticText( L"Air Ball", 
+			core::rect<s32>( game->GetWinWidth() / 2 - 150, 0, game->GetWinWidth() / 2 + 150, 100), 
+			false, true, 0, MAINMENU_TITLE );
+		gameTitle->setAlignment( gui::EGUIA_CENTER, gui::EGUIA_CENTER, gui::EGUIA_CENTER, gui::EGUIA_CENTER );
 	}
 
 	void MainMenu::Execute(Game *game)
@@ -80,6 +86,7 @@ namespace Tuatara
 		// clear buttons from GUI before changing state
 		newGameButton->remove();
 		exitButton->remove();
+		gameTitle->remove();
 	}
 
 	MainMenu::~MainMenu()

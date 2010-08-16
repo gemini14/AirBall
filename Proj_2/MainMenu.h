@@ -32,6 +32,8 @@ namespace Tuatara
 		irr::gui::IGUIButton *newGameButton;
 		irr::gui::IGUIButton *exitButton;
 
+		irr::gui::IGUIStaticText *gameTitle;
+
 		std::shared_ptr<MainMenuEventReceiver> menuEventRcvr;
 
 	public:

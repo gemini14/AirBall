@@ -8,6 +8,7 @@ namespace Tuatara
 		irr::scene::ISceneManager *smgr, irr::gui::IGUIEnvironment *guienv )
 		: device( device ), driver( driver ), smgr( smgr ), guienv( guienv )
 	{
+		font = std::make_shared<FontHandler>( "pala.ttf", this );
 	}
 
 	IrrManager::~IrrManager()
