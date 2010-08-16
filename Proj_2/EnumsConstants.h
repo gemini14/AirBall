@@ -7,7 +7,8 @@ namespace Tuatara
 	enum
 	{
 		MAINMENU_BUTTON_NEWGAME,
-		MAINMENU_BUTTON_EXIT
+		MAINMENU_BUTTON_EXIT,
+		MAINMENU_TITLE
 	};
 
 }
