@@ -1,21 +1,17 @@
-#ifndef GAMESTATE_EVENTRECEIVER_H
-#define GAMESTATE_EVENTRECEIVER_H
-
-
+#pragma once
 #include <irrlicht.h>
-
 #include "Game.h"
+#include "GameExit.h"
+#include "GameState.h"
 #include "MainMenu.h"
-#include "PauseMenu.h"
 #include "StateMachine.h"
-
 
 namespace Tuatara
 {
-
 	class Game;
 
-	class GameStateEventReceiver : public irr::IEventReceiver
+	class PauseMenuEventReceiver :
+		public irr::IEventReceiver
 	{
 	private:
 
@@ -23,17 +19,14 @@ namespace Tuatara
 
 	public:
 
-		GameStateEventReceiver();
+		PauseMenuEventReceiver();
 
-		// the reason this can't go in the constructor is that the GameState state doesn't have access to the
+		// the reason this can't go in the constructor is that the MainMenu state doesn't have access to the
 		// Game pointer originally
 		void SetGame( Game *g );
 
 		// event callback
 		virtual bool OnEvent( const irr::SEvent& event);
-
 	};
-
 }
 
-#endif

@@ -22,8 +22,8 @@ namespace Tuatara
 			switch( event.KeyInput.Key )
 			{
 			case KEY_ESCAPE:
-				// ESC = quit to main menu
-				game->stateMachine->ChangeState( MainMenu::Instance() );
+				// ESC = go to pause menu
+				game->stateMachine->ChangeState( PauseMenu::Instance() );
 				return true;
 
 			default:

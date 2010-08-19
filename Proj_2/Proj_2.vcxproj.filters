@@ -69,8 +69,14 @@
     <ClCompile Include="GameStateEventReceiver.cpp">
       <Filter>Source Files\Event Receivers</Filter>
     </ClCompile>
+    <ClCompile Include="PauseMenu.cpp">
+      <Filter>Source Files\Utility\StateMachine\States</Filter>
+    </ClCompile>
     <ClCompile Include="TTF_Irr.cpp">
       <Filter>Source Files\Utility\Font</Filter>
+    </ClCompile>
+    <ClCompile Include="PauseMenuEventReceiver.cpp">
+      <Filter>Source Files\Event Receivers</Filter>
     </ClCompile>
     <ClCompile Include="FontHandler.cpp">
       <Filter>Source Files\Utility\Font</Filter>
@@ -110,8 +116,14 @@
     <ClInclude Include="EnumsConstants.h">
       <Filter>Header Files\Utility</Filter>
     </ClInclude>
+    <ClInclude Include="PauseMenu.h">
+      <Filter>Header Files\StateMachine\States</Filter>
+    </ClInclude>
     <ClInclude Include="TTF_Irr.h">
       <Filter>Header Files\Utility\Font</Filter>
+    </ClInclude>
+    <ClInclude Include="PauseMenuEventReceiver.h">
+      <Filter>Header Files\Event Receivers</Filter>
     </ClInclude>
     <ClInclude Include="FontHandler.h">
       <Filter>Header Files\Utility\Font</Filter>
