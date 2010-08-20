@@ -92,6 +92,8 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainMenu.cpp" />
     <ClCompile Include="MainMenuEventReceiver.cpp" />
+    <ClCompile Include="PauseMenu.cpp" />
+    <ClCompile Include="PauseMenuEventReceiver.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Entity.h" />
@@ -107,6 +109,8 @@
     <ClInclude Include="IrrManager.h" />
     <ClInclude Include="MainMenu.h" />
     <ClInclude Include="MainMenuEventReceiver.h" />
+    <ClInclude Include="PauseMenu.h" />
+    <ClInclude Include="PauseMenuEventReceiver.h" />
     <ClInclude Include="State.h" />
     <ClInclude Include="StateMachine.h" />
   </ItemGroup>

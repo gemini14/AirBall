@@ -8,6 +8,7 @@
 #include "Game.h"
 #include "GameState.h"
 #include "MainMenu.h"
+#include "PauseMenu.h"
 #include "StateMachine.h"
 
 
