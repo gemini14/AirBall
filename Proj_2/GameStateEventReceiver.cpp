@@ -53,6 +53,7 @@ namespace Tuatara
 			{
 			case KEY_ESCAPE:
 				// ESC = go to pause menu
+				// TODO - ZOMGZ now I have to fix this later, thanks a lot :)
 				game->stateMachine->ChangeState( PauseMenu::Instance() );
 				return true;
 			case KEY_LEFT:

@@ -66,7 +66,8 @@ namespace Tuatara
 
 				// draw the background image
 				game->manager->driver->draw2DImage( menuBackground, game->GetWindowRect(),
-					core::rect<s32>( 0, 0, menuBackground->getOriginalSize().Width, menuBackground->getOriginalSize().Height) );
+					core::rect<s32>( 0, 0, menuBackground->getOriginalSize().Width,
+					menuBackground->getOriginalSize().Height) );
 
 				// draw the GUI
 				game->manager->guienv->drawAll();
