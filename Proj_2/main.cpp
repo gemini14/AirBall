@@ -91,6 +91,10 @@ namespace Tuatara
 		core::dimension2d<u32> resolution = (*device)->getVideoModeList()->getDesktopResolution();
 		u32 screenBitDepth = (*device)->getVideoModeList()->getDesktopDepth();
 
+		if (resolution.Width > 2*resolution.Height)
+		{
+			resolution.Width = resolution.Width/2;
+		}
 		// snip 200 pixels off so it doesn't take up entire screen
 		resolution.Height -= 200;
 		resolution.Width -= 200;
