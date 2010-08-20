@@ -4,7 +4,7 @@
 namespace Tuatara
 {
 
-	GameState::GameState() : gameEventRcvr( new GameStateEventReceiver )
+	GameState::GameState() : gameEventRcvr( new GameStateEventReceiver ), level( new Level )
 	{
 	}
 
@@ -23,8 +23,13 @@ namespace Tuatara
 		using namespace irr;
 
 		// set event receiver on entry (replaces any current receiver)
-		gameEventRcvr->SetGame( game );
+		gameEventRcvr->SetGame( game, this );
 		game->manager->device->setEventReceiver( gameEventRcvr.get() );
+
+		camera = game->manager->smgr->addCameraSceneNode( 0, core::vector3df( 0, 0, -100 ), core::vector3df( 0, 0, 0 ) );
+
+		level->physics->CreateWorld( game );
+		level->physics->CreateBall( game );
 	}
 
 	void GameState::Execute( Game *game )
@@ -36,6 +41,8 @@ namespace Tuatara
 		{
 			if( game->manager->device->isWindowActive() )
 			{
+
+				level->physics->StepSimulation();
 				game->manager->driver->beginScene( true, true, video::SColor(255, 100, 100, 100) );
 
 				game->manager->driver->endScene();

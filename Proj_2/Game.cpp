@@ -15,6 +15,7 @@ namespace Tuatara
 
 		// add zip archive of media files to Irr device's file system
 		manager->device->getFileSystem()->addFileArchive( "media.zip", true, true );
+		//manager->device->getFileSystem()->addFileArchive( "media" );
 
 		// create the FSM
 		stateMachine = std::make_shared<StateMachine<Game>>( this );

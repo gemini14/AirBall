@@ -22,11 +22,6 @@
 #include "Game.h"
 #include "GameExit.h"
 
-#ifdef _IRR_WINDOWS_
-#pragma comment(lib, "Irrlicht.lib")
-#pragma comment(linker, "/subsystem:windows /ENTRY:mainCRTStartup")
-#endif
-
 
 namespace Tuatara
 {
@@ -90,6 +85,10 @@ namespace Tuatara
 		*device = createDevice( video::EDT_NULL );
 		core::dimension2d<u32> resolution = (*device)->getVideoModeList()->getDesktopResolution();
 		u32 screenBitDepth = (*device)->getVideoModeList()->getDesktopDepth();
+
+		// fix for Ted's misbehaving computer
+		if( resolution.Width > 2 * resolution.Height )
+			resolution.Width /= 2;
 
 		// snip 200 pixels off so it doesn't take up entire screen
 		resolution.Height -= 200;

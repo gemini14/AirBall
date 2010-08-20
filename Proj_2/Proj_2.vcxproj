@@ -39,6 +39,8 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
+    <IncludePath>C:\Havok_710r1\Source;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Havok_710r1\Lib\win32_net_9-0\debug_multithreaded_dll;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -54,7 +56,8 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>irrlicht.lib;freetype242_D.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>irrlicht.lib;freetype242_D.lib;hkBase.lib;hkCompat.lib;hkGeometryUtilities.lib;hkInternal.lib;hkSceneData.lib;hkSerialize.lib;hkVisualize.lib;hkpConstraintSolver.lib;hkpCollide.lib;hkpDynamics.lib;hkpInternal.lib;hkpUtilities.lib;hkpVehicle.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <EntryPointSymbol>mainCRTStartup</EntryPointSymbol>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -68,11 +71,12 @@
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalDependencies>irrlicht.lib;freetype242.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <EntryPointSymbol>mainCRTStartup</EntryPointSymbol>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -81,6 +85,8 @@
     <ClCompile Include="GameExit.cpp" />
     <ClCompile Include="GameState.cpp" />
     <ClCompile Include="GameStateEventReceiver.cpp" />
+    <ClCompile Include="Level.cpp" />
+    <ClCompile Include="PhysicsManager.cpp" />
     <ClCompile Include="TTF_Irr.cpp" />
     <ClCompile Include="IrrManager.cpp" />
     <ClCompile Include="main.cpp" />
@@ -95,6 +101,8 @@
     <ClInclude Include="GameExit.h" />
     <ClInclude Include="GameState.h" />
     <ClInclude Include="GameStateEventReceiver.h" />
+    <ClInclude Include="Level.h" />
+    <ClInclude Include="PhysicsManager.h" />
     <ClInclude Include="TTF_Irr.h" />
     <ClInclude Include="IrrManager.h" />
     <ClInclude Include="MainMenu.h" />

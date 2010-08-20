@@ -43,6 +43,18 @@
     <Filter Include="Header Files\Utility\Font">
       <UniqueIdentifier>{7dd8e89c-738c-4b02-a0ea-f191300d0fc1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Level">
+      <UniqueIdentifier>{82d05893-afb7-4f82-bcca-1ae81e7bd32f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Level">
+      <UniqueIdentifier>{abe9cf67-ef2e-4801-8be2-d19004e06e99}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Physics">
+      <UniqueIdentifier>{305c9150-5fa1-43ea-9775-d87d9aab6f95}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Physics">
+      <UniqueIdentifier>{e00e19ac-1506-4cbc-bf77-296e06338ca4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -74,6 +86,12 @@
     </ClCompile>
     <ClCompile Include="FontHandler.cpp">
       <Filter>Source Files\Utility\Font</Filter>
+    </ClCompile>
+    <ClCompile Include="Level.cpp">
+      <Filter>Source Files\Level</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysicsManager.cpp">
+      <Filter>Source Files\Physics</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -115,6 +133,12 @@
     </ClInclude>
     <ClInclude Include="FontHandler.h">
       <Filter>Header Files\Utility\Font</Filter>
+    </ClInclude>
+    <ClInclude Include="Level.h">
+      <Filter>Header Files\Level</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysicsManager.h">
+      <Filter>Header Files\Physics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
