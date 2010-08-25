@@ -31,12 +31,6 @@
     <Filter Include="Source Files\Utility\StateMachine\States">
       <UniqueIdentifier>{26c97d62-08fb-4a62-a4df-7c9316ce7540}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Event Receivers">
-      <UniqueIdentifier>{c3424044-b538-4558-a275-31283bfd4168}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Event Receivers">
-      <UniqueIdentifier>{11557612-3f74-4bb6-ae42-71750891157a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\Utility\Font">
       <UniqueIdentifier>{48c99b3d-ddf7-44d4-9442-16c502cd8db5}</UniqueIdentifier>
     </Filter>
@@ -84,20 +78,11 @@
     <ClCompile Include="GameState.cpp">
       <Filter>Source Files\Utility\StateMachine\States</Filter>
     </ClCompile>
-    <ClCompile Include="MainMenuEventReceiver.cpp">
-      <Filter>Source Files\Event Receivers</Filter>
-    </ClCompile>
-    <ClCompile Include="GameStateEventReceiver.cpp">
-      <Filter>Source Files\Event Receivers</Filter>
-    </ClCompile>
     <ClCompile Include="PauseMenu.cpp">
       <Filter>Source Files\Utility\StateMachine\States</Filter>
     </ClCompile>
     <ClCompile Include="TTF_Irr.cpp">
       <Filter>Source Files\Utility\Font</Filter>
-    </ClCompile>
-    <ClCompile Include="PauseMenuEventReceiver.cpp">
-      <Filter>Source Files\Event Receivers</Filter>
     </ClCompile>
     <ClCompile Include="FontHandler.cpp">
       <Filter>Source Files\Utility\Font</Filter>
@@ -107,6 +92,15 @@
     </ClCompile>
     <ClCompile Include="PhysicsManager.cpp">
       <Filter>Source Files\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="ScreenBase.cpp">
+      <Filter>Source Files\Utility\StateMachine\States</Filter>
+    </ClCompile>
+    <ClCompile Include="GUIButton.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GameStateEventReceiver.cpp">
+      <Filter>Source Files\Utility\StateMachine\States</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -134,12 +128,6 @@
     <ClInclude Include="GameState.h">
       <Filter>Header Files\StateMachine\States</Filter>
     </ClInclude>
-    <ClInclude Include="MainMenuEventReceiver.h">
-      <Filter>Header Files\Event Receivers</Filter>
-    </ClInclude>
-    <ClInclude Include="GameStateEventReceiver.h">
-      <Filter>Header Files\Event Receivers</Filter>
-    </ClInclude>
     <ClInclude Include="EnumsConstants.h">
       <Filter>Header Files\Utility</Filter>
     </ClInclude>
@@ -149,9 +137,6 @@
     <ClInclude Include="TTF_Irr.h">
       <Filter>Header Files\Utility\Font</Filter>
     </ClInclude>
-    <ClInclude Include="PauseMenuEventReceiver.h">
-      <Filter>Header Files\Event Receivers</Filter>
-    </ClInclude>
     <ClInclude Include="FontHandler.h">
       <Filter>Header Files\Utility\Font</Filter>
     </ClInclude>
@@ -160,6 +145,15 @@
     </ClInclude>
     <ClInclude Include="PhysicsManager.h">
       <Filter>Header Files\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="ScreenBase.h">
+      <Filter>Header Files\StateMachine\States</Filter>
+    </ClInclude>
+    <ClInclude Include="GUIButton.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GameStateEventReceiver.h">
+      <Filter>Header Files\StateMachine\States</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

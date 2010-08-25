@@ -5,34 +5,25 @@
 #include <memory>
 
 #include "EnumsConstants.h"
-#include "Game.h"
-#include "PauseMenuEventReceiver.h"
-#include "state.h"
+#include "ScreenBase.h"
+#include "GUIButton.h"
 
 namespace Tuatara
 {
-	class Game;
-	class PauseMenuEventReceiver;
-
-	class PauseMenu : public State<Game>, boost::noncopyable
+	class PauseMenu : public ScreenBase
 	{
 	private:
 		PauseMenu(void);
 		~PauseMenu(void);
 
-		irr::video::ITexture *menuBackground;
-
-		irr::gui::IGUIButton *returnButton;
-		irr::gui::IGUIButton *mainMenuButton;
-
-		std::shared_ptr<PauseMenuEventReceiver> menuEventRcvr;
+		GUIButton* returnButton;
+		GUIButton* mainMenuButton;
 
 	public:
-
+		
 		static PauseMenu* Instance();
 
-		virtual void Enter( Game* game );
-		virtual void Execute( Game* game );
-		virtual void Exit( Game* game );
+		// will be called when a button is clicked
+		virtual bool OnClick( int ID );
 	};
 }

@@ -85,15 +85,15 @@
     <ClCompile Include="GameExit.cpp" />
     <ClCompile Include="GameState.cpp" />
     <ClCompile Include="GameStateEventReceiver.cpp" />
+    <ClCompile Include="GUIButton.cpp" />
     <ClCompile Include="Level.cpp" />
     <ClCompile Include="PhysicsManager.cpp" />
+    <ClCompile Include="ScreenBase.cpp" />
     <ClCompile Include="TTF_Irr.cpp" />
     <ClCompile Include="IrrManager.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainMenu.cpp" />
-    <ClCompile Include="MainMenuEventReceiver.cpp" />
     <ClCompile Include="PauseMenu.cpp" />
-    <ClCompile Include="PauseMenuEventReceiver.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Entity.h" />
@@ -103,14 +103,14 @@
     <ClInclude Include="GameExit.h" />
     <ClInclude Include="GameState.h" />
     <ClInclude Include="GameStateEventReceiver.h" />
+    <ClInclude Include="GUIButton.h" />
     <ClInclude Include="Level.h" />
     <ClInclude Include="PhysicsManager.h" />
+    <ClInclude Include="ScreenBase.h" />
     <ClInclude Include="TTF_Irr.h" />
     <ClInclude Include="IrrManager.h" />
     <ClInclude Include="MainMenu.h" />
-    <ClInclude Include="MainMenuEventReceiver.h" />
     <ClInclude Include="PauseMenu.h" />
-    <ClInclude Include="PauseMenuEventReceiver.h" />
     <ClInclude Include="State.h" />
     <ClInclude Include="StateMachine.h" />
   </ItemGroup>

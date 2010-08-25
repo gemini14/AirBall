@@ -1,5 +1,4 @@
-#ifndef MENUSTATES_H
-#define MENUSTATES_H
+#pragma once
 
 
 #include <boost/noncopyable.hpp>
@@ -7,19 +6,12 @@
 #include <memory>
 
 #include "EnumsConstants.h"
-#include "Game.h"
-#include "MainMenuEventReceiver.h"
-#include "State.h"
-
+#include "ScreenBase.h"
+#include "GUIButton.h"
 
 namespace Tuatara
 {
-
-	class Game;
-	class MainMenuEventReceiver;
-	
-	// MainMenu state
-	class MainMenu : public State<Game>, boost::noncopyable
+	class MainMenu : public ScreenBase
 	{
 
 	private:
@@ -27,25 +19,14 @@ namespace Tuatara
 		MainMenu();
 		~MainMenu();
 
-		irr::video::ITexture *menuBackground;
-
-		irr::gui::IGUIButton *newGameButton;
-		irr::gui::IGUIButton *exitButton;
-
-		irr::gui::IGUIStaticText *gameTitle;
-
-		std::shared_ptr<MainMenuEventReceiver> menuEventRcvr;
+		GUIButton *newGameButton;
+		GUIButton *exitButton;
 
 	public:
 
 		static MainMenu* Instance();
 
-		virtual void Enter( Game* game );
-		virtual void Execute( Game* game );
-		virtual void Exit( Game* game );
-
+		// will be called when a button is clicked
+		virtual bool OnClick( int ID );
 	};
-
 }
-
-#endif

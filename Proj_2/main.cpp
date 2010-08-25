@@ -94,6 +94,11 @@ namespace Tuatara
 		resolution.Height -= 200;
 		resolution.Width -= 200;
 		
+		// Dylan added (to make debugging easier):
+		#pragma message("TODO: Rendering to smaller screen for now")
+		resolution.Height = 768;
+		resolution.Width = 1024;
+
 		// create the device with the calculated resolution and bit depth
 		*device = createDevice( Type, resolution, screenBitDepth, false, true );
 
