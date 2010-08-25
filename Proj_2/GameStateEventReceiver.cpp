@@ -1,4 +1,5 @@
 #include "GameStateEventReceiver.h"
+#include "PauseMenu.h"
 
 namespace Tuatara
 {
