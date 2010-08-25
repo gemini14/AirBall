@@ -22,6 +22,8 @@ namespace Tuatara
 		FORWARD,
 		BACKWARD,
 	};
+
+	const int levelSize = 9;
 }
 
 #endif

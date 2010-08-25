@@ -116,7 +116,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Irrlicht.dll" />
-    <None Include="media.zip" />
     <None Include="media\exitButton.png" />
     <None Include="media\mainMenuButton.png" />
     <None Include="media\menuBackground.jpg" />

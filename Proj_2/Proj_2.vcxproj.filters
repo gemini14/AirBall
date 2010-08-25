@@ -22,14 +22,8 @@
     <Filter Include="Header Files\StateMachine">
       <UniqueIdentifier>{4ae66f03-21c5-4e74-ab73-b11b2fa234d1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Utility\StateMachine">
-      <UniqueIdentifier>{0e846951-2010-4c74-957c-b15e3f1f496f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\StateMachine\States">
       <UniqueIdentifier>{68615566-18b0-4a69-889f-57edd12e3cd3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Utility\StateMachine\States">
-      <UniqueIdentifier>{26c97d62-08fb-4a62-a4df-7c9316ce7540}</UniqueIdentifier>
     </Filter>
     <Filter Include="Header Files\Event Receivers">
       <UniqueIdentifier>{c3424044-b538-4558-a275-31283bfd4168}</UniqueIdentifier>
@@ -58,11 +52,11 @@
     <Filter Include="Resource Files\media folder">
       <UniqueIdentifier>{f6862ea7-526f-4c8b-827d-5f5412b6b7e7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Utility\Font\FreeType">
-      <UniqueIdentifier>{1df8428b-73c3-402b-b976-ec36aa80caa1}</UniqueIdentifier>
+    <Filter Include="Source Files\StateMachine">
+      <UniqueIdentifier>{0e846951-2010-4c74-957c-b15e3f1f496f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Utility\Font\FreeType Lib">
-      <UniqueIdentifier>{bff3b3a9-b1f0-433c-8280-cf1aaf153dc9}</UniqueIdentifier>
+    <Filter Include="Source Files\StateMachine\States">
+      <UniqueIdentifier>{26c97d62-08fb-4a62-a4df-7c9316ce7540}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -76,13 +70,13 @@
       <Filter>Source Files\Utility</Filter>
     </ClCompile>
     <ClCompile Include="GameExit.cpp">
-      <Filter>Source Files\Utility\StateMachine\States</Filter>
+      <Filter>Source Files\StateMachine\States</Filter>
     </ClCompile>
     <ClCompile Include="MainMenu.cpp">
-      <Filter>Source Files\Utility\StateMachine\States</Filter>
+      <Filter>Source Files\StateMachine\States</Filter>
     </ClCompile>
     <ClCompile Include="GameState.cpp">
-      <Filter>Source Files\Utility\StateMachine\States</Filter>
+      <Filter>Source Files\StateMachine\States</Filter>
     </ClCompile>
     <ClCompile Include="MainMenuEventReceiver.cpp">
       <Filter>Source Files\Event Receivers</Filter>
@@ -91,7 +85,7 @@
       <Filter>Source Files\Event Receivers</Filter>
     </ClCompile>
     <ClCompile Include="PauseMenu.cpp">
-      <Filter>Source Files\Utility\StateMachine\States</Filter>
+      <Filter>Source Files\StateMachine\States</Filter>
     </ClCompile>
     <ClCompile Include="TTF_Irr.cpp">
       <Filter>Source Files\Utility\Font</Filter>
@@ -163,9 +157,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="media.zip">
-      <Filter>Resource Files</Filter>
-    </None>
     <None Include="Irrlicht.dll">
       <Filter>Resource Files</Filter>
     </None>

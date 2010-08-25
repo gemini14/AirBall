@@ -16,7 +16,7 @@
 
 // Visual Leak Detector (http://sites.google.com/site/dmoulding/vld) There's a 2.0 version, but I had problems
 // with it a few months back.
-//#include <vld.h>
+// #include <vld.h>
 #include <irrlicht.h>
 
 #include "Game.h"
@@ -33,7 +33,7 @@ namespace Tuatara
 
 int main()
 {
-// macro to spew out leaks at program termination (if any)
+	// macro to spew out leaks at program termination (if any)
 #ifdef _DEBUG
 	_CrtSetDbgFlag( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF );
 #endif
@@ -88,12 +88,14 @@ namespace Tuatara
 
 		// fix for Ted's misbehaving computer
 		if( resolution.Width > 2 * resolution.Height )
+		{
 			resolution.Width /= 2;
+		}
 
 		// snip 200 pixels off so it doesn't take up entire screen
 		resolution.Height -= 200;
 		resolution.Width -= 200;
-		
+
 		// create the device with the calculated resolution and bit depth
 		*device = createDevice( Type, resolution, screenBitDepth, false, true );
 

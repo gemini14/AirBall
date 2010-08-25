@@ -36,7 +36,9 @@ namespace Tuatara
 		inline const irr::u32& GetWinWidth() { return windowWidth; }
 		inline const irr::u32& GetWinHeight() { return windowHeight; }
 		inline const irr::core::rect<irr::s32>& GetWindowRect() { return windowRect; }
-		void Update();		
+		void Update();
+
+		irr::f32 frameDelta;
 
 	};
 

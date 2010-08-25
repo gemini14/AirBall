@@ -4,6 +4,7 @@
 
 #include <boost/noncopyable.hpp>
 #include <irrlicht.h>
+#include <math.h>
 #include <memory>
 
 #include "Game.h"
@@ -26,7 +27,7 @@ namespace Tuatara
 		~GameState();
 		
 		std::shared_ptr<GameStateEventReceiver> gameEventRcvr;
-		std::shared_ptr<Level> level;
+		Level *level;
 
 		irr::scene::ICameraSceneNode *camera;
 
@@ -37,6 +38,8 @@ namespace Tuatara
 		virtual void Enter( Game* game );
 		virtual void Execute( Game* game );
 		virtual void Exit( Game* game );
+
+		bool pausedOrExited;
 
 		friend class GameStateEventReceiver;
 

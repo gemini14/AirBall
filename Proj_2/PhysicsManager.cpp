@@ -52,18 +52,15 @@ namespace Tuatara
 		// this hold global simulation parameters (gravity, etc.)
 		// gravity (most important attribute for this app) defaults to -9.8 m/s^2
 		hkpWorldCinfo worldInfo;
-		worldInfo.m_gravity = hkVector4( 0, -4.9f, 0 );
+		worldInfo.m_gravity = hkVector4( 0, -1.f, 0 );
 		worldInfo.m_simulationType = hkpWorldCinfo::SIMULATION_TYPE_CONTINUOUS;
 		//worldInfo.m_simulationType = hkpWorldCinfo::SIMULATION_TYPE_MULTITHREADED;
+
 		// flag objects that fall out of the world to be automatically removed
 		worldInfo.m_broadPhaseBorderBehaviour = hkpWorldCinfo::BROADPHASE_BORDER_REMOVE_ENTITY;
-		worldInfo.m_collisionTolerance = 0.1f;
+		//worldInfo.m_collisionTolerance = 0.01f;
 
 		world = new hkpWorld( worldInfo );
-
-		// when multithreaded and in debug mode, sdk makes sure only one thread is changing the world at once
-		// each thread must call markForRead / markForWrite before it modifies the world
-		//world->markForWrite();
 
 		// register all collision agents
 		hkpAgentRegisterUtil::registerAllAgents( world->getCollisionDispatcher() );
@@ -84,9 +81,6 @@ namespace Tuatara
 		contexts.pushBack( context );
 
 		world->setMultithreadedAccessChecking( hkpWorld::MT_ACCESS_CHECKING_DISABLED );
-		// we have finished modifying the world, release write marker
-		//world->unmarkForWrite();
-
 
 		vdb = new hkVisualDebugger( contexts );
 		vdb->serve();
@@ -94,9 +88,7 @@ namespace Tuatara
 
 	PhysicsManager::~PhysicsManager()
 	{
-		world->markForWrite();
 		world->removeReference();
-
 		vdb->removeReference();
 
 		// context is deleted only after finished using VDB
@@ -109,19 +101,23 @@ namespace Tuatara
 		hkMemoryInitUtil::quit();
 	}
 
-	void PhysicsManager::StepSimulation()
+	void PhysicsManager::StepSimulation( float timeDelta )
 	{
-		hkStopwatch stopWatch;
-		stopWatch.start();
-		hkReal lastTime = stopWatch.getElapsedSeconds();
+		//hkStopwatch stopWatch;
+		//stopWatch.start();
+		//hkReal lastTime = stopWatch.getElapsedSeconds();
 
-		static hkReal timestep = 1.f / 60.f;
-
-		// get read/write access to the world (for debug build only)
-		//world->markForWrite();
+		static hkReal timestep;
+		if( timeDelta == 0 )
+		{
+			timestep = 1.f / 60.f;
+		}
+		else
+		{
+			timestep = timeDelta;
+		}
 
 		// step the world
-		//world->stepMultithreaded( jobQueue, threadPool, timestep );
 		world->stepDeltaTime( timestep );
 
 		// step the visual debugger after synchronizing the timer data
@@ -131,20 +127,10 @@ namespace Tuatara
 		// clear accumulated timer data in this thread and all slave threads
 		hkMonitorStream::getInstance().reset();
 		threadPool->clearTimerData();
-
-		// pause until actual time has passed
-		//while( stopWatch.getElapsedSeconds() < (lastTime + timestep) );
-		/*{
-			lastTime += timestep;
-		}*/
-
-		//world->unmarkForWrite();
 	}
 
-	void PhysicsManager::CreateWorld( Game *game )
+	void PhysicsManager::CreateWorld( /*Game *game*/ )
 	{
-		//world->markForWrite();
-
 		// create the ground box (so ball doesn't fall down through...err...nothing)
 		hkVector4 ground( 50.f, 2.f, 50.f );
 		hkpConvexShape *shape = new hkpBoxShape( ground, 0 );
@@ -156,19 +142,50 @@ namespace Tuatara
 		ci.m_qualityType = HK_COLLIDABLE_QUALITY_FIXED;
 
 		world->addEntity( new hkpRigidBody( ci ) )->removeReference();
+
 		shape->removeReference();
 
-		//world->unmarkForWrite();
+		// add the six faces
+		hkVector4 buildingBlockSize( 0.5f, 0.5f, 0.5f );
+		for( int cubeLevel = 0; cubeLevel <= levelSize; ++cubeLevel )
+		{
+			for( int x = 0; x <= levelSize; ++x )
+			{
+				for( int z = 0; z <= levelSize; ++z )
+				{
+					if( // bottom or top level
+						( cubeLevel == 0 || cubeLevel == levelSize ) 
+						|| 
+						// or one of the edges of the mid levels
+						( cubeLevel != 0 && cubeLevel != levelSize && 
+						// (this part of the test weeds out blocks in the center portion of the cube)
+						( ( z == 0 || z == levelSize ) || ( z > 0 && z < levelSize && ( x == 0 || x == levelSize ) ) )
+						) )
+					{
+						hkpConvexShape *buildingBlock = new hkpBoxShape( buildingBlockSize, 0 );
+
+						hkpRigidBodyCinfo ci;
+						ci.m_shape = buildingBlock;
+						ci.m_motionType = hkpMotion::MOTION_FIXED;
+						ci.m_position = hkVector4( static_cast<float>(x),
+							static_cast<float>(cubeLevel), static_cast<float>(z) );
+						ci.m_qualityType = HK_COLLIDABLE_QUALITY_FIXED;
+						ci.m_friction = .8f;
+
+						world->addEntity( new hkpRigidBody( ci ) )->removeReference();
+
+						buildingBlock->removeReference();
+					}
+				}
+			}
+		}		
 	}
 
-	void PhysicsManager::CreateBall( Game *game )
+	void PhysicsManager::CreateBall( /*Game *game*/ )
 	{
-		//world->markForWrite();
-
-		hkReal radius = 1.f;
+		// radius of 0.5 for a diameter of 1
+		hkReal radius = .5f;
 		hkReal sphereMass = 1.0f;
-
-		hkVector4 relPos( 0.0f, radius + 0.0f, 0.0f );
 
 		hkpRigidBodyCinfo info;
 		hkpMassProperties massProperties;
@@ -178,9 +195,9 @@ namespace Tuatara
 		info.m_centerOfMass = massProperties.m_centerOfMass;
 		info.m_inertiaTensor = massProperties.m_inertiaTensor;
 		info.m_shape = new hkpSphereShape( radius );
-		
-		hkVector4 posy( 0.f, 10.f, 0.f );
-		info.m_position.setAdd4( posy, relPos );
+		info.m_friction = 1.f;
+		info.m_position = hkVector4( levelSize / 2.f, 1.f, levelSize / 2.f );//1.5f, 2.f, 1.5f );
+
 		info.m_motionType = hkpMotion::MOTION_DYNAMIC;
 		info.m_qualityType = HK_COLLIDABLE_QUALITY_MOVING;
 
@@ -190,11 +207,6 @@ namespace Tuatara
 		world->addEntity( sphereRigidBody );
 		sphereRigidBody->removeReference();
 		info.m_shape->removeReference();
-
-		//hkVector4 vel( 0.0f, 0.0f, 0.0f );
-		//sphereRigidBody->setLinearVelocity( vel );
-
-		//world->unmarkForWrite();
 	}
 
 	static void HK_CALL errorReport(const char* msg, void* userArgGivenToInit)
@@ -202,9 +214,44 @@ namespace Tuatara
 		printf("%s", msg);
 	}
 
-	void PhysicsManager::ApplyImpulseToBall( Direction dir )
+	void PhysicsManager::ApplyImpulseToBall( Direction dir, const float& x, const float& y, const float& z )
 	{
-		hkVector4 impulse( 0, ball->getMass() * 5, 0 );
+		hkVector4 impulse;
+		hkReal modifier = 1.f;
+
+		switch( dir )
+		{
+		case FORWARD:
+			impulse.setXYZ( hkVector4( x / modifier, 0, z / modifier ) );
+			break;
+
+		case LEFT:
+			impulse.setXYZ( hkVector4( x / modifier, 0, z / modifier ) );
+			break;
+
+		case BACKWARD:
+			impulse.setXYZ( hkVector4( x / modifier, 0, z / modifier ) );
+			break;
+
+		case RIGHT:
+			impulse.setXYZ( hkVector4( x / modifier, 0, z / modifier ) );
+			break;
+		
+		case UP:
+			impulse.setXYZ( hkVector4( 0, 2.f, 0 ) );
+			break;
+
+		default:
+			printf( "ApplyImpulseToBall: Bad direction sent.\n" );
+			break;
+		}
+
 		ball->applyLinearImpulse( impulse );
+	}
+
+	irr::core::vector3df PhysicsManager::GetBallPosition()
+	{
+		hkVector4 ballPos = ball->getPosition();
+		return irr::core::vector3df( ballPos.getSimdAt( 0 ), ballPos.getSimdAt( 1 ), ballPos.getSimdAt( 2 ) );
 	}
 }

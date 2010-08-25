@@ -65,12 +65,13 @@ namespace Tuatara
 		PhysicsManager();
 		~PhysicsManager();
 
-		void CreateWorld( Game *game );
-		void CreateBall( Game *game );
+		void CreateWorld( /*Game *game*/ );
+		void CreateBall( /*Game *game*/ );
 
-		void StepSimulation();
+		void StepSimulation( float timeDelta = 0 );
 
-		void ApplyImpulseToBall( Direction dir );
+		void ApplyImpulseToBall( Direction dir, const float& x = 0, const float& y = 0, const float& z = 0 );
+		irr::core::vector3df GetBallPosition();
 	};
 
 	static void HK_CALL errorReport(const char* msg, void* userArgGivenToInit);
