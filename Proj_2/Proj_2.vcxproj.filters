@@ -31,17 +31,32 @@
     <Filter Include="Source Files\Utility\StateMachine\States">
       <UniqueIdentifier>{26c97d62-08fb-4a62-a4df-7c9316ce7540}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Event Receivers">
-      <UniqueIdentifier>{c3424044-b538-4558-a275-31283bfd4168}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Event Receivers">
-      <UniqueIdentifier>{11557612-3f74-4bb6-ae42-71750891157a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\Utility\Font">
       <UniqueIdentifier>{48c99b3d-ddf7-44d4-9442-16c502cd8db5}</UniqueIdentifier>
     </Filter>
     <Filter Include="Header Files\Utility\Font">
       <UniqueIdentifier>{7dd8e89c-738c-4b02-a0ea-f191300d0fc1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Level">
+      <UniqueIdentifier>{82d05893-afb7-4f82-bcca-1ae81e7bd32f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Level">
+      <UniqueIdentifier>{abe9cf67-ef2e-4801-8be2-d19004e06e99}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Physics">
+      <UniqueIdentifier>{305c9150-5fa1-43ea-9775-d87d9aab6f95}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Physics">
+      <UniqueIdentifier>{e00e19ac-1506-4cbc-bf77-296e06338ca4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\media folder">
+      <UniqueIdentifier>{f6862ea7-526f-4c8b-827d-5f5412b6b7e7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Utility\Font\FreeType">
+      <UniqueIdentifier>{1df8428b-73c3-402b-b976-ec36aa80caa1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Utility\Font\FreeType Lib">
+      <UniqueIdentifier>{bff3b3a9-b1f0-433c-8280-cf1aaf153dc9}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -63,17 +78,29 @@
     <ClCompile Include="GameState.cpp">
       <Filter>Source Files\Utility\StateMachine\States</Filter>
     </ClCompile>
-    <ClCompile Include="MainMenuEventReceiver.cpp">
-      <Filter>Source Files\Event Receivers</Filter>
-    </ClCompile>
-    <ClCompile Include="GameStateEventReceiver.cpp">
-      <Filter>Source Files\Event Receivers</Filter>
+    <ClCompile Include="PauseMenu.cpp">
+      <Filter>Source Files\Utility\StateMachine\States</Filter>
     </ClCompile>
     <ClCompile Include="TTF_Irr.cpp">
       <Filter>Source Files\Utility\Font</Filter>
     </ClCompile>
     <ClCompile Include="FontHandler.cpp">
       <Filter>Source Files\Utility\Font</Filter>
+    </ClCompile>
+    <ClCompile Include="Level.cpp">
+      <Filter>Source Files\Level</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysicsManager.cpp">
+      <Filter>Source Files\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="ScreenBase.cpp">
+      <Filter>Source Files\Utility\StateMachine\States</Filter>
+    </ClCompile>
+    <ClCompile Include="GUIButton.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GameStateEventReceiver.cpp">
+      <Filter>Source Files\Utility\StateMachine\States</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -101,20 +128,32 @@
     <ClInclude Include="GameState.h">
       <Filter>Header Files\StateMachine\States</Filter>
     </ClInclude>
-    <ClInclude Include="MainMenuEventReceiver.h">
-      <Filter>Header Files\Event Receivers</Filter>
-    </ClInclude>
-    <ClInclude Include="GameStateEventReceiver.h">
-      <Filter>Header Files\Event Receivers</Filter>
-    </ClInclude>
     <ClInclude Include="EnumsConstants.h">
       <Filter>Header Files\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="PauseMenu.h">
+      <Filter>Header Files\StateMachine\States</Filter>
     </ClInclude>
     <ClInclude Include="TTF_Irr.h">
       <Filter>Header Files\Utility\Font</Filter>
     </ClInclude>
     <ClInclude Include="FontHandler.h">
       <Filter>Header Files\Utility\Font</Filter>
+    </ClInclude>
+    <ClInclude Include="Level.h">
+      <Filter>Header Files\Level</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysicsManager.h">
+      <Filter>Header Files\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="ScreenBase.h">
+      <Filter>Header Files\StateMachine\States</Filter>
+    </ClInclude>
+    <ClInclude Include="GUIButton.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GameStateEventReceiver.h">
+      <Filter>Header Files\StateMachine\States</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -126,6 +165,24 @@
     </None>
     <None Include="pala.ttf">
       <Filter>Resource Files</Filter>
+    </None>
+    <None Include="media\exitButton.png">
+      <Filter>Resource Files\media folder</Filter>
+    </None>
+    <None Include="media\mainMenuButton.png">
+      <Filter>Resource Files\media folder</Filter>
+    </None>
+    <None Include="media\menuBackground.jpg">
+      <Filter>Resource Files\media folder</Filter>
+    </None>
+    <None Include="media\newGameButton.png">
+      <Filter>Resource Files\media folder</Filter>
+    </None>
+    <None Include="media\pauseBackground.jpg">
+      <Filter>Resource Files\media folder</Filter>
+    </None>
+    <None Include="media\returnToGameButton.png">
+      <Filter>Resource Files\media folder</Filter>
     </None>
   </ItemGroup>
 </Project>

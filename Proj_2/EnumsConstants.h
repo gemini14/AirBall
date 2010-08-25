@@ -8,9 +8,20 @@ namespace Tuatara
 	{
 		MAINMENU_BUTTON_NEWGAME,
 		MAINMENU_BUTTON_EXIT,
-		MAINMENU_TITLE
+		PAUSEMENU_BUTTON_RETURN,
+		PAUSEMENU_BUTTON_MAINMENU,
+		MAINMENU_TITLE,
 	};
 
+	enum Direction 
+	{ 
+		UP,
+		DOWN,
+		LEFT,
+		RIGHT,
+		FORWARD,
+		BACKWARD,
+	};
 }
 
 #endif

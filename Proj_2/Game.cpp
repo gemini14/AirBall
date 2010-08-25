@@ -1,4 +1,5 @@
 #include "Game.h"
+#include "MainMenu.h"
 
 
 namespace Tuatara
@@ -13,8 +14,10 @@ namespace Tuatara
 		windowHeight = manager->driver->getScreenSize().Height;
 		windowRect.addInternalPoint( windowWidth, windowHeight );
 
-		// add zip archive of media files to Irr device's file system
-		manager->device->getFileSystem()->addFileArchive( "media.zip", true, true );
+		// add zip archive of media files to Irr device's file system - this will be used at the end
+		// to speed up asset loading and to save space
+		//manager->device->getFileSystem()->addFileArchive( "media.zip", true, true );
+		manager->device->getFileSystem()->addFileArchive( "media\\" );
 
 		// create the FSM
 		stateMachine = std::make_shared<StateMachine<Game>>( this );

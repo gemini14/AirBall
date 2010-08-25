@@ -1,6 +1,5 @@
 #pragma once
 
-
 #include <boost/noncopyable.hpp>
 #include <irrlicht.h>
 #include <memory>
@@ -11,20 +10,18 @@
 
 namespace Tuatara
 {
-	class MainMenu : public ScreenBase
+	class PauseMenu : public ScreenBase
 	{
-
 	private:
+		PauseMenu(void);
+		~PauseMenu(void);
 
-		MainMenu();
-		~MainMenu();
-
-		GUIButton *newGameButton;
-		GUIButton *exitButton;
+		GUIButton* returnButton;
+		GUIButton* mainMenuButton;
 
 	public:
-
-		static MainMenu* Instance();
+		
+		static PauseMenu* Instance();
 
 		// will be called when a button is clicked
 		virtual bool OnClick( int ID );
