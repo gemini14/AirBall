@@ -19,12 +19,6 @@
     <Filter Include="Source Files\Utility">
       <UniqueIdentifier>{329db685-e31c-4718-9da8-f22af8319927}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\StateMachine">
-      <UniqueIdentifier>{4ae66f03-21c5-4e74-ab73-b11b2fa234d1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\StateMachine\States">
-      <UniqueIdentifier>{68615566-18b0-4a69-889f-57edd12e3cd3}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\Utility\Font">
       <UniqueIdentifier>{48c99b3d-ddf7-44d4-9442-16c502cd8db5}</UniqueIdentifier>
     </Filter>
@@ -46,11 +40,20 @@
     <Filter Include="Resource Files\media folder">
       <UniqueIdentifier>{f6862ea7-526f-4c8b-827d-5f5412b6b7e7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\StateMachine">
+    <Filter Include="Source Files\States">
       <UniqueIdentifier>{0e846951-2010-4c74-957c-b15e3f1f496f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\StateMachine\States">
-      <UniqueIdentifier>{26c97d62-08fb-4a62-a4df-7c9316ce7540}</UniqueIdentifier>
+    <Filter Include="Source Files\UI">
+      <UniqueIdentifier>{52fbe2d1-a025-4024-b26e-130a1bdfc691}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Utility\StateMachine">
+      <UniqueIdentifier>{0993c2a6-5c0c-4758-8712-cdc090d1acfc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\States">
+      <UniqueIdentifier>{68615566-18b0-4a69-889f-57edd12e3cd3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\UI">
+      <UniqueIdentifier>{aed943cd-36ea-4d5a-903f-f04f280432c5}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -59,21 +62,6 @@
     </ClCompile>
     <ClCompile Include="IrrManager.cpp">
       <Filter>Source Files\Utility</Filter>
-    </ClCompile>
-    <ClCompile Include="Game.cpp">
-      <Filter>Source Files\Utility</Filter>
-    </ClCompile>
-    <ClCompile Include="GameExit.cpp">
-      <Filter>Source Files\StateMachine\States</Filter>
-    </ClCompile>
-    <ClCompile Include="MainMenu.cpp">
-      <Filter>Source Files\StateMachine\States</Filter>
-    </ClCompile>
-    <ClCompile Include="GameState.cpp">
-      <Filter>Source Files\StateMachine\States</Filter>
-    </ClCompile>
-    <ClCompile Include="PauseMenu.cpp">
-      <Filter>Source Files\StateMachine\States</Filter>
     </ClCompile>
     <ClCompile Include="TTF_Irr.cpp">
       <Filter>Source Files\Utility\Font</Filter>
@@ -87,46 +75,46 @@
     <ClCompile Include="PhysicsManager.cpp">
       <Filter>Source Files\Physics</Filter>
     </ClCompile>
-    <ClCompile Include="ScreenBase.cpp">
-      <Filter>Source Files\Utility\StateMachine\States</Filter>
+    <ClCompile Include="GameExit.cpp">
+      <Filter>Source Files\States</Filter>
     </ClCompile>
-    <ClCompile Include="GUIButton.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="PauseMenu.cpp">
+      <Filter>Source Files\States</Filter>
+    </ClCompile>
+    <ClCompile Include="MainMenu.cpp">
+      <Filter>Source Files\States</Filter>
     </ClCompile>
     <ClCompile Include="GameStateEventReceiver.cpp">
-      <Filter>Source Files\Utility\StateMachine\States</Filter>
+      <Filter>Source Files\States</Filter>
+    </ClCompile>
+    <ClCompile Include="Game.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GameState.cpp">
+      <Filter>Source Files\States</Filter>
+    </ClCompile>
+    <ClCompile Include="ScreenBase.cpp">
+      <Filter>Source Files\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="GUIButton.cpp">
+      <Filter>Source Files\UI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="IrrManager.h">
       <Filter>Header Files\Utility</Filter>
     </ClInclude>
-    <ClInclude Include="Game.h">
-      <Filter>Header Files\Utility</Filter>
-    </ClInclude>
-    <ClInclude Include="Entity.h">
-      <Filter>Header Files\StateMachine</Filter>
-    </ClInclude>
-    <ClInclude Include="State.h">
-      <Filter>Header Files\StateMachine</Filter>
-    </ClInclude>
-    <ClInclude Include="StateMachine.h">
-      <Filter>Header Files\StateMachine</Filter>
-    </ClInclude>
     <ClInclude Include="GameExit.h">
-      <Filter>Header Files\StateMachine\States</Filter>
+      <Filter>Header Files\States</Filter>
     </ClInclude>
     <ClInclude Include="MainMenu.h">
-      <Filter>Header Files\StateMachine\States</Filter>
+      <Filter>Header Files\States</Filter>
     </ClInclude>
     <ClInclude Include="GameState.h">
-      <Filter>Header Files\StateMachine\States</Filter>
-    </ClInclude>
-    <ClInclude Include="EnumsConstants.h">
-      <Filter>Header Files\Utility</Filter>
+      <Filter>Header Files\States</Filter>
     </ClInclude>
     <ClInclude Include="PauseMenu.h">
-      <Filter>Header Files\StateMachine\States</Filter>
+      <Filter>Header Files\States</Filter>
     </ClInclude>
     <ClInclude Include="TTF_Irr.h">
       <Filter>Header Files\Utility\Font</Filter>
@@ -140,14 +128,29 @@
     <ClInclude Include="PhysicsManager.h">
       <Filter>Header Files\Physics</Filter>
     </ClInclude>
+    <ClInclude Include="GameStateEventReceiver.h">
+      <Filter>Header Files\States</Filter>
+    </ClInclude>
+    <ClInclude Include="StateMachine.h">
+      <Filter>Header Files\Utility\StateMachine</Filter>
+    </ClInclude>
+    <ClInclude Include="State.h">
+      <Filter>Header Files\Utility\StateMachine</Filter>
+    </ClInclude>
+    <ClInclude Include="Entity.h">
+      <Filter>Header Files\Utility\StateMachine</Filter>
+    </ClInclude>
     <ClInclude Include="ScreenBase.h">
-      <Filter>Header Files\StateMachine\States</Filter>
+      <Filter>Header Files\UI</Filter>
     </ClInclude>
     <ClInclude Include="GUIButton.h">
+      <Filter>Header Files\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Game.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="GameStateEventReceiver.h">
-      <Filter>Header Files\StateMachine\States</Filter>
+    <ClInclude Include="EnumsConstants.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
