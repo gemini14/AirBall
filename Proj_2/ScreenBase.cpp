@@ -48,28 +48,16 @@ namespace Tuatara
 	{
 		using namespace irr;
 
-		// make sure device is still operational
-		if( game->manager->device->run() && game->manager->driver )
-		{
-			if( game->manager->device->isWindowActive() )
-			{
-				game->manager->driver->beginScene();
+		game->manager->driver->beginScene();
 
-				// draw the background image
-				game->manager->driver->draw2DImage( menuBackground, game->GetWindowRect(),
-					core::rect<s32>( 0, 0, menuBackground->getOriginalSize().Width, menuBackground->getOriginalSize().Height) );
+		// draw the background image
+		game->manager->driver->draw2DImage( menuBackground, game->GetWindowRect(),
+			core::rect<s32>( 0, 0, menuBackground->getOriginalSize().Width, menuBackground->getOriginalSize().Height) );
 
-				// draw the GUI
-				game->manager->guienv->drawAll();
+		// draw the GUI
+		game->manager->guienv->drawAll();
 
-				game->manager->driver->endScene();
-			}
-			else
-			{
-				// if window isn't active, yield resources to OS
-				game->manager->device->yield();
-			}
-		}
+		game->manager->driver->endScene();
 	}
 
 	void ScreenBase::Exit(Game *game)

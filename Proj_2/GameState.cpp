@@ -49,28 +49,16 @@ namespace Tuatara
 					return delta; 
 				};
 
-		// make sure device is still operational
-		if( game->manager->device->run() && game->manager->driver && !pausedOrExited )
-		{
-			if( game->manager->device->isWindowActive() )
-			{
-				//u32 now = game->manager->device->getTimer()->getTime();
-				//game->frameDelta = calcTimeDelta( then, game->manager->device->getTimer()->getTime() );
+		//u32 now = game->manager->device->getTimer()->getTime();
+		//game->frameDelta = calcTimeDelta( then, game->manager->device->getTimer()->getTime() );
 
-				level->StepSimulation();
+		level->StepSimulation();
 
-				game->manager->driver->beginScene( true, true, video::SColor(255, 100, 101, 140)/*255, 100, 100, 100)*/ );
+		game->manager->driver->beginScene( true, true, video::SColor(255, 100, 101, 140)/*255, 100, 100, 100)*/ );
 
-				game->manager->smgr->drawAll();
+		game->manager->smgr->drawAll();
 
-				game->manager->driver->endScene();
-			}
-			else
-			{
-				// if window isn't active, yield resources to OS
-				game->manager->device->yield();
-			}
-		}
+		game->manager->driver->endScene();
 	}
 
 	void GameState::Exit( Game *game )

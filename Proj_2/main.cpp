@@ -64,11 +64,14 @@ int main()
 	Game game( device, driver, smgr, guienv );
 
 	// continue running FSM until exit state is reached
-	while( !game.stateMachine->isInState( (*GameExit::Instance()) ) )
+	while( game.manager->device->run() && !game.stateMachine->isInState( *GameExit::Instance() ) )
 	{
-		game.Update();
+		if (game.manager->device->isWindowActive())
+		{
+			game.Update();
+		}
+		else device->yield();
 	}
-
 	return 0;
 }
 
