@@ -84,7 +84,14 @@ namespace Tuatara
 				return iter->second->HandleEvent( event );
 			}
 		}
+		else if( event.EventType == EET_KEY_INPUT_EVENT )
+		{
+			if ( event.KeyInput.PressedDown == true )
+			{
+				// pass key event to derived class
+				return this->OnKeyEvent( event.KeyInput.Key );
+			}
+		}
 		return false;
 	}
-
 }

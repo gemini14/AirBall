@@ -21,7 +21,13 @@ namespace Tuatara
 	void Level::StepSimulation( float timeDelta )
 	{
 		physics->StepSimulation( timeDelta );
+		// set ball position:
 		ball->setPosition( physics->GetBallPosition() );
+		// set ball rotation:
+		irr::core::vector3df rot;
+		irr::core::quaternion q = physics->GetBallRotation();
+		q.toEuler( rot );
+		ball->setRotation( rot );
 	}
 
 	void Level::InitLevel( irr::scene::ISceneManager *smgr, irr::video::ITexture *wall, irr::video::ITexture *ballTex )

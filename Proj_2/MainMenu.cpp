@@ -36,13 +36,33 @@ namespace Tuatara
 		switch (ID)
 		{
 			case MAINMENU_BUTTON_NEWGAME:
-				// return button = move to game state
+				// new game button = move to game state
 				game->stateMachine->ChangeState( GameState::Instance() );
 				return true;
 
 			case MAINMENU_BUTTON_EXIT:
-				// main menu button = move back to main menu
+				// exit button = exit game
 				game->stateMachine->ChangeState( GameExit::Instance() );
+				return true;
+
+			default:
+				return false;
+		}
+	}
+
+	bool MainMenu::OnKeyEvent( irr::EKEY_CODE code )
+	{
+		using namespace irr;
+
+		switch (code)
+		{
+			case KEY_ESCAPE: // exit game
+				game->stateMachine->ChangeState( GameExit::Instance() );
+				return true;
+
+			case KEY_F2:
+				// new game button = move to game state
+				game->stateMachine->ChangeState( GameState::Instance() );
 				return true;
 
 			default:

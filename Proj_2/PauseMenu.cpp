@@ -51,6 +51,22 @@ namespace Tuatara
 		}
 	}
 
+	bool PauseMenu::OnKeyEvent( irr::EKEY_CODE code )
+	{
+		using namespace irr;
+
+		switch (code)
+		{
+			case KEY_ESCAPE: // exit game
+				game->stateMachine->RevertToPreviousState();
+				return true;
+
+			default:
+				return false;
+		}
+	}
+
+
 	// Destructor:
 	PauseMenu::~PauseMenu()
 	{

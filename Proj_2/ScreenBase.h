@@ -38,6 +38,8 @@ namespace Tuatara
 		// will be called when a button is clicked
 		virtual bool OnClick( int ID ) = 0;
 
+		virtual bool OnKeyEvent( irr::EKEY_CODE code ) = 0;
+
 		// IEventReceiver, event callback:
 		virtual bool OnEvent( const irr::SEvent& event);
 
