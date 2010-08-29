@@ -255,37 +255,26 @@ namespace Tuatara
 		return irr::core::vector3df( ballPos.getSimdAt( 0 ), ballPos.getSimdAt( 1 ), ballPos.getSimdAt( 2 ) );
 	}
 
-	irr::core::quaternion PhysicsManager::GetBallRotation()
+	bool PhysicsManager::GetBallRotation( irr::core::vector3df& rotationVector )
 	{
-		hkQuaternion ballRot = ball->getRotation();
-		irr::f32 angle = ballRot.getAngle();
-		angle = angle * irr::core::RADTODEG;
-		irr::core::vector3df axis;
-		if ( ballRot.hasValidAxis() )
-		{
-			hkVector4 origAxis;
-			ballRot.getAxis( origAxis );
-			axis.X = origAxis.getSimdAt( 0 );
-			axis.Y = origAxis.getSimdAt( 1 );
-			axis.Z = origAxis.getSimdAt( 2 );
+		hkQuaternion ballRotation = ball->getRotation();
+		if( !ballRotation.hasValidAxis() )
+			{
+				return false;
 		}
-		else
-		{
-			axis.X = 0;
-			axis.Y = 0;
-			axis.Z = 0;
-		}
-		irr::core::quaternion q;
-		q.fromAngleAxis(angle, axis);
+		
+		static hkVector4 originalAxis;
+		ballRotation.getAxis( originalAxis );
+		irr::core::vector3df axis( originalAxis( 0 ), originalAxis( 1 ), originalAxis( 2 ) );
+		axis.normalize();
+		
+		static irr::core::quaternion q;
+		// axis must be normalized (see above)
+		q.fromAngleAxis( ballRotation.getAngle(), axis );
+		q.toEuler( rotationVector );
+		// this must be in degrees for the setRotation function
+		rotationVector = rotationVector * irr::core::RADTODEG;
 
-		// Debug:
-		//static irr::f32 i = 0;
-		//i = i + 0.5;
-		//axis.X = 1;
-		//axis.Y = 0;
-		//axis.Z = 0;
-		//angle = i;
-		//q.fromAngleAxis(angle, axis);
-		return q;
+		return true;
 	}
 }

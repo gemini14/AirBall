@@ -63,18 +63,12 @@ namespace Tuatara
 	const irr::core::vector3df GameStateEventReceiver::GetCameraLookVector()
 	{
 		irr::core::vector3df look( gameState->camera->getTarget() );
-		/*look.X = gameState->camera->getTarget().X;
-		look.Y = gameState->camera->getTarget().Y;
-		look.Z = gameState->camera->getTarget().Z;*/
 		return look.normalize();
 	}
 
 	const irr::core::vector3df GameStateEventReceiver::GetCameraUpVector()
 	{
 		irr::core::vector3df up( gameState->camera->getUpVector() );
-		/*up.X = gameState->camera->getUpVector().X;
-		up.Y = gameState->camera->getUpVector().Y;
-		up.Z = gameState->camera->getUpVector().Z;*/
 		return up.normalize();
 	}
 
@@ -88,9 +82,7 @@ namespace Tuatara
 			switch( event.KeyInput.Key )
 			{
 			case KEY_ESCAPE:
-				// ESC = go to pause menu (temporarily set to main menu)
-				// TODO - ZOMGZ now I have to fix this later, thanks a lot :)
-				game->stateMachine->ChangeState( MainMenu::Instance()/*PauseMenu::Instance()*/ );
+				game->stateMachine->ChangeState( MainMenu::Instance() );
 				gameState->pausedOrExited = true;
 				return true;
 
@@ -121,7 +113,7 @@ namespace Tuatara
 					static auto W_Action = [&]()
 					{
 						auto look = GetCameraLookVector();
-						gameState->level->physics->ApplyImpulseToBall( FORWARD, 0.f, 0.f, 1.f);//look.X, look.Y, look.Z );
+						gameState->level->physics->ApplyImpulseToBall( FORWARD, 0.f, 0.f, 1.f);
 
 						then = game->manager->device->getTimer()->getTime();
 						okToExecute = !okToExecute;
@@ -150,7 +142,7 @@ namespace Tuatara
 					{
 						auto look = GetCameraLookVector();
 						look.rotateXZBy( -90.f, gameState->level->physics->GetBallPosition() );
-						gameState->level->physics->ApplyImpulseToBall( LEFT, -1.f, 0.f, 0.f);//look.X, look.Y, look.Z );
+						gameState->level->physics->ApplyImpulseToBall( LEFT, -1.f, 0.f, 0.f);
 
 						then = game->manager->device->getTimer()->getTime();
 						okToExecute = !okToExecute;
@@ -178,7 +170,7 @@ namespace Tuatara
 					static auto S_Action = [&]()
 					{
 						auto look = GetCameraLookVector();
-						gameState->level->physics->ApplyImpulseToBall( BACKWARD, 0.f, 0.f, -1.f);//-look.X, -look.Y, -look.Z );
+						gameState->level->physics->ApplyImpulseToBall( BACKWARD, 0.f, 0.f, -1.f);
 
 						then = game->manager->device->getTimer()->getTime();
 						okToExecute = !okToExecute;
@@ -200,14 +192,14 @@ namespace Tuatara
 				}
 
 			case KEY_KEY_D:
-				{ // TODO
+				{
 					static bool okToExecute = true;
 					static u32 then;
 					static auto D_Action = [&]()
 					{
 						auto look = GetCameraLookVector();
 						look.rotateXZBy( 90.f, gameState->level->physics->GetBallPosition() );
-						gameState->level->physics->ApplyImpulseToBall( RIGHT, 1.f, 0.f, 0.f);//look.X, look.Y, look.Z );
+						gameState->level->physics->ApplyImpulseToBall( RIGHT, 1.f, 0.f, 0.f);
 
 						then = game->manager->device->getTimer()->getTime();
 						okToExecute = !okToExecute;

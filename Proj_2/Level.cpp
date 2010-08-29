@@ -8,14 +8,6 @@ namespace Tuatara
 
 	Level::~Level()
 	{
-		using namespace std;
-
-		/*ball->drop();
-
-		for_each( levelBlocks.begin(), levelBlocks.end(), [&](std::pair<std::string, irr::scene::IMeshSceneNode*> iter)
-		{
-			iter.second->drop();
-		});*/
 	}
 
 	void Level::StepSimulation( float timeDelta )
@@ -23,11 +15,13 @@ namespace Tuatara
 		physics->StepSimulation( timeDelta );
 		// set ball position:
 		ball->setPosition( physics->GetBallPosition() );
+		
 		// set ball rotation:
-		irr::core::vector3df rot;
-		irr::core::quaternion q = physics->GetBallRotation();
-		q.toEuler( rot );
-		ball->setRotation( rot );
+		static irr::core::vector3df rotation;
+		if( physics->GetBallRotation( rotation ) ) 
+		{
+			ball->setRotation( rotation );
+		}
 	}
 
 	void Level::InitLevel( irr::scene::ISceneManager *smgr, irr::video::ITexture *wall, irr::video::ITexture *ballTex )
@@ -60,13 +54,13 @@ namespace Tuatara
 					{
 						stringstream key;
 						key << x << cubeLevel << z;
-						
+
 						scene::IMeshSceneNode *node = smgr->addCubeSceneNode( 1.f, 0, -1, 
 							core::vector3df( static_cast<float>(x), static_cast<float>(cubeLevel),
 							static_cast<float>(z) ) );
 						node->setMaterialFlag( video::EMF_LIGHTING, false );
 						node->setMaterialTexture( 0, wall );
-						
+
 						levelBlocks.insert( make_pair( key.str(), node ) );
 					}
 				}

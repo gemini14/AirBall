@@ -72,7 +72,7 @@ namespace Tuatara
 
 		void ApplyImpulseToBall( Direction dir, const float& x = 0, const float& y = 0, const float& z = 0 );
 		irr::core::vector3df GetBallPosition();
-		irr::core::quaternion GetBallRotation();
+		bool GetBallRotation( irr::core::vector3df& rotationVector );
 	};
 
 	static void HK_CALL errorReport(const char* msg, void* userArgGivenToInit);
