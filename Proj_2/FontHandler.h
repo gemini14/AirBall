@@ -30,6 +30,8 @@ namespace Tuatara
 		~FontHandler();
 
 		bool ChangeFontSize( irr::u32 sizeInPoints );
+		void ChangeFontForElement( irr::gui::EGUI_DEFAULT_FONT which = irr::gui::EGDF_DEFAULT );
+		void ChangeFontColor( irr::gui::EGUI_DEFAULT_COLOR which, irr::video::SColor color );
 	};
 
 }

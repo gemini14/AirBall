@@ -28,16 +28,13 @@ namespace Tuatara
 			menuBackground = game->manager->driver->getTexture( backgroundPath.c_str() );
 		}
 
-		// setup font for GUI:
-		gui::IGUISkin* skin = game->manager->guienv->getSkin();
-        gui::IGUIFont* font = game->manager->guienv->getFont("media/fonthaettenschweiler.bmp");
-		if (font) { skin->setFont(font); }
-		skin->setFont(game->manager->guienv->getBuiltInFont(), gui::EGDF_TOOLTIP);
-		skin->setColor(gui::EGUI_DEFAULT_COLOR::EGDC_BUTTON_TEXT,video::SColor(255, 255, 255, 255));
-
+		// set up font for GUI
+		game->manager->font->ChangeFontSize( 16 );
+		game->manager->font->ChangeFontForElement( gui::EGDF_TOOLTIP );
+		game->manager->font->ChangeFontColor( gui::EGDC_BUTTON_TEXT, video::SColor( 255, 255, 255, 255 ) );
 
 		// Add buttons to GUI:
-	    for(ButtonMap::const_iterator it = buttonList.begin(); it != buttonList.end(); ++it)
+		for(auto it = buttonList.cbegin(); it != buttonList.cend(); ++it)
 		{
 			it->second->AddToGUI( game );
 		}
@@ -63,7 +60,7 @@ namespace Tuatara
 	void ScreenBase::Exit(Game *game)
 	{
 		// clear buttons from GUI before changing state
-		for(ButtonMap::const_iterator it = buttonList.begin(); it != buttonList.end(); ++it)
+		for(auto it = buttonList.cbegin(); it != buttonList.cend(); ++it)
 		{
 			it->second->RemoveFromGUI();
 		}
@@ -78,7 +75,7 @@ namespace Tuatara
 			s32 id = event.GUIEvent.Caller->getID();
 
 			// find correct button and handle the event:
-			ButtonMap::iterator iter = buttonList.find(id);
+			auto iter = buttonList.find(id);
 			if ( iter != buttonList.end() )
 			{
 				return iter->second->HandleEvent( event );
@@ -92,6 +89,7 @@ namespace Tuatara
 				return this->OnKeyEvent( event.KeyInput.Key );
 			}
 		}
+
 		return false;
 	}
 }

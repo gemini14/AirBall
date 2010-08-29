@@ -19,6 +19,18 @@ namespace Tuatara
 		return false;
 	}
 
+	void FontHandler::ChangeFontForElement( irr::gui::EGUI_DEFAULT_FONT which )
+	{
+		irr::gui::IGUISkin *skin = manager->guienv->getSkin();
+		skin->setFont( ttfont, which );
+	}
+
+	void FontHandler::ChangeFontColor( irr::gui::EGUI_DEFAULT_COLOR which, irr::video::SColor color )
+	{
+		irr::gui::IGUISkin *skin = manager->guienv->getSkin();
+		skin->setColor( which, color );
+	}
+
 	FontHandler::FontHandler( const irr::io::path& filename, IrrManager *manager )
 		: manager( manager ), ttface( std::make_shared<CGUITTFace>() )
 	{
