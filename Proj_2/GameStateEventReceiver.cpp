@@ -108,12 +108,14 @@ namespace Tuatara
 
 			case KEY_KEY_W:
 				{
+					gameState->level->physics->ApplyImpulseToBall( FORWARD, 0.f, 0.f, 0.6f);
+					/*		edit for test
 					static bool okToExecute = true;
 					static u32 then;
 					static auto W_Action = [&]()
 					{
 						auto look = GetCameraLookVector();
-						gameState->level->physics->ApplyImpulseToBall( FORWARD, 0.f, 0.f, 1.5f);
+						gameState->level->physics->ApplyImpulseToBall( FORWARD, 0.f, 0.f, 1.0f);
 
 						then = game->manager->device->getTimer()->getTime();
 						okToExecute = !okToExecute;
@@ -131,18 +133,21 @@ namespace Tuatara
 							W_Action();
 						}
 					}
+					*/
 					return true;
 				}
 
 			case KEY_KEY_A:
 				{
+					gameState->level->physics->ApplyImpulseToBall( LEFT, -0.6f, 0.f, 0.f);
+					/*
 					static bool okToExecute = true;
 					static u32 then;
 					static auto W_Action = [&]()
 					{
 						auto look = GetCameraLookVector();
 						look.rotateXZBy( -90.f, gameState->level->physics->GetBallPosition() );
-						gameState->level->physics->ApplyImpulseToBall( LEFT, -1.5f, 0.f, 0.f);
+						gameState->level->physics->ApplyImpulseToBall( LEFT, -1.0f, 0.f, 0.f);
 
 						then = game->manager->device->getTimer()->getTime();
 						okToExecute = !okToExecute;
@@ -160,17 +165,20 @@ namespace Tuatara
 							W_Action();
 						}
 					}
+					*/
 					return true;
 				}
 
 			case KEY_KEY_S:
 				{
+					gameState->level->physics->ApplyImpulseToBall( BACKWARD, 0.f, 0.f, -0.6f);
+					/*
 					static bool okToExecute = true;
 					static u32 then;
 					static auto S_Action = [&]()
 					{
 						auto look = GetCameraLookVector();
-						gameState->level->physics->ApplyImpulseToBall( BACKWARD, 0.f, 0.f, -1.5f);
+						gameState->level->physics->ApplyImpulseToBall( BACKWARD, 0.f, 0.f, -1.0f);
 
 						then = game->manager->device->getTimer()->getTime();
 						okToExecute = !okToExecute;
@@ -188,18 +196,21 @@ namespace Tuatara
 							S_Action();
 						}
 					}
+					*/
 					return true;
 				}
 
 			case KEY_KEY_D:
 				{
+					gameState->level->physics->ApplyImpulseToBall( RIGHT, 0.6f, 0.f, 0.f);
+					/*
 					static bool okToExecute = true;
 					static u32 then;
 					static auto D_Action = [&]()
 					{
 						auto look = GetCameraLookVector();
 						look.rotateXZBy( 90.f, gameState->level->physics->GetBallPosition() );
-						gameState->level->physics->ApplyImpulseToBall( RIGHT, 1.5f, 0.f, 0.f);
+						gameState->level->physics->ApplyImpulseToBall( RIGHT, 1.0f, 0.f, 0.f);
 
 						then = game->manager->device->getTimer()->getTime();
 						okToExecute = !okToExecute;
@@ -217,6 +228,7 @@ namespace Tuatara
 							D_Action();
 						}
 					}
+					*/
 					return true;
 				}
 
