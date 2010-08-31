@@ -15,7 +15,7 @@ namespace Tuatara
 		physics->StepSimulation( timeDelta );
 		// set ball position:
 		ball->setPosition( physics->GetBallPosition() );
-		
+
 		// set ball rotation:
 		static irr::core::vector3df rotation;
 		if( physics->GetBallRotation( rotation ) ) 
@@ -24,7 +24,8 @@ namespace Tuatara
 		}
 	}
 
-	void Level::InitLevel( /*irr::scene::ISceneManager *smgr*/Game& game, irr::video::ITexture *wall, irr::video::ITexture *ballTex )
+	bool Level::InitLevel( irr::scene::ISceneManager *smgr, irr::io::IFileSystem *fileSystem, std::string& levelFile, 
+			irr::video::ITexture *wall, irr::video::ITexture *ballTex )
 	{
 		using namespace irr;
 		using namespace std;
@@ -66,10 +67,49 @@ namespace Tuatara
 				}
 			}
 		}
+
 		// TODO: Temporarily put in 5 vents.
 		for (int i = 0; i < 5; i++)
 		{
 			vents[0].Start(game, irr::core::vector3df( levelSize - 1.5f - (float)i, 1.f, levelSize - 1.5f ), irr::core::vector3df(0.0f,1.0f,0.0f), (float)i + 1.f);
 		}
+
+		auto *levelReader = fileSystem->createXMLReaderUTF8( levelFile.c_str() );
+		if( levelReader == nullptr )
+		{
+			return false;
+		}
+
+		while( levelReader->read() )
+		{
+			if( levelReader->getNodeType() == io::EXN_ELEMENT )
+			{
+				std::string name( levelReader->getNodeName() );
+				if( name == "entry\0" )
+				{
+					entryX = levelReader->getAttributeValueAsFloat( "x" );
+					entryY = levelReader->getAttributeValueAsFloat( "y" );
+					entryZ = levelReader->getAttributeValueAsFloat( "z" );
+				}
+				else if( name == "exit\0" )
+				{
+					exitX = levelReader->getAttributeValueAsFloat( "x" );
+					exitY = levelReader->getAttributeValueAsFloat( "y" );
+					exitZ = levelReader->getAttributeValueAsFloat( "z" );
+				}
+				else if( name == "vent\0" )
+				{
+					VentInfo v;
+					v.face = levelReader->getAttributeValueAsInt( "face" );
+					v.strength = levelReader->getAttributeValueAsInt( "strength" );
+					v.x = levelReader->getAttributeValueAsFloat( "x" );
+					v.y = levelReader->getAttributeValueAsFloat( "y" );
+					vents.push_back( v );
+				}
+			}
+		}
+
+		delete levelReader;
+		return true;
 	}
 }

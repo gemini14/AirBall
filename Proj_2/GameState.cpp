@@ -4,8 +4,23 @@
 namespace Tuatara
 {
 
-	GameState::GameState() : gameEventRcvr( new GameStateEventReceiver )
+	GameState::GameState() : gameEventRcvr( new GameStateEventReceiver ), currentLevel( 1 )
 	{
+		using namespace std;
+
+		ifstream config( "levels//config.txt" );
+		string property, value;
+		config >> property >> value;
+		if( property == "[NumberOfLevels]" )
+		{
+			stringstream temp( value );
+			temp >> numberOfLevels;
+		}
+		else
+		{
+			numberOfLevels = 0;
+			currentLevel = 0;
+		}
 	}
 
 	GameState::~GameState()
@@ -33,8 +48,21 @@ namespace Tuatara
 			core::vector3df( levelSize - 1, 1.f, levelSize - 1 ) );
 
 		level = new Level;
-		level->InitLevel( *game /*->manager->smgr*/, game->manager->driver->getTexture( "media/tile.bmp" ), //"media/bubbleWater.jpg" ),
+		
+		auto levelFilenameGenerator = []( int currentLevel )->std::string
+		{
+			std::stringstream filename;
+			filename << "level_" << currentLevel << ".xml";
+			return filename.str();
+		};
+		bool levelCreatedOK = level->InitLevel( game->manager->smgr, game->manager->device->getFileSystem(),
+			levelFilenameGenerator( currentLevel ), game->manager->driver->getTexture( "media/bubbleWater.jpg" ),
 			game->manager->driver->getTexture( "media/tuatara.jpg" ) );
+
+		if( !levelCreatedOK )
+		{
+			game->stateMachine->ChangeState( MainMenu::Instance() );
+		}
 	}
 
 	void GameState::Execute( Game *game )

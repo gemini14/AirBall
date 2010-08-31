@@ -84,10 +84,14 @@ namespace Tuatara
 
 		vdb = new hkVisualDebugger( contexts );
 		vdb->serve();
+
+		world->addWorldPostSimulationListener( this );
 	}
 
 	PhysicsManager::~PhysicsManager()
 	{
+		world->removeWorldPostSimulationListener( this );
+		//m_phantom->removeReference();
 		world->removeReference();
 		vdb->removeReference();
 
@@ -101,12 +105,25 @@ namespace Tuatara
 		hkMemoryInitUtil::quit();
 	}
 
+	void PhysicsManager::postSimulationCallback( hkpWorld* world )
+	{
+		for (int i = 0; i < m_phantom->getOverlappingCollidables().getSize(); i++ )
+		{
+			hkpCollidable* c = m_phantom->getOverlappingCollidables()[i];
+			if ( c->getType() == hkpWorldObject::BROAD_PHASE_ENTITY )
+			{
+				hkVector4 force( 0.0f, 0.2f, 0.0f );
+				hkpRigidBody* rb = hkpGetRigidBody(m_phantom->getOverlappingCollidables()[i]);
+				if ( rb )
+				{
+					rb->applyLinearImpulse( force );
+				}
+			}
+		}
+	}
+
 	void PhysicsManager::StepSimulation( float timeDelta )
 	{
-		//hkStopwatch stopWatch;
-		//stopWatch.start();
-		//hkReal lastTime = stopWatch.getElapsedSeconds();
-
 		static hkReal timestep;
 		if( timeDelta == 0 )
 		{
@@ -129,22 +146,8 @@ namespace Tuatara
 		threadPool->clearTimerData();
 	}
 
-	void PhysicsManager::CreateWorld( /*Game *game*/ )
+	void PhysicsManager::CreateWorld()
 	{
-		// create the ground box (so ball doesn't fall down through...err...nothing)
-		hkVector4 ground( 50.f, 2.f, 50.f );
-		hkpConvexShape *shape = new hkpBoxShape( ground, 0 );
-
-		hkpRigidBodyCinfo ci;
-		ci.m_shape = shape;
-		ci.m_motionType = hkpMotion::MOTION_FIXED;
-		ci.m_position = hkVector4( 0.f, -2.f, 0.f );
-		ci.m_qualityType = HK_COLLIDABLE_QUALITY_FIXED;
-
-		world->addEntity( new hkpRigidBody( ci ) )->removeReference();
-
-		shape->removeReference();
-
 		// add the six faces
 		hkVector4 buildingBlockSize( 0.5f, 0.5f, 0.5f );
 		for( int cubeLevel = 0; cubeLevel <= levelSize; ++cubeLevel )
@@ -178,10 +181,18 @@ namespace Tuatara
 					}
 				}
 			}
-		}		
+		}	
+
+
+		hkAabb info;
+		info.m_min = hkVector4( 0.5f, 0.5f, 0.5f );
+		info.m_max = hkVector4( 1.5f, 1.5f, 1.5f ) ;
+		m_phantom = new hkpAabbPhantom( info );
+
+		world->addPhantom( m_phantom )->removeReference();
 	}
 
-	void PhysicsManager::CreateBall( /*Game *game*/ )
+	void PhysicsManager::CreateBall()
 	{
 		// radius of 0.5 for a diameter of 1
 		hkReal radius = .5f;

@@ -18,6 +18,7 @@ namespace Tuatara
 		// to speed up asset loading and to save space
 		//manager->device->getFileSystem()->addFileArchive( "media.zip", true, true );
 		manager->device->getFileSystem()->addFileArchive( "media\\" );
+		manager->device->getFileSystem()->addFileArchive( "levels\\" );
 
 		// create the FSM
 		stateMachine = std::make_shared<StateMachine<Game>>( this );
