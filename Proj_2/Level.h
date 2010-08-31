@@ -14,6 +14,7 @@
 #include <vector>
 
 #include "PhysicsManager.h"
+#include "VentParticles.h"
 
 
 namespace Tuatara

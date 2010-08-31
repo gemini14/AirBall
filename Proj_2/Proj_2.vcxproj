@@ -94,6 +94,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainMenu.cpp" />
     <ClCompile Include="PauseMenu.cpp" />
+    <ClCompile Include="VentParticles.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Entity.h" />
@@ -113,6 +114,7 @@
     <ClInclude Include="PauseMenu.h" />
     <ClInclude Include="State.h" />
     <ClInclude Include="StateMachine.h" />
+    <ClInclude Include="VentParticles.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Irrlicht.dll" />
@@ -120,12 +122,16 @@
     <None Include="levels\level_0.xml">
       <SubType>Designer</SubType>
     </None>
+    <None Include="media\bubbleWater.jpg" />
+    <None Include="media\defaultButton.png" />
+    <None Include="media\defaultHoverButton.png" />
     <None Include="media\exitButton.png" />
     <None Include="media\mainMenuButton.png" />
     <None Include="media\menuBackground.jpg" />
     <None Include="media\newGameButton.png" />
     <None Include="media\pauseBackground.jpg" />
     <None Include="media\returnToGameButton.png" />
+    <None Include="media\tuatara.jpg" />
     <None Include="pala.ttf" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
