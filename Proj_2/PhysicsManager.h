@@ -32,8 +32,10 @@
 #include <Physics/Collide/Query/CastUtil/hkpWorldRayCastInput.h>			
 #include <Physics/Collide/Query/CastUtil/hkpWorldRayCastOutput.h>			
 
-#include <Physics/Dynamics/World/hkpWorld.h>								
-#include <Physics/Dynamics/Entity/hkpRigidBody.h>							
+#include <Physics/Dynamics/World/hkpWorld.h>
+#include <Physics/Dynamics/World/Listener/hkpWorldPostSimulationListener.h>
+#include <Physics/Dynamics/Entity/hkpRigidBody.h>
+#include <Physics/Dynamics/Phantom/hkpAabbPhantom.h>
 #include <Physics/Utilities/Dynamics/Inertia/hkpInertiaTensorComputer.h>	
 
 #include <Common/Base/Thread/Job/ThreadPool/Cpu/hkCpuJobThreadPool.h>
@@ -47,7 +49,7 @@
 
 namespace Tuatara
 {
-	class PhysicsManager : boost::noncopyable
+	class PhysicsManager : boost::noncopyable, hkpWorldPostSimulationListener
 	{
 	private:
 
@@ -59,20 +61,22 @@ namespace Tuatara
 		hkpPhysicsContext *context;
 
 		hkpRigidBody *ball;
-
+		hkpAabbPhantom *m_phantom;
 	public:
 
 		PhysicsManager();
 		~PhysicsManager();
 
-		void CreateWorld( /*Game *game*/ );
-		void CreateBall( /*Game *game*/ );
+		void CreateWorld();
+		void CreateBall();
 
 		void StepSimulation( float timeDelta = 0 );
 
 		void ApplyImpulseToBall( Direction dir, const float& x = 0, const float& y = 0, const float& z = 0 );
 		irr::core::vector3df GetBallPosition();
 		bool GetBallRotation( irr::core::vector3df& rotationVector );
+
+		virtual void postSimulationCallback( hkpWorld* world );
 	};
 
 	static void HK_CALL errorReport(const char* msg, void* userArgGivenToInit);

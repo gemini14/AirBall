@@ -3,9 +3,12 @@
 
 
 #include <boost/noncopyable.hpp>
+#include <fstream>
 #include <irrlicht.h>
 #include <math.h>
 #include <memory>
+#include <sstream>
+#include <string>
 
 #include "Game.h"
 #include "GameStateEventReceiver.h"
@@ -25,6 +28,9 @@ namespace Tuatara
 	{
 		GameState();
 		~GameState();
+
+		int currentLevel;
+		int numberOfLevels;
 		
 		std::shared_ptr<GameStateEventReceiver> gameEventRcvr;
 		Level *level;

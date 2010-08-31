@@ -2,12 +2,9 @@
 
 namespace Tuatara
 {
-	GUIButton::GUIButton( int ID, std::wstring text, ScreenBase* screen ) : location(0,0,0,0)
+	GUIButton::GUIButton( int ID, std::wstring text, ScreenBase* screen ) 
+		: location(0,0,0,0), screen( screen ), ID( ID ), text( text )
 	{
-		this->screen = screen;
-		this->ID = ID;
-		this->text = text;
-
 		pathEnabledTexture = "defaultButton.png";
 		pathHoverEnabledTexture = "defaultHoverButton.png";
 	}

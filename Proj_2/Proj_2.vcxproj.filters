@@ -55,6 +55,9 @@
     <Filter Include="Header Files\UI">
       <UniqueIdentifier>{aed943cd-36ea-4d5a-903f-f04f280432c5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files\levels">
+      <UniqueIdentifier>{6da7d67e-e72a-4f31-95dc-b38e8827e557}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -177,6 +180,12 @@
     </None>
     <None Include="media\returnToGameButton.png">
       <Filter>Resource Files\media folder</Filter>
+    </None>
+    <None Include="levels\level_1.xml">
+      <Filter>Resource Files\levels</Filter>
+    </None>
+    <None Include="levels\config.txt">
+      <Filter>Resource Files\levels</Filter>
     </None>
   </ItemGroup>
 </Project>
