@@ -24,7 +24,7 @@ namespace Tuatara
 		}
 	}
 
-	bool Level::InitLevel( irr::scene::ISceneManager *smgr, irr::io::IFileSystem *fileSystem, std::string& levelFile, 
+	bool Level::InitLevel( Game &game, irr::io::IFileSystem *fileSystem, std::string& levelFile, 
 			irr::video::ITexture *wall, irr::video::ITexture *ballTex )
 	{
 		using namespace irr;
@@ -37,6 +37,12 @@ namespace Tuatara
 		node->setMaterialFlag( video::EMF_LIGHTING, false );
 		node->setMaterialTexture( 0, ballTex );
 		ball = node;
+
+		// TODO: Temporarily put in 5 vents. This should change to work through level loading...
+		for (int i = 0; i < 5; i++)
+		{
+			ventRenderers[0].Start(game, irr::core::vector3df( levelSize - 1.5f - (float)i, 1.f, levelSize - 1.5f ), irr::core::vector3df(0.0f,1.0f,0.0f), (float)i + 1.f);
+		}
 
 		for( int cubeLevel = 0; cubeLevel <= levelSize; ++cubeLevel )
 		{
@@ -66,12 +72,6 @@ namespace Tuatara
 					}
 				}
 			}
-		}
-
-		// TODO: Temporarily put in 5 vents.
-		for (int i = 0; i < 5; i++)
-		{
-			vents[0].Start(game, irr::core::vector3df( levelSize - 1.5f - (float)i, 1.f, levelSize - 1.5f ), irr::core::vector3df(0.0f,1.0f,0.0f), (float)i + 1.f);
 		}
 
 		auto *levelReader = fileSystem->createXMLReaderUTF8( levelFile.c_str() );

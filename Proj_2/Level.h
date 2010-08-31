@@ -41,14 +41,14 @@ namespace Tuatara
 		irr::scene::IMeshSceneNode *ball;
 		BuildingBlockMap levelBlocks;
 		// TODO: Temporarily put in 5 vents, to see them.
-		VentParticles vents[5];
+		VentParticles ventRenderers[5];
 
 	public:
 		std::shared_ptr<PhysicsManager> physics;
 		Level();
 		~Level();
 
-		bool InitLevel( irr::scene::ISceneManager *smgr, irr::io::IFileSystem *fileSystem, std::string& levelFile, 
+		bool InitLevel( Game &game, irr::io::IFileSystem *fileSystem, std::string& levelFile, 
 			irr::video::ITexture *wall, irr::video::ITexture *ballTex );
 		void StepSimulation( float timeDelta = 0 );
 	};
