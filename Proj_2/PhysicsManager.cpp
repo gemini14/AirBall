@@ -15,7 +15,7 @@
 
 namespace Tuatara
 {
-	PhysicsManager::PhysicsManager()
+	PhysicsManager::PhysicsManager() : levelComplete( false )
 	{
 		// initialize base system and memory
 		hkMemoryRouter *memoryRouter = hkMemoryInitUtil::initDefault();
@@ -91,7 +91,12 @@ namespace Tuatara
 	PhysicsManager::~PhysicsManager()
 	{
 		world->removeWorldPostSimulationListener( this );
-		//m_phantom->removeReference();
+
+		BOOST_FOREACH( Vent *v, vents )
+		{
+			delete v;
+		}
+
 		world->removeReference();
 		vdb->removeReference();
 
@@ -107,22 +112,139 @@ namespace Tuatara
 
 	void PhysicsManager::postSimulationCallback( hkpWorld* world )
 	{
-		for (int i = 0; i < m_phantom->getOverlappingCollidables().getSize(); i++ )
+		BOOST_FOREACH( Vent *v, vents )
 		{
-			hkpCollidable* c = m_phantom->getOverlappingCollidables()[i];
-			if ( c->getType() == hkpWorldObject::BROAD_PHASE_ENTITY )
+			auto impulse = [=]()->hkVector4
 			{
-				hkVector4 force( 0.0f, 0.2f, 0.0f );
-				hkpRigidBody* rb = hkpGetRigidBody(m_phantom->getOverlappingCollidables()[i]);
-				if ( rb )
+				float x( 0.f ), y( 0.f ), z( 0.f );
+				switch( v->direction )
 				{
-					rb->applyLinearImpulse( force );
+				case FORWARD:
+					z += 0.1f;
+					break;
+				case BACKWARD:
+					z -= 0.1f;
+					break;
+				case LEFT:
+					x -= 0.1f;
+					break;
+				case RIGHT:
+					x += 0.1f;
+					break;
+				case UP:
+					y += 0.1f;
+					break;
+				case DOWN:
+					y -= 0.1f;
+					break;
+				default:
+					printf( "postSimulationCallback: bad direction in vent structure.\n" );
+					return hkVector4( 0, 0, 0);
+				}
+
+				return hkVector4( x, y, z );
+			};
+
+			for( int i = 0; i < v->phantom->getOverlappingCollidables().getSize(); ++i )
+			{
+				hkpCollidable* c = v->phantom->getOverlappingCollidables()[i];
+				if ( c->getType() == hkpWorldObject::BROAD_PHASE_ENTITY )
+				{
+
+					hkpRigidBody* rigidBody = hkpGetRigidBody( v->phantom->getOverlappingCollidables()[i] );
+					if ( rigidBody )
+					{
+						rigidBody->applyLinearImpulse( impulse() );
+					}
 				}
 			}
 		}
+
+		// level completion check (bit of code duplication here, will look into it later)
+		/*for( int i = 0; i < exit->getOverlappingCollidables().getSize(); ++i )
+		{
+			hkpCollidable* c = exit->getOverlappingCollidables()[i];
+			if ( c->getType() == hkpWorldObject::BROAD_PHASE_ENTITY )
+			{
+				hkpRigidBody* rigidBody = hkpGetRigidBody( exit->getOverlappingCollidables()[i] );
+				if ( rigidBody )
+				{
+					levelComplete = true;
+				}
+			}
+		}*/
 	}
 
-	void PhysicsManager::StepSimulation( float timeDelta )
+	void PhysicsManager::CreatePhantom( const float& x, const float& y, const float& z, const Direction& dir, 
+		const int& strength, bool isVent )
+	{
+		hkAabb info;
+		info.m_min = hkVector4( x - 0.5f, y - 0.5f, z - 0.5f );
+
+		auto maxCalc = [=]()->hkVector4
+		{
+			float max_x( x ), max_y( y ), max_z( z );
+			switch( dir )
+			{
+			case FORWARD:
+				max_x += 1.f;
+				max_y += 1.f;
+				max_z += static_cast<float>(strength);
+				break;
+			case BACKWARD:
+				max_x += 1.f;
+				max_y += 1.f;
+				max_z -= static_cast<float>(strength);
+				break;
+			case LEFT:
+				max_x += static_cast<float>(strength);
+				max_y += 1.f;
+				max_z += 1.f;
+				break;
+			case RIGHT:
+				max_x -= static_cast<float>(strength);
+				max_y += 1.f;
+				max_z += 1.f;
+				break;
+			case UP:
+				max_x += 1.f;
+				max_y += static_cast<float>(strength);
+				max_z += 1.f;
+				break;
+			case DOWN:
+				max_x += 1.f;
+				max_y -= static_cast<float>(strength);
+				max_z += 1.f;
+				break;
+			default:
+				printf( "CreateVent: bad direction sent.\n" );
+				return hkVector4( 0.f, 0.f, 0.f);
+			}
+
+			return hkVector4( max_x - 0.5f, max_y - 0.5f, max_z - 0.5f);
+		};
+
+		info.m_max = maxCalc();
+
+		if( isVent )
+		{
+			Vent *vent = new Vent;
+
+			vent->direction = dir;
+			vent->strength = strength;
+			vent->phantom = new hkpAabbPhantom( info );
+
+			world->addPhantom( vent->phantom );
+			vents.push_back( vent );
+		}
+		/*else
+		{
+			exit = new hkpAabbPhantom( info );
+			world->addPhantom( exit );
+		}*/
+	}
+
+	bool PhysicsManager::StepSimulation( float timeDelta )
 	{
 		static hkReal timestep;
 		if( timeDelta == 0 )
@@ -144,59 +266,33 @@ namespace Tuatara
 		// clear accumulated timer data in this thread and all slave threads
 		hkMonitorStream::getInstance().reset();
 		threadPool->clearTimerData();
+
+		return levelComplete;
 	}
 
-	void PhysicsManager::CreateWorld()
+	void PhysicsManager::CreateBlock( const float& x, const float& y, const float& z)
 	{
-		// add the six faces
 		hkVector4 buildingBlockSize( 0.5f, 0.5f, 0.5f );
-		for( int cubeLevel = 0; cubeLevel <= levelSize; ++cubeLevel )
-		{
-			for( int x = 0; x <= levelSize; ++x )
-			{
-				for( int z = 0; z <= levelSize; ++z )
-				{
-					if( // bottom or top level
-						( cubeLevel == 0 || cubeLevel == levelSize ) 
-						|| 
-						// or one of the edges of the mid levels
-						( cubeLevel != 0 && cubeLevel != levelSize && 
-						// (this part of the test weeds out blocks in the center portion of the cube)
-						( ( z == 0 || z == levelSize ) || ( z > 0 && z < levelSize && ( x == 0 || x == levelSize ) ) )
-						) )
-					{
-						hkpConvexShape *buildingBlock = new hkpBoxShape( buildingBlockSize, 0 );
+		hkpConvexShape *buildingBlock = new hkpBoxShape( buildingBlockSize, 0 );
 
-						hkpRigidBodyCinfo ci;
-						ci.m_shape = buildingBlock;
-						ci.m_motionType = hkpMotion::MOTION_FIXED;
-						ci.m_position = hkVector4( static_cast<float>(x),
-							static_cast<float>(cubeLevel), static_cast<float>(z) );
-						ci.m_qualityType = HK_COLLIDABLE_QUALITY_FIXED;
-						ci.m_friction = .8f;
+		hkpRigidBodyCinfo ci;
+		ci.m_shape = buildingBlock;
+		ci.m_motionType = hkpMotion::MOTION_FIXED;
+		ci.m_position = hkVector4( x, y, z );
+		ci.m_qualityType = HK_COLLIDABLE_QUALITY_FIXED;
+		ci.m_friction = .8f;
 
-						world->addEntity( new hkpRigidBody( ci ) )->removeReference();
+		world->addEntity( new hkpRigidBody( ci ) )->removeReference();
 
-						buildingBlock->removeReference();
-					}
-				}
-			}
-		}	
+		buildingBlock->removeReference();
 
-
-		hkAabb info;
-		info.m_min = hkVector4( 0.5f, 0.5f, 0.5f );
-		info.m_max = hkVector4( 1.5f, 1.5f, 1.5f ) ;
-		m_phantom = new hkpAabbPhantom( info );
-
-		world->addPhantom( m_phantom )->removeReference();
 	}
 
-	void PhysicsManager::CreateBall()
+	void PhysicsManager::CreateBall( const float& entryX, const float& entryY, const float& entryZ )
 	{
-		// radius of 0.5 for a diameter of 1
-		hkReal radius = .5f;
-		hkReal sphereMass = 1.0f;
+		// radius of 0.5 for a diameter of 1 -- .25 for .5 -- .125 for .25
+		hkReal radius = .125f;
+		hkReal sphereMass = 5.0f;
 
 		hkpRigidBodyCinfo info;
 		hkpMassProperties massProperties;
@@ -207,7 +303,7 @@ namespace Tuatara
 		info.m_inertiaTensor = massProperties.m_inertiaTensor;
 		info.m_shape = new hkpSphereShape( radius );
 		info.m_friction = 1.f;
-		info.m_position = hkVector4( levelSize / 2.f, 1.f, levelSize / 2.f );//1.5f, 2.f, 1.5f );
+		info.m_position = hkVector4( entryX, entryY, entryZ );
 
 		info.m_motionType = hkpMotion::MOTION_DYNAMIC;
 		info.m_qualityType = HK_COLLIDABLE_QUALITY_MOVING;
@@ -228,28 +324,27 @@ namespace Tuatara
 	void PhysicsManager::ApplyImpulseToBall( Direction dir, const float& x, const float& y, const float& z )
 	{
 		hkVector4 impulse;
-		hkReal modifier = 1.f;
 
 		switch( dir )
 		{
 		case FORWARD:
-			impulse.setXYZ( hkVector4( x / modifier, 0, z / modifier ) );
+			impulse.setXYZ( hkVector4( x, 0, z ) );
 			break;
 
 		case LEFT:
-			impulse.setXYZ( hkVector4( x / modifier, 0, z / modifier ) );
+			impulse.setXYZ( hkVector4( x, 0, z ) );
 			break;
 
 		case BACKWARD:
-			impulse.setXYZ( hkVector4( x / modifier, 0, z / modifier ) );
+			impulse.setXYZ( hkVector4( x, 0, z ) );
 			break;
 
 		case RIGHT:
-			impulse.setXYZ( hkVector4( x / modifier, 0, z / modifier ) );
+			impulse.setXYZ( hkVector4( x, 0, z ) );
 			break;
-		
+
 		case UP:
-			impulse.setXYZ( hkVector4( 0, 2.f, 0 ) );
+			impulse.setXYZ( hkVector4( 0, 7.5f, 0 ) );
 			break;
 
 		default:
@@ -270,15 +365,15 @@ namespace Tuatara
 	{
 		hkQuaternion ballRotation = ball->getRotation();
 		if( !ballRotation.hasValidAxis() )
-			{
-				return false;
+		{
+			return false;
 		}
-		
+
 		static hkVector4 originalAxis;
 		ballRotation.getAxis( originalAxis );
 		irr::core::vector3df axis( originalAxis( 0 ), originalAxis( 1 ), originalAxis( 2 ) );
 		axis.normalize();
-		
+
 		static irr::core::quaternion q;
 		// axis must be normalized (see above)
 		q.fromAngleAxis( ballRotation.getAngle(), axis );

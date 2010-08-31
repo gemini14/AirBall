@@ -15,6 +15,7 @@ namespace Tuatara
 
 	enum Direction 
 	{ 
+		NONE,
 		UP,
 		DOWN,
 		LEFT,

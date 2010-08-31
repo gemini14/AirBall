@@ -117,7 +117,7 @@
   <ItemGroup>
     <None Include="Irrlicht.dll" />
     <None Include="levels\config.txt" />
-    <None Include="levels\level_1.xml">
+    <None Include="levels\level_0.xml">
       <SubType>Designer</SubType>
     </None>
     <None Include="media\exitButton.png" />
