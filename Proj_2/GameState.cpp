@@ -4,7 +4,7 @@
 namespace Tuatara
 {
 
-	GameState::GameState() : gameEventRcvr( new GameStateEventReceiver ), currentLevel( 1 )
+	GameState::GameState() : gameEventRcvr( new GameStateEventReceiver ), currentLevel( 0 )
 	{
 		using namespace std;
 
@@ -55,8 +55,8 @@ namespace Tuatara
 			filename << "level_" << currentLevel << ".xml";
 			return filename.str();
 		};
-		bool levelCreatedOK = level->InitLevel( *game, game->manager->device->getFileSystem(),
-			levelFilenameGenerator( currentLevel ), game->manager->driver->getTexture( "media/tile.bmp" ),
+		bool levelCreatedOK = level->InitLevel( game->manager->smgr, game->manager->device->getFileSystem(),
+			levelFilenameGenerator( currentLevel ), game->manager->driver->getTexture( "media/bubbleWater.jpg" ),
 			game->manager->driver->getTexture( "media/tuatara.jpg" ) );
 
 		if( !levelCreatedOK )
@@ -69,6 +69,8 @@ namespace Tuatara
 	{
 		using namespace irr;
 
+		bool levelComplete;
+
 		static u32 then = game->manager->device->getTimer()->getTime();
 		auto calcTimeDelta = [&]( irr::f32 then, irr::f32 now ) -> irr::f32
 				{
@@ -80,18 +82,32 @@ namespace Tuatara
 		//u32 now = game->manager->device->getTimer()->getTime();
 		//game->frameDelta = calcTimeDelta( then, game->manager->device->getTimer()->getTime() );
 
-		level->StepSimulation();
+		levelComplete = level->StepSimulation();
 
 		game->manager->driver->beginScene( true, true, video::SColor(255, 100, 101, 140)/*255, 100, 100, 100)*/ );
 
 		game->manager->smgr->drawAll();
 
 		game->manager->driver->endScene();
+
+		if( levelComplete )
+		{
+			if( ++currentLevel != numberOfLevels )
+			{
+				Exit( game );
+				Enter( game );
+			}
+			else
+			{
+				game->stateMachine->ChangeState( MainMenu::Instance() );
+			}
+		}
 	}
 
 	void GameState::Exit( Game *game )
 	{
 		delete level;
+		camera->remove();
 	}
 
 }

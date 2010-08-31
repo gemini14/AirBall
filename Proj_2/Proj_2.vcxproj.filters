@@ -102,9 +102,6 @@
     <ClCompile Include="GUIButton.cpp">
       <Filter>Source Files\UI</Filter>
     </ClCompile>
-    <ClCompile Include="VentParticles.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="IrrManager.h">
@@ -158,9 +155,6 @@
     <ClInclude Include="EnumsConstants.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="VentParticles.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Irrlicht.dll">
@@ -187,10 +181,10 @@
     <None Include="media\returnToGameButton.png">
       <Filter>Resource Files\media folder</Filter>
     </None>
-    <None Include="levels\level_1.xml">
+    <None Include="levels\config.txt">
       <Filter>Resource Files\levels</Filter>
     </None>
-    <None Include="levels\config.txt">
+    <None Include="levels\level_0.xml">
       <Filter>Resource Files\levels</Filter>
     </None>
   </ItemGroup>

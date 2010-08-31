@@ -3,8 +3,10 @@
 
 
 // other includes
+#include <boost/foreach.hpp>
 #include <boost/noncopyable.hpp>
 #include <stdio.h>
+#include <vector>
 
 #include "EnumsConstants.h"
 #include "Game.h"
@@ -53,6 +55,15 @@ namespace Tuatara
 	{
 	private:
 
+		struct Vent
+		{
+			hkpAabbPhantom *phantom;
+			Direction direction;
+			int strength;
+		};
+
+		typedef std::vector<Vent*> VentVector;
+
 		hkJobThreadPool *threadPool;
 		hkJobQueue *jobQueue;
 
@@ -61,16 +72,24 @@ namespace Tuatara
 		hkpPhysicsContext *context;
 
 		hkpRigidBody *ball;
-		hkpAabbPhantom *m_phantom;
+		hkpAabbPhantom *exit;
+
+		VentVector vents;
+
+		bool levelComplete;
+		
 	public:
 
 		PhysicsManager();
 		~PhysicsManager();
 
-		void CreateWorld();
-		void CreateBall();
+		//void CreateWorld();
+		void CreateBlock( const float& x, const float& y, const float& z);
+		void CreateBall( const float& entryX, const float& entryY, const float& entryZ );
+		void CreatePhantom( const float& x, const float& y, const float& z, const Direction& dir,
+			const int& strength, bool isVent = true );
 
-		void StepSimulation( float timeDelta = 0 );
+		bool StepSimulation( float timeDelta = 0 );
 
 		void ApplyImpulseToBall( Direction dir, const float& x = 0, const float& y = 0, const float& z = 0 );
 		irr::core::vector3df GetBallPosition();
