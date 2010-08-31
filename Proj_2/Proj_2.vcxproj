@@ -94,6 +94,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainMenu.cpp" />
     <ClCompile Include="PauseMenu.cpp" />
+    <ClCompile Include="VentParticles.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Entity.h" />
@@ -113,6 +114,7 @@
     <ClInclude Include="PauseMenu.h" />
     <ClInclude Include="State.h" />
     <ClInclude Include="StateMachine.h" />
+    <ClInclude Include="VentParticles.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Irrlicht.dll" />

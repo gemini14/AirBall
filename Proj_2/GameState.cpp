@@ -33,7 +33,7 @@ namespace Tuatara
 			core::vector3df( levelSize - 1, 1.f, levelSize - 1 ) );
 
 		level = new Level;
-		level->InitLevel( game->manager->smgr, game->manager->driver->getTexture( "media/bubbleWater.jpg" ),
+		level->InitLevel( *game /*->manager->smgr*/, game->manager->driver->getTexture( "media/tile.bmp" ), //"media/bubbleWater.jpg" ),
 			game->manager->driver->getTexture( "media/tuatara.jpg" ) );
 	}
 

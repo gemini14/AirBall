@@ -11,7 +11,8 @@
 #include <sstream>
 
 #include "PhysicsManager.h"
-
+#include "Game.h"
+#include "VentParticles.h"
 
 namespace Tuatara
 {
@@ -25,13 +26,15 @@ namespace Tuatara
 
 		irr::scene::IMeshSceneNode *ball;
 		BuildingBlockMap levelBlocks;
+		// TODO: Temporarily put in 5 vents, to see them.
+		VentParticles vents[5];
 
 	public:
 		std::shared_ptr<PhysicsManager> physics;
 		Level();
 		~Level();
 
-		void InitLevel( irr::scene::ISceneManager *smgr, irr::video::ITexture *wall, irr::video::ITexture *ballTex );
+		void InitLevel( /*irr::scene::ISceneManager *smgr*/Game& game, irr::video::ITexture *wall, irr::video::ITexture *ballTex );
 		void StepSimulation( float timeDelta = 0 );
 	};
 

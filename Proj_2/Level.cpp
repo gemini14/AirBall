@@ -24,7 +24,7 @@ namespace Tuatara
 		}
 	}
 
-	void Level::InitLevel( irr::scene::ISceneManager *smgr, irr::video::ITexture *wall, irr::video::ITexture *ballTex )
+	void Level::InitLevel( /*irr::scene::ISceneManager *smgr*/Game& game, irr::video::ITexture *wall, irr::video::ITexture *ballTex )
 	{
 		using namespace irr;
 		using namespace std;
@@ -32,7 +32,7 @@ namespace Tuatara
 		physics->CreateWorld();
 		physics->CreateBall();
 
-		scene::IMeshSceneNode * node = smgr->addSphereSceneNode( 0.5f, 64, 0, -1, physics->GetBallPosition() );
+		scene::IMeshSceneNode * node = game.manager->smgr->addSphereSceneNode( 0.5f, 64, 0, -1, physics->GetBallPosition() );
 		node->setMaterialFlag( video::EMF_LIGHTING, false );
 		node->setMaterialTexture( 0, ballTex );
 		ball = node;
@@ -55,7 +55,7 @@ namespace Tuatara
 						stringstream key;
 						key << x << cubeLevel << z;
 
-						scene::IMeshSceneNode *node = smgr->addCubeSceneNode( 1.f, 0, -1, 
+						scene::IMeshSceneNode *node = game.manager->smgr->addCubeSceneNode( 1.f, 0, -1, 
 							core::vector3df( static_cast<float>(x), static_cast<float>(cubeLevel),
 							static_cast<float>(z) ) );
 						node->setMaterialFlag( video::EMF_LIGHTING, false );
@@ -65,6 +65,11 @@ namespace Tuatara
 					}
 				}
 			}
+		}
+		// TODO: Temporarily put in 5 vents.
+		for (int i = 0; i < 5; i++)
+		{
+			vents[0].Start(game, irr::core::vector3df( levelSize - 1.5f - (float)i, 1.f, levelSize - 1.5f ), irr::core::vector3df(0.0f,1.0f,0.0f), (float)i + 1.f);
 		}
 	}
 }
