@@ -3,28 +3,12 @@
 namespace Tuatara
 {
 
-	VentParticles::VentParticles()
-	{
-		particleSystem = NULL;
-
-		//Position = irr::core::vector3df( levelSize / 2.f, 1.f, levelSize / 2.f ); //(0, 0, 0);
-
-	}
-
-
-	VentParticles::~VentParticles()
-	{
-		if (particleSystem != NULL)
-		{
-			particleSystem->remove();
-			particleSystem = NULL;
-		}
-	}
-
-	void VentParticles::Start (Game& game, irr::core::vector3df position, irr::core::vector3df normalDirection, irr::f32 distance)
+	VentParticles::VentParticles( irr::scene::ISceneManager *smgr, irr::video::ITexture *particleTex,
+			irr::core::vector3df position, irr::core::vector3df normalDirection, irr::f32 distance )
+			: particleSystem( nullptr )
 	{
 		// SMOKE EFFECT:
-		particleSystem = game.manager->smgr->addParticleSystemSceneNode(false, 0, -1, 
+		particleSystem = smgr->addParticleSystemSceneNode(false, 0, -1, 
 			position, 
 			irr::core::vector3df(0, 0, 0), // rotation
 			irr::core::vector3df(1.0f, 1.0f, 1.0f)); //scale
@@ -67,8 +51,17 @@ namespace Tuatara
 		particleSystem->setPosition(position);
 		particleSystem->setMaterialFlag(irr::video::EMF_LIGHTING, false);
 		particleSystem->setMaterialFlag(irr::video::EMF_ZWRITE_ENABLE, false);
-		particleSystem->setMaterialTexture(0, game.manager->driver->getTexture("media/smoke2.jpg"));
+		particleSystem->setMaterialTexture(0, particleTex);
 		particleSystem->setMaterialType(irr::video::EMT_TRANSPARENT_ADD_COLOR);
 		// END SMOKE
+	}
+
+
+	VentParticles::~VentParticles()
+	{
+		if (particleSystem != nullptr)
+		{
+			particleSystem->remove();
+		}
 	}
 }

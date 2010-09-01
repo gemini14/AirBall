@@ -5,7 +5,7 @@
 #include <string>
 
 #include "EnumsConstants.h"
-#include "Game.h"
+//#include "Game.h"
 
 namespace Tuatara
 {
@@ -14,11 +14,10 @@ namespace Tuatara
 		irr::scene::IParticleSystemSceneNode* particleSystem;
 
 	public:
-		VentParticles(void);
-		~VentParticles(void);
-
-		void Start (Game& game, irr::core::vector3df position, 
-			irr::core::vector3df normalDirection, irr::f32 distance);
+		
+		VentParticles( irr::scene::ISceneManager *smgr, irr::video::ITexture *particleTex,
+			irr::core::vector3df position, irr::core::vector3df normalDirection, irr::f32 distance );
+		~VentParticles();
 	};
 }
 

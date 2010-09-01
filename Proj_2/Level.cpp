@@ -105,13 +105,48 @@ namespace Tuatara
 		return NONE;
 	}
 
-	void Level::CreateVents( irr::video::ITexture *ventTex )
+	void Level::CreateVents( irr::scene::ISceneManager *smgr, irr::video::ITexture *particleTex,
+			irr::video::ITexture *ventTex )
 	{
+		using namespace irr::core;
+
+		auto normalGenerator = []( Direction d )->irr::core::vector3df
+		{
+			irr::core::vector3df normal;
+			switch( d )
+			{
+			case FORWARD:
+				normal.Z = 1.f;
+				break;
+			case BACKWARD:
+				normal.Z = -1.f;
+				break;
+			case LEFT:
+				normal.X = -1.f;
+				break;
+			case RIGHT:
+				normal.X = 1.f;
+				break;
+			case UP:
+				normal.Y = 1.f;
+				break;
+			case DOWN:
+				normal.Y = -1.f;
+				break;
+			default:
+				printf( "CreateVents: bad direction sent to normalGenerator lambda.\n" );
+			}
+
+			return normal.normalize();
+		};
+
 		BOOST_FOREACH( VentInfo *v, vents )
 		{
 			//RemoveBlock( v->x, v->y, v->z );
 			FindBlock( v->x, v->y, v->z )->second->setMaterialTexture( 0, ventTex );
 			physics->CreatePhantom( v->x, v->y, v->z, v->direction, v->strength );
+			v->particle.reset( new VentParticles(smgr, particleTex, vector3df( v->x, v->y, v->z ), 
+				normalGenerator( v->direction ), v->strength) );
 		}
 	}
 
@@ -219,7 +254,7 @@ namespace Tuatara
 
 		CreateBall( smgr, ballTex );
 		CreateRenderBlocks( smgr, wall );
-		CreateVents( ventTex );
+		CreateVents( smgr, ventFXTex, ventTex );
 		CreateExit( exitTex );
 		CreatePhysicsBlocks();
 

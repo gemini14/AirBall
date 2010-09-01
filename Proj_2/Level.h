@@ -32,6 +32,7 @@ namespace Tuatara
 			float z;
 			Direction direction;
 			int strength;
+			std::shared_ptr<VentParticles> particle;
 		};
 
 		typedef std::vector<VentInfo*> VentVector;
@@ -69,7 +70,8 @@ namespace Tuatara
 		void CreatePhysicsBlocks();
 		void RemoveBlock( float x, float y, float z );
 		BuildingBlockMap::iterator FindBlock( const float& x, const float& y, const float& z );
-		void CreateVents( irr::video::ITexture *ventTex );
+		void CreateVents( irr::scene::ISceneManager *smgr, irr::video::ITexture *particleTex,
+			irr::video::ITexture *ventTex );
 		void CreateExit( irr::video::ITexture *exitTex );
 
 	public:
