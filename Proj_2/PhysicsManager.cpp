@@ -280,7 +280,7 @@ namespace Tuatara
 		ci.m_motionType = hkpMotion::MOTION_FIXED;
 		ci.m_position = hkVector4( x, y, z );
 		ci.m_qualityType = HK_COLLIDABLE_QUALITY_FIXED;
-		ci.m_friction = 100.0f;
+		ci.m_friction = 100.f;
 
 		world->addEntity( new hkpRigidBody( ci ) )->removeReference();
 
@@ -290,10 +290,10 @@ namespace Tuatara
 
 	void PhysicsManager::CreateBall( const float& entryX, const float& entryY, const float& entryZ )
 	{
-		// radius of 0.5 for a diameter of 1 -- .25 for .5 -- .125 for .25
+		// half-extent radius of .125 for .25
 		hkReal radius = .125f;
-		hkReal sphereMass = 5.0f;
-		hkReal MaxVel = 0.5f;
+		hkReal sphereMass = 5.f;
+		hkReal maxVelocity = 1.f;
 
 		hkpRigidBodyCinfo info;
 		hkpMassProperties massProperties;
@@ -303,8 +303,8 @@ namespace Tuatara
 		info.m_centerOfMass = massProperties.m_centerOfMass;
 		info.m_inertiaTensor = massProperties.m_inertiaTensor;
 		info.m_shape = new hkpSphereShape( radius );
-		info.m_friction = 3.0f;
-		info.m_linearDamping = 0.05f;
+		info.m_friction = 3.f;
+		// info.m_linearDamping = 0.25f;
 		info.m_position = hkVector4( entryX, entryY, entryZ );
 
 		info.m_motionType = hkpMotion::MOTION_DYNAMIC;
@@ -313,7 +313,7 @@ namespace Tuatara
 		hkpRigidBody *sphereRigidBody = new hkpRigidBody( info );
 		ball = sphereRigidBody;
 
-		ball->setMaxLinearVelocity(MaxVel);
+		ball->setMaxLinearVelocity(maxVelocity);
 
 		world->addEntity( sphereRigidBody );
 		sphereRigidBody->removeReference();
@@ -348,7 +348,7 @@ namespace Tuatara
 			break;
 
 		case UP:
-			impulse.setXYZ( hkVector4( 0, 7.5f, 0 ) );
+			impulse.setXYZ( hkVector4( 0, y, 0 ) );
 			break;
 
 		default:

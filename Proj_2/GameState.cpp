@@ -56,7 +56,7 @@ namespace Tuatara
 			return filename.str();
 		};
 		bool levelCreatedOK = level->InitLevel( game->manager->smgr, game->manager->device->getFileSystem(),
-			levelFilenameGenerator( currentLevel ), game->manager->driver->getTexture( "media/bubbleWater.jpg" ),
+			levelFilenameGenerator( currentLevel ), game->manager->driver->getTexture( "media/tile.png" ),
 			game->manager->driver->getTexture( "media/tuatara.jpg" ) );
 
 		if( !levelCreatedOK )

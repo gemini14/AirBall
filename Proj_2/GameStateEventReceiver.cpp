@@ -48,8 +48,8 @@ namespace Tuatara
 		case RIGHT:
 			newTarget.rotateXZBy( -5.f, currentPos );
 			if( newTarget.Z < 3 )
-				{
-					newTarget.Z = 2;
+			{
+				newTarget.Z = 2;
 			}
 			return newTarget;
 
@@ -107,139 +107,28 @@ namespace Tuatara
 				return true;
 
 			case KEY_KEY_W:
-				{
-					gameState->level->physics->ApplyImpulseToBall( FORWARD, 0.f, 0.f, 0.6f);
-					/*		edit for test
-					static bool okToExecute = true;
-					static u32 then;
-					static auto W_Action = [&]()
-					{
-						auto look = GetCameraLookVector();
-						gameState->level->physics->ApplyImpulseToBall( FORWARD, 0.f, 0.f, 1.0f);
-
-						then = game->manager->device->getTimer()->getTime();
-						okToExecute = !okToExecute;
-					};
-
-					if( okToExecute )
-					{
-						W_Action();
-					}
-					else
-					{
-						u32 now = game->manager->device->getTimer()->getTime();
-						if( (now - then) / 1000.f >= 0.75 )
-						{
-							W_Action();
-						}
-					}
-					*/
-					return true;
-				}
+				gameState->level->physics->ApplyImpulseToBall( FORWARD, 0.f, 0.f, 0.6f);
+				return true;
 
 			case KEY_KEY_A:
-				{
-					gameState->level->physics->ApplyImpulseToBall( LEFT, -0.6f, 0.f, 0.f);
-					/*
-					static bool okToExecute = true;
-					static u32 then;
-					static auto W_Action = [&]()
-					{
-						auto look = GetCameraLookVector();
-						look.rotateXZBy( -90.f, gameState->level->physics->GetBallPosition() );
-						gameState->level->physics->ApplyImpulseToBall( LEFT, -1.0f, 0.f, 0.f);
-
-						then = game->manager->device->getTimer()->getTime();
-						okToExecute = !okToExecute;
-					};
-
-					if( okToExecute )
-					{
-						W_Action();
-					}
-					else
-					{
-						u32 now = game->manager->device->getTimer()->getTime();
-						if( (now - then) / 1000.f >= 0.75 )
-						{
-							W_Action();
-						}
-					}
-					*/
-					return true;
-				}
+				gameState->level->physics->ApplyImpulseToBall( LEFT, -0.6f, 0.f, 0.f);
+				return true;
 
 			case KEY_KEY_S:
-				{
-					gameState->level->physics->ApplyImpulseToBall( BACKWARD, 0.f, 0.f, -0.6f);
-					/*
-					static bool okToExecute = true;
-					static u32 then;
-					static auto S_Action = [&]()
-					{
-						auto look = GetCameraLookVector();
-						gameState->level->physics->ApplyImpulseToBall( BACKWARD, 0.f, 0.f, -1.0f);
-
-						then = game->manager->device->getTimer()->getTime();
-						okToExecute = !okToExecute;
-					};
-
-					if( okToExecute )
-					{
-						S_Action();
-					}
-					else
-					{
-						u32 now = game->manager->device->getTimer()->getTime();
-						if( (now - then) / 1000.f >= 0.75 )
-						{
-							S_Action();
-						}
-					}
-					*/
-					return true;
-				}
+				gameState->level->physics->ApplyImpulseToBall( BACKWARD, 0.f, 0.f, -0.6f);
+				return true;
 
 			case KEY_KEY_D:
-				{
-					gameState->level->physics->ApplyImpulseToBall( RIGHT, 0.6f, 0.f, 0.f);
-					/*
-					static bool okToExecute = true;
-					static u32 then;
-					static auto D_Action = [&]()
-					{
-						auto look = GetCameraLookVector();
-						look.rotateXZBy( 90.f, gameState->level->physics->GetBallPosition() );
-						gameState->level->physics->ApplyImpulseToBall( RIGHT, 1.0f, 0.f, 0.f);
-
-						then = game->manager->device->getTimer()->getTime();
-						okToExecute = !okToExecute;
-					};
-
-					if( okToExecute )
-					{
-						D_Action();
-					}
-					else
-					{
-						u32 now = game->manager->device->getTimer()->getTime();
-						if( (now - then) / 1000.f >= 0.75 )
-						{
-							D_Action();
-						}
-					}
-					*/
-					return true;
-				}
+				gameState->level->physics->ApplyImpulseToBall( RIGHT, 0.6f, 0.f, 0.f);
+				return true;
 
 			case KEY_KEY_Q:
-				{ 
+				{
 					static bool okToExecute = true;
 					static u32 then;
 					static auto Q_Action = [&]()
 					{
-						auto up = GetCameraUpVector();
-						gameState->level->physics->ApplyImpulseToBall( UP, up.X, up.Y, up.Z );
+						gameState->level->physics->ApplyImpulseToBall( UP, 0, 7.5f, 0 );
 
 						then = game->manager->device->getTimer()->getTime();
 						okToExecute = !okToExecute;
@@ -252,13 +141,13 @@ namespace Tuatara
 					else
 					{
 						u32 now = game->manager->device->getTimer()->getTime();
-						if( (now - then) / 1000.f >= 1.f )
+						if( (now - then) / 1000.f >= 0.25f )
 						{
 							Q_Action();
 						}
 					}
-					return true;
 				}
+				return true;
 
 			default:
 				return false;

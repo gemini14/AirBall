@@ -122,16 +122,19 @@
     <None Include="levels\level_0.xml">
       <SubType>Designer</SubType>
     </None>
-    <None Include="media\bubbleWater.jpg" />
     <None Include="media\defaultButton.png" />
     <None Include="media\defaultHoverButton.png" />
+    <None Include="media\exit.png" />
     <None Include="media\exitButton.png" />
     <None Include="media\mainMenuButton.png" />
     <None Include="media\menuBackground.jpg" />
     <None Include="media\newGameButton.png" />
     <None Include="media\pauseBackground.jpg" />
     <None Include="media\returnToGameButton.png" />
+    <None Include="media\tile.png" />
+    <None Include="media\tileVent.png" />
     <None Include="media\tuatara.jpg" />
+    <None Include="media\ventSmoke.png" />
     <None Include="pala.ttf" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

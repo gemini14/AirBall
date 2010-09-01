@@ -37,9 +37,6 @@
     <Filter Include="Source Files\Physics">
       <UniqueIdentifier>{e00e19ac-1506-4cbc-bf77-296e06338ca4}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Resource Files\media folder">
-      <UniqueIdentifier>{f6862ea7-526f-4c8b-827d-5f5412b6b7e7}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\States">
       <UniqueIdentifier>{0e846951-2010-4c74-957c-b15e3f1f496f}</UniqueIdentifier>
     </Filter>
@@ -57,6 +54,9 @@
     </Filter>
     <Filter Include="Resource Files\levels">
       <UniqueIdentifier>{6da7d67e-e72a-4f31-95dc-b38e8827e557}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\media">
+      <UniqueIdentifier>{f6862ea7-526f-4c8b-827d-5f5412b6b7e7}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -170,22 +170,22 @@
       <Filter>Resource Files</Filter>
     </None>
     <None Include="media\exitButton.png">
-      <Filter>Resource Files\media folder</Filter>
+      <Filter>Resource Files\media</Filter>
     </None>
     <None Include="media\mainMenuButton.png">
-      <Filter>Resource Files\media folder</Filter>
+      <Filter>Resource Files\media</Filter>
     </None>
     <None Include="media\menuBackground.jpg">
-      <Filter>Resource Files\media folder</Filter>
+      <Filter>Resource Files\media</Filter>
     </None>
     <None Include="media\newGameButton.png">
-      <Filter>Resource Files\media folder</Filter>
+      <Filter>Resource Files\media</Filter>
     </None>
     <None Include="media\pauseBackground.jpg">
-      <Filter>Resource Files\media folder</Filter>
+      <Filter>Resource Files\media</Filter>
     </None>
     <None Include="media\returnToGameButton.png">
-      <Filter>Resource Files\media folder</Filter>
+      <Filter>Resource Files\media</Filter>
     </None>
     <None Include="levels\config.txt">
       <Filter>Resource Files\levels</Filter>
@@ -193,17 +193,26 @@
     <None Include="levels\level_0.xml">
       <Filter>Resource Files\levels</Filter>
     </None>
-    <None Include="media\bubbleWater.jpg">
-      <Filter>Resource Files\media folder</Filter>
-    </None>
     <None Include="media\defaultButton.png">
-      <Filter>Resource Files\media folder</Filter>
+      <Filter>Resource Files\media</Filter>
     </None>
     <None Include="media\defaultHoverButton.png">
-      <Filter>Resource Files\media folder</Filter>
+      <Filter>Resource Files\media</Filter>
     </None>
     <None Include="media\tuatara.jpg">
-      <Filter>Resource Files\media folder</Filter>
+      <Filter>Resource Files\media</Filter>
+    </None>
+    <None Include="media\tile.png">
+      <Filter>Resource Files\media</Filter>
+    </None>
+    <None Include="media\exit.png">
+      <Filter>Resource Files\media</Filter>
+    </None>
+    <None Include="media\tileVent.png">
+      <Filter>Resource Files\media</Filter>
+    </None>
+    <None Include="media\ventSmoke.png">
+      <Filter>Resource Files\media</Filter>
     </None>
   </ItemGroup>
 </Project>
