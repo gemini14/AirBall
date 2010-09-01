@@ -66,30 +66,6 @@ namespace Tuatara
 					v->z = levelReader->getAttributeValueAsFloat( "z" );
 					v->strength = levelReader->getAttributeValueAsInt( "strength" );
 					v->direction = CalcDirection( v->x, v->y, v->z );
-					/*if( v->z == 0 )
-					{
-						v->direction = FORWARD;
-					}
-					else if( v->z == levelSize )
-					{
-						v->direction = BACKWARD;
-					}
-					else if( v->x == 0 && ( v->z != 0 && v->z != levelSize ) )
-					{
-						v->direction == RIGHT;
-					}
-					else if( v->x == levelSize && ( v->z != 0 && v->z != levelSize ) )
-					{
-						v->direction = LEFT;
-					}
-					else if( v->y == levelSize )
-					{
-						v->direction = DOWN;
-					}
-					else if( v->y == 0 )
-					{
-						v->direction = UP;
-					}*/
 					vents.push_back( v );
 				}
 			}
@@ -129,19 +105,21 @@ namespace Tuatara
 		return NONE;
 	}
 
-	void Level::CreateVents()
+	void Level::CreateVents( irr::video::ITexture *ventTex )
 	{
 		BOOST_FOREACH( VentInfo *v, vents )
 		{
-			RemoveBlock( v->x, v->y, v->z );
+			//RemoveBlock( v->x, v->y, v->z );
+			FindBlock( v->x, v->y, v->z )->second->setMaterialTexture( 0, ventTex );
 			physics->CreatePhantom( v->x, v->y, v->z, v->direction, v->strength );
 		}
 	}
 
-	void Level::CreateExit()
+	void Level::CreateExit( irr::video::ITexture *exitTex )
 	{
-		RemoveBlock( exitX, exitY, exitZ );
+		//RemoveBlock( exitX, exitY, exitZ );
 		//physics->CreatePhantom( exitX, exitY, exitZ, CalcDirection( exitX, exitY, exitZ ), 1, false );
+		FindBlock( exitX, exitY, exitZ )->second->setMaterialTexture( 0, exitTex );
 	}
 
 	void Level::CreateBall( irr::scene::ISceneManager *smgr, irr::video::ITexture *ballTex )
@@ -151,7 +129,7 @@ namespace Tuatara
 		ball = smgr->addSphereSceneNode( /*0.5*/0.125f, 64, 0, -1, core::vector3df( entryX, entryY, entryZ ) );
 		ball->setMaterialFlag( video::EMF_LIGHTING, false );
 		ball->setMaterialTexture( 0, ballTex );
-		
+
 		physics->CreateBall( entryX, entryY, entryZ );
 	}
 
@@ -205,17 +183,31 @@ namespace Tuatara
 		levelBlocks.erase( iter );
 	}
 
+	Level::BuildingBlockMap::iterator Level::FindBlock( const float& x, const float& y, const float& z )
+	{
+		return std::find_if( levelBlocks.begin(), levelBlocks.end(), 
+			[=](std::pair<NodePos, irr::scene::IMeshSceneNode*> pair)->bool
+		{
+			return pair.first.x == x && pair.first.y == y && pair.first.z == z;
+		});
+	}
+
 	void Level::CreatePhysicsBlocks()
 	{
 		std::for_each( levelBlocks.begin(), levelBlocks.end(), 
 			[=](std::pair<NodePos, irr::scene::IMeshSceneNode*> pair)
 		{
+			if( pair.first.x == exitX && pair.first.y == exitY && pair.first.z == exitZ )
+			{
+				return;
+			}
 			physics->CreateBlock( pair.first.x, pair.first.y, pair.first.z );
 		});
 	}
 
 	bool Level::InitLevel( irr::scene::ISceneManager *smgr, irr::io::IFileSystem *fileSystem, std::string& levelFile, 
-			irr::video::ITexture *wall, irr::video::ITexture *ballTex )
+		irr::video::ITexture *wall, irr::video::ITexture *ballTex, irr::video::ITexture *exitTex,
+		irr::video::ITexture *ventTex, irr::video::ITexture *ventFXTex )
 	{
 		using namespace irr;
 		using namespace std;
@@ -227,8 +219,8 @@ namespace Tuatara
 
 		CreateBall( smgr, ballTex );
 		CreateRenderBlocks( smgr, wall );
-		CreateVents();
-		CreateExit();
+		CreateVents( ventTex );
+		CreateExit( exitTex );
 		CreatePhysicsBlocks();
 
 		return true;

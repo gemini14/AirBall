@@ -68,8 +68,9 @@ namespace Tuatara
 		Direction CalcDirection( const float& x, const float& y, const float& z );
 		void CreatePhysicsBlocks();
 		void RemoveBlock( float x, float y, float z );
-		void CreateVents();
-		void CreateExit();
+		BuildingBlockMap::iterator FindBlock( const float& x, const float& y, const float& z );
+		void CreateVents( irr::video::ITexture *ventTex );
+		void CreateExit( irr::video::ITexture *exitTex );
 
 	public:
 		std::shared_ptr<PhysicsManager> physics;
@@ -77,7 +78,8 @@ namespace Tuatara
 		~Level();
 
 		bool InitLevel( irr::scene::ISceneManager *smgr, irr::io::IFileSystem *fileSystem, std::string& levelFile, 
-			irr::video::ITexture *wall, irr::video::ITexture *ballTex );
+			irr::video::ITexture *wall, irr::video::ITexture *ballTex, irr::video::ITexture *exitTex,
+			irr::video::ITexture *ventTex, irr::video::ITexture *ventFXTex );
 		bool StepSimulation( float timeDelta = 0 );
 	};
 
