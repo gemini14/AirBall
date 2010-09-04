@@ -128,7 +128,7 @@ namespace Tuatara
 					static u32 then;
 					static auto Q_Action = [&]()
 					{
-						gameState->level->physics->ApplyImpulseToBall( UP, 0, 7.5f, 0 );
+						gameState->level->physics->ApplyImpulseToBall( UP, 0, 5.f, 0 );
 
 						then = game->manager->device->getTimer()->getTime();
 						okToExecute = !okToExecute;
@@ -141,7 +141,7 @@ namespace Tuatara
 					else
 					{
 						u32 now = game->manager->device->getTimer()->getTime();
-						if( (now - then) / 1000.f >= 0.25f )
+						if( (now - then) / 1000.f >= 1.f )
 						{
 							Q_Action();
 						}
