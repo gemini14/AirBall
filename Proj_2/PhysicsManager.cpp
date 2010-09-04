@@ -80,8 +80,10 @@ namespace Tuatara
 		context->addWorld( world );
 		contexts.pushBack( context );
 
+		// we're single threading, so disable checks
 		world->setMultithreadedAccessChecking( hkpWorld::MT_ACCESS_CHECKING_DISABLED );
 
+		// init the debugger
 		vdb = new hkVisualDebugger( contexts );
 		vdb->serve();
 
@@ -92,6 +94,7 @@ namespace Tuatara
 	{
 		world->removeWorldPostSimulationListener( this );
 
+		// memory cleanup
 		BOOST_FOREACH( Vent *v, vents )
 		{
 			delete v;
@@ -114,6 +117,7 @@ namespace Tuatara
 	{
 		BOOST_FOREACH( Vent *v, vents )
 		{
+			// calculate impulse vector based on vent direction
 			auto impulse = [=]()->hkVector4
 			{
 				float x( 0.f ), y( 0.f ), z( 0.f );
@@ -145,13 +149,16 @@ namespace Tuatara
 				return hkVector4( x, y, z );
 			};
 
+			// iterate through all overlapping bodies
 			for( int i = 0; i < v->phantom->getOverlappingCollidables().getSize(); ++i )
 			{
 				hkpCollidable* c = v->phantom->getOverlappingCollidables()[i];
+				// if collidable is the ball (which it will always be, only one dynamic object in game)
 				if ( c->getType() == hkpWorldObject::BROAD_PHASE_ENTITY )
 				{
-
+					// get the body
 					hkpRigidBody* rigidBody = hkpGetRigidBody( v->phantom->getOverlappingCollidables()[i] );
+					// add apply the impulse to it
 					if ( rigidBody )
 					{
 						rigidBody->applyLinearImpulse( impulse() );
@@ -181,6 +188,8 @@ namespace Tuatara
 		hkAabb info;
 		info.m_min = hkVector4( x - 0.5f, y - 0.5f, z - 0.5f );
 
+		// return m_max point of the box for the phantom based on the direction of the vent (max points
+		// will always point toward center of level)
 		auto maxCalc = [=]()->hkVector4
 		{
 			float max_x( x ), max_y( y ), max_z( z );
@@ -221,6 +230,8 @@ namespace Tuatara
 				return hkVector4( 0.f, 0.f, 0.f);
 			}
 
+			// remove 0.5f because position of center of blocks is on the axes, but the extents of the cubes themselves lie
+			// on .5 values on the axes
 			return hkVector4( max_x - 0.5f, max_y - 0.5f, max_z - 0.5f);
 		};
 
@@ -230,22 +241,20 @@ namespace Tuatara
 		{
 			Vent *vent = new Vent;
 
+			// store information for vent
 			vent->direction = dir;
 			vent->strength = strength;
 			vent->phantom = new hkpAabbPhantom( info );
 
+			// add to world and vector
 			world->addPhantom( vent->phantom );
 			vents.push_back( vent );
 		}
-		/*else
-		{
-			exit = new hkpAabbPhantom( info );
-			world->addPhantom( exit );
-		}*/
 	}
 
 	bool PhysicsManager::StepSimulation( float timeDelta )
 	{
+		// use the timeDelta if given, otherwise use 1/60th of a second
 		static hkReal timestep;
 		if( timeDelta == 0 )
 		{
@@ -279,9 +288,11 @@ namespace Tuatara
 		ci.m_shape = buildingBlock;
 		ci.m_motionType = hkpMotion::MOTION_FIXED;
 		ci.m_position = hkVector4( x, y, z );
+		// blocks will not move, so keep them fixed, but collidable
 		ci.m_qualityType = HK_COLLIDABLE_QUALITY_FIXED;
 		ci.m_friction = 100.f;
 
+		// add the block and remove the reference
 		world->addEntity( new hkpRigidBody( ci ) )->removeReference();
 
 		buildingBlock->removeReference();
@@ -362,7 +373,7 @@ namespace Tuatara
 	irr::core::vector3df PhysicsManager::GetBallPosition()
 	{
 		hkVector4 ballPos = ball->getPosition();
-		return irr::core::vector3df( ballPos.getSimdAt( 0 ), ballPos.getSimdAt( 1 ), ballPos.getSimdAt( 2 ) );
+		return irr::core::vector3df( ballPos( 0 ), ballPos( 1 ), ballPos( 2 ) );
 	}
 
 	bool PhysicsManager::GetBallRotation( irr::core::vector3df& rotationVector )

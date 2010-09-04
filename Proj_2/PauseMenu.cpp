@@ -4,14 +4,12 @@
 
 namespace Tuatara
 {
-	// Constructor:
-	PauseMenu::PauseMenu() 
-		: ScreenBase()
+	PauseMenu::PauseMenu() : ScreenBase()
 	{
 		// Create buttons:
 		returnButton = new GUIButton(PAUSEMENU_BUTTON_RETURN, L"Return to Game", this);
 		returnButton->location = irr::core::rect<irr::s32>( 100, 100, 300, 200 );
-		
+
 		mainMenuButton = new GUIButton(PAUSEMENU_BUTTON_MAINMENU, L"Main Menu", this);
 		mainMenuButton->location = irr::core::rect<irr::s32>( 100, 400, 300, 500 );
 
@@ -36,18 +34,18 @@ namespace Tuatara
 	{
 		switch (ID)
 		{
-			case PAUSEMENU_BUTTON_RETURN:
-				// return button = move to game state
-				game->stateMachine->RevertToPreviousState(); //ChangeState( GameState::Instance() );
-				return true;
+		case PAUSEMENU_BUTTON_RETURN:
+			// return button = move to game state
+			game->stateMachine->RevertToPreviousState();
+			return true;
 
-			case PAUSEMENU_BUTTON_MAINMENU:
-				// main menu button = move back to main menu
-				game->stateMachine->ChangeState( MainMenu::Instance() );
-				return true;
+		case PAUSEMENU_BUTTON_MAINMENU:
+			// main menu button = move back to main menu
+			game->stateMachine->ChangeState( MainMenu::Instance() );
+			return true;
 
-			default:
-				return false;
+		default:
+			return false;
 		}
 	}
 
@@ -57,17 +55,16 @@ namespace Tuatara
 
 		switch (code)
 		{
-			case KEY_ESCAPE: // exit game
-				game->stateMachine->RevertToPreviousState();
-				return true;
+			// exit game	
+		case KEY_ESCAPE:
+			game->stateMachine->RevertToPreviousState();
+			return true;
 
-			default:
-				return false;
+		default:
+			return false;
 		}
 	}
 
-
-	// Destructor:
 	PauseMenu::~PauseMenu()
 	{
 		// clean up buttons:

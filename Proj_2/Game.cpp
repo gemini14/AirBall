@@ -12,11 +12,10 @@ namespace Tuatara
 		// set the current window width and height (this could be pulled out later into a function if needed)
 		windowWidth = manager->driver->getScreenSize().Width;
 		windowHeight = manager->driver->getScreenSize().Height;
+		// set the window rect to the current window size
 		windowRect.addInternalPoint( windowWidth, windowHeight );
 
-		// add zip archive of media files to Irr device's file system - this will be used at the end
-		// to speed up asset loading and to save space
-		//manager->device->getFileSystem()->addFileArchive( "media.zip", true, true );
+		// add archives to Irr device's file system
 		manager->device->getFileSystem()->addFileArchive( "media\\" );
 		manager->device->getFileSystem()->addFileArchive( "levels\\" );
 

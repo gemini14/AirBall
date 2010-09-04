@@ -5,12 +5,12 @@ namespace Tuatara
 	class Game;
 	class GUIButton;
 
-	ScreenBase::ScreenBase(void) : menuBackground( nullptr )
+	ScreenBase::ScreenBase() : menuBackground( nullptr )
 	{
 	}
 
 
-	ScreenBase::~ScreenBase(void)
+	ScreenBase::~ScreenBase()
 	{
 	}
 
@@ -33,7 +33,7 @@ namespace Tuatara
 		game->manager->font->ChangeFontForElement( gui::EGDF_TOOLTIP );
 		game->manager->font->ChangeFontColor( gui::EGDC_BUTTON_TEXT, video::SColor( 255, 255, 255, 255 ) );
 
-		// Add buttons to GUI:
+		// Add buttons to GUI
 		for(auto it = buttonList.cbegin(); it != buttonList.cend(); ++it)
 		{
 			it->second->AddToGUI( game );
