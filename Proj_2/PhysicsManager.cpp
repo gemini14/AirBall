@@ -304,7 +304,7 @@ namespace Tuatara
 		// half-extent radius of .125 for .25
 		hkReal radius = .125f;
 		hkReal sphereMass = 5.f;
-		hkReal maxVelocity = 1.f;
+		hkReal maxVelocity = 3.f;
 
 		hkpRigidBodyCinfo info;
 		hkpMassProperties massProperties;
@@ -314,7 +314,7 @@ namespace Tuatara
 		info.m_centerOfMass = massProperties.m_centerOfMass;
 		info.m_inertiaTensor = massProperties.m_inertiaTensor;
 		info.m_shape = new hkpSphereShape( radius );
-		info.m_friction = 3.f;
+		info.m_friction = 2.f;
 		// info.m_linearDamping = 0.25f;
 		info.m_position = hkVector4( entryX, entryY, entryZ );
 

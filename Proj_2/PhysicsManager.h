@@ -95,6 +95,8 @@ namespace Tuatara
 		irr::core::vector3df GetBallPosition();
 		bool GetBallRotation( irr::core::vector3df& rotationVector );
 
+		hkVector4 GetBallVel();
+
 		virtual void postSimulationCallback( hkpWorld* world );
 	};
 
