@@ -169,16 +169,10 @@
     <None Include="pala.ttf">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="media\exitButton.png">
-      <Filter>Resource Files\media</Filter>
-    </None>
     <None Include="media\mainMenuButton.png">
       <Filter>Resource Files\media</Filter>
     </None>
     <None Include="media\menuBackground.jpg">
-      <Filter>Resource Files\media</Filter>
-    </None>
-    <None Include="media\newGameButton.png">
       <Filter>Resource Files\media</Filter>
     </None>
     <None Include="media\pauseBackground.jpg">
