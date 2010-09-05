@@ -4,9 +4,7 @@
 
 namespace Tuatara
 {
-	// Constructor:
-	MainMenu::MainMenu() 
-		: ScreenBase()
+	MainMenu::MainMenu() : ScreenBase()
 	{
 		// Create buttons:
 		newGameButton = new GUIButton(MAINMENU_BUTTON_NEWGAME, L"New Game", this);
@@ -20,7 +18,6 @@ namespace Tuatara
 		buttonList[MAINMENU_BUTTON_EXIT] = exitButton;
 
 		backgroundPath = "menuBackground.jpg";
-
 	}
 
 	// return the one and only instance of the pause menu:
@@ -56,7 +53,8 @@ namespace Tuatara
 
 		switch (code)
 		{
-			case KEY_ESCAPE: // exit game
+			// exit game
+			case KEY_ESCAPE: 
 				game->stateMachine->ChangeState( GameExit::Instance() );
 				return true;
 
@@ -70,7 +68,6 @@ namespace Tuatara
 		}
 	}
 
-	// Destructor:
 	MainMenu::~MainMenu()
 	{
 		// clean up buttons:

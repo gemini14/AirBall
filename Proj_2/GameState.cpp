@@ -8,6 +8,7 @@ namespace Tuatara
 	{
 		using namespace std;
 
+		// get the total number of levels from the config.txt file (invalid file will return user to menu)
 		ifstream config( "levels//config.txt" );
 		string property, value;
 		config >> property >> value;
@@ -43,23 +44,26 @@ namespace Tuatara
 		gameEventRcvr->SetGame( game, this );
 		game->manager->device->setEventReceiver( gameEventRcvr.get() );
 
+		// add camera
 		camera = game->manager->smgr->addCameraSceneNode( 0, 
 			core::vector3df( 1.f, levelSize - 1.f, 1.f ), 
 			core::vector3df( levelSize - 1, 1.f, levelSize - 1 ) );
 
 		level = new Level;
 		
+		// returns the correct filename for the level file based on which level the player is on
 		auto levelFilenameGenerator = []( int currentLevel )->std::string
 		{
 			std::stringstream filename;
 			filename << "level_" << currentLevel << ".xml";
 			return filename.str();
 		};
+
 		bool levelCreatedOK = level->InitLevel( game->manager->smgr, game->manager->device->getFileSystem(),
-			levelFilenameGenerator( currentLevel ), game->manager->driver->getTexture( "media/tile.png" ),
-			game->manager->driver->getTexture( "media/tuatara.jpg" ), game->manager->driver->getTexture( "media/exit.png" ),
-			game->manager->driver->getTexture( "media/tileVent.png" ), 
-			game->manager->driver->getTexture( "media/ventSmoke.png" ) );
+			levelFilenameGenerator( currentLevel ), game->manager->driver->getTexture( "tile.png" ),
+			game->manager->driver->getTexture( "tuatara.jpg" ), game->manager->driver->getTexture( "exit.png" ),
+			game->manager->driver->getTexture( "tileVent.png" ), 
+			game->manager->driver->getTexture( "ventSmoke.png" ) );
 
 		if( !levelCreatedOK )
 		{
@@ -75,18 +79,18 @@ namespace Tuatara
 
 		static u32 then = game->manager->device->getTimer()->getTime();
 		auto calcTimeDelta = [&]( irr::f32 then, irr::f32 now ) -> irr::f32
-				{
-					irr::f32 delta = static_cast<irr::f32>( now - then ) / 1000.f;
-					then = now;
-					return delta; 
-				};
+		{
+			irr::f32 delta = static_cast<irr::f32>( now - then ) / 1000.f;
+			then = now;
+			return delta; 
+		};
 
 		//u32 now = game->manager->device->getTimer()->getTime();
 		//game->frameDelta = calcTimeDelta( then, game->manager->device->getTimer()->getTime() );
 
 		levelComplete = level->StepSimulation();
 
-		game->manager->driver->beginScene( true, true, video::SColor(255, 100, 101, 140)/*255, 100, 100, 100)*/ );
+		game->manager->driver->beginScene( true, true, video::SColor(255, 100, 101, 140) );
 
 		game->manager->smgr->drawAll();
 
@@ -94,11 +98,14 @@ namespace Tuatara
 
 		if( levelComplete )
 		{
+			// if the player finished the level, advance to the next level if the player hasn't completed
+			// all the levels
 			if( ++currentLevel != numberOfLevels )
 			{
 				Exit( game );
 				Enter( game );
 			}
+			// otherwise go back to the main menu
 			else
 			{
 				game->stateMachine->ChangeState( MainMenu::Instance() );

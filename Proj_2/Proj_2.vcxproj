@@ -39,7 +39,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>C:\Users\Tarik\Documents\SG 490\Proj_2\Proj_2\freetype;C:\Havok_710r1\Source;$(IncludePath)</IncludePath>
+    <IncludePath>C:\Havok_710r1\Source;$(IncludePath)</IncludePath>
     <LibraryPath>C:\Programming Files\hk710r1\Lib\win32_net_9-0\debug_multithreaded_dll;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -127,10 +127,8 @@
     <None Include="media\defaultButton.png" />
     <None Include="media\defaultHoverButton.png" />
     <None Include="media\exit.png" />
-    <None Include="media\exitButton.png" />
     <None Include="media\mainMenuButton.png" />
     <None Include="media\menuBackground.jpg" />
-    <None Include="media\newGameButton.png" />
     <None Include="media\pauseBackground.jpg" />
     <None Include="media\returnToGameButton.png" />
     <None Include="media\tile.png" />

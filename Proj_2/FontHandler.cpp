@@ -39,6 +39,7 @@ namespace Tuatara
 		ttfont = new CGUIFreetypeFont( manager->driver );
 		ttfont->AntiAlias = true;
 
+		// this sets the default font size for GUI objects
 		ChangeFontSize( 16 );
 	}
 

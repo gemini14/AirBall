@@ -23,7 +23,6 @@ namespace Tuatara
 
 	void GameExit::Exit(Game *game)
 	{
-
 	}
 
 }
