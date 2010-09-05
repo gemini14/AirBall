@@ -13,6 +13,13 @@ namespace Tuatara
 		{
 			delete v;
 		}
+		
+		std::for_each( levelBlocks.begin(), levelBlocks.end(), []( std::pair<NodePos, irr::scene::IMeshSceneNode*> p )
+		{
+			p.second->remove();
+		});
+
+		ball->remove();
 	}
 
 	bool Level::StepSimulation( float timeDelta )
@@ -154,7 +161,7 @@ namespace Tuatara
 			FindBlock( v->x, v->y, v->z )->second->setMaterialTexture( 0, ventTex );
 			physics->CreatePhantom( v->x, v->y, v->z, v->direction, v->strength );
 			v->particle.reset( new VentParticles(smgr, particleTex, vector3df( v->x, v->y, v->z ), 
-				normalGenerator( v->direction ), v->strength) );
+				normalGenerator( v->direction ), v->strength ) );
 		}
 	}
 
