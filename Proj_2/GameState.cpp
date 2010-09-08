@@ -77,17 +77,6 @@ namespace Tuatara
 
 		bool levelComplete;
 
-		static u32 then = game->manager->device->getTimer()->getTime();
-		auto calcTimeDelta = [&]( irr::f32 then, irr::f32 now ) -> irr::f32
-		{
-			irr::f32 delta = static_cast<irr::f32>( now - then ) / 1000.f;
-			then = now;
-			return delta; 
-		};
-
-		//u32 now = game->manager->device->getTimer()->getTime();
-		//game->frameDelta = calcTimeDelta( then, game->manager->device->getTimer()->getTime() );
-
 		levelComplete = level->StepSimulation();
 
 		game->manager->driver->beginScene( true, true, video::SColor(255, 100, 101, 140) );

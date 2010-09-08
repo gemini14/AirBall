@@ -176,7 +176,7 @@ namespace Tuatara
 		using namespace irr;
 
 		// create the scene node for the ball and set its properties
-		ball = smgr->addSphereSceneNode( 0.125f, 64, 0, -1, core::vector3df( entryX, entryY, entryZ ) );
+		ball = smgr->addSphereSceneNode( 0.25f, 64, 0, -1, core::vector3df( entryX, entryY, entryZ ) );
 		ball->setMaterialFlag( video::EMF_LIGHTING, false );
 		ball->setMaterialTexture( 0, ballTex );
 

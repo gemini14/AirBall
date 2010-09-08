@@ -170,15 +170,15 @@ namespace Tuatara
 		// level completion check (bit of code duplication here, will look into it later)
 		/*for( int i = 0; i < exit->getOverlappingCollidables().getSize(); ++i )
 		{
-			hkpCollidable* c = exit->getOverlappingCollidables()[i];
-			if ( c->getType() == hkpWorldObject::BROAD_PHASE_ENTITY )
-			{
-				hkpRigidBody* rigidBody = hkpGetRigidBody( exit->getOverlappingCollidables()[i] );
-				if ( rigidBody )
-				{
-					levelComplete = true;
-				}
-			}
+		hkpCollidable* c = exit->getOverlappingCollidables()[i];
+		if ( c->getType() == hkpWorldObject::BROAD_PHASE_ENTITY )
+		{
+		hkpRigidBody* rigidBody = hkpGetRigidBody( exit->getOverlappingCollidables()[i] );
+		if ( rigidBody )
+		{
+		levelComplete = true;
+		}
+		}
 		}*/
 	}
 
@@ -196,36 +196,62 @@ namespace Tuatara
 			switch( dir )
 			{
 			case FORWARD:
-				max_x += 1.f;
-				max_y += 1.f;
-				max_z += static_cast<float>(strength);
+				{
+					max_x += 1.f;
+					max_y += 1.f;
+					max_z += static_cast<float>(strength) + 1.f;
+
+					info.m_min = hkVector4( x - 0.5f, y - 0.5f, z + 0.5f );
+				}
 				break;
 			case BACKWARD:
-				max_x += 1.f;
-				max_y += 1.f;
-				max_z -= static_cast<float>(strength);
+				{
+					max_x += 1.f;
+					max_y += 1.f;
+					max_z -= static_cast<float>(strength);
+
+					// flip z values between m_min and m_max or Havok complains
+					float temp_z = info.m_min(2) + 0.5f;
+					info.m_min = hkVector4( info.m_min(0), info.m_min(1), max_z - 0.5f );
+					max_z = temp_z;
+				}
 				break;
 			case LEFT:
-				max_x += static_cast<float>(strength);
-				max_y += 1.f;
-				max_z += 1.f;
+				{
+					max_x -= static_cast<float>(strength) + 1.f;
+					max_y += 1.f;
+					max_z += 1.f;
+
+					// flip x values between m_min and m_max or Havok complains
+					float temp_x = info.m_min(0) + 0.5f;
+					info.m_min = hkVector4( max_x + 0.5f, info.m_min(1), info.m_min(2) );
+					max_x = temp_x;
+				}
 				break;
 			case RIGHT:
-				max_x -= static_cast<float>(strength);
-				max_y += 1.f;
-				max_z += 1.f;
+				{
+					max_x += static_cast<float>(strength) + 1.f;
+					max_y += 1.f;
+					max_z += 1.f;
+
+					info.m_min = hkVector4( x + 0.5f, y - 0.5f, z - 0.5f );
+				}
 				break;
 			case UP:
-				max_x += 1.f;
-				max_y += static_cast<float>(strength);
-				max_z += 1.f;
+				{
+					max_x += 1.f;
+					max_y += static_cast<float>(strength) + 1;
+					max_z += 1.f;
+
+					info.m_min = hkVector4( x - 0.5f, y + 0.5f, z - 0.5f );
+				}
 				break;
 			case DOWN:
 				{
 					max_x += 1.f;
 					max_y -= static_cast<float>(strength);
 					max_z += 1.f;
-					
+
 					// flip y values between m_min and m_max or Havok complains
 					float temp_y = info.m_min(1) + 0.5f;
 					info.m_min = hkVector4( info.m_min(0), max_y - 0.5f, info.m_min(2) );
@@ -309,7 +335,7 @@ namespace Tuatara
 	void PhysicsManager::CreateBall( const float& entryX, const float& entryY, const float& entryZ )
 	{
 		// half-extent radius of .125 for .25
-		hkReal radius = .125f;
+		hkReal radius = .25/*.125f*/;
 		hkReal sphereMass = 5.f;
 		hkReal maxVelocity = 3.f;
 
