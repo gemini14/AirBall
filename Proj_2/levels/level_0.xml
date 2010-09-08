@@ -12,4 +12,5 @@
   <vent x="3" y="0" z="4" strength="3"></vent>
   <vent x="4" y="0" z="4" strength="2"></vent>
   <vent x="5" y="0" z="4" strength="1"></vent>
+  <vent x="2" y="9" z="3" strength="2"></vent>
 </level>

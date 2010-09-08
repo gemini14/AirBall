@@ -124,22 +124,22 @@ namespace Tuatara
 				switch( v->direction )
 				{
 				case FORWARD:
-					z += 0.1f;
+					z += 0.05f;
 					break;
 				case BACKWARD:
-					z -= 0.1f;
+					z -= 0.05f;
 					break;
 				case LEFT:
-					x -= 0.1f;
+					x -= 0.05f;
 					break;
 				case RIGHT:
-					x += 0.1f;
+					x += 0.05f;
 					break;
 				case UP:
-					y += 0.1f;
+					y += 0.05f;
 					break;
 				case DOWN:
-					y -= 0.1f;
+					y -= 0.05f;
 					break;
 				default:
 					printf( "postSimulationCallback: bad direction in vent structure.\n" );
@@ -190,7 +190,7 @@ namespace Tuatara
 
 		// return m_max point of the box for the phantom based on the direction of the vent (max points
 		// will always point toward center of level)
-		auto maxCalc = [=]()->hkVector4
+		auto maxCalc = [&]()->hkVector4
 		{
 			float max_x( x ), max_y( y ), max_z( z );
 			switch( dir )
@@ -221,9 +221,16 @@ namespace Tuatara
 				max_z += 1.f;
 				break;
 			case DOWN:
-				max_x += 1.f;
-				max_y -= static_cast<float>(strength);
-				max_z += 1.f;
+				{
+					max_x += 1.f;
+					max_y -= static_cast<float>(strength);
+					max_z += 1.f;
+					
+					// flip y values between m_min and m_max or Havok complains
+					float temp_y = info.m_min(1) + 0.5f;
+					info.m_min = hkVector4( info.m_min(0), max_y - 0.5f, info.m_min(2) );
+					max_y = temp_y;
+				}
 				break;
 			default:
 				printf( "CreateVent: bad direction sent.\n" );
@@ -315,7 +322,6 @@ namespace Tuatara
 		info.m_inertiaTensor = massProperties.m_inertiaTensor;
 		info.m_shape = new hkpSphereShape( radius );
 		info.m_friction = 2.f;
-		// info.m_linearDamping = 0.25f;
 		info.m_position = hkVector4( entryX, entryY, entryZ );
 
 		info.m_motionType = hkpMotion::MOTION_DYNAMIC;
