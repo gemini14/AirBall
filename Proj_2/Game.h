@@ -38,8 +38,6 @@ namespace Tuatara
 		inline const irr::core::rect<irr::s32>& GetWindowRect() { return windowRect; }
 		void Update();
 
-		irr::f32 frameDelta;
-
 	};
 
 }

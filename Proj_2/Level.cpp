@@ -2,7 +2,7 @@
 
 namespace Tuatara
 {
-	Level::Level() : physics( new PhysicsManager )
+	Level::Level() : physics( new PhysicsManager ), ball( nullptr )
 	{
 	}
 
@@ -19,7 +19,10 @@ namespace Tuatara
 			p.second->remove();
 		});
 
-		ball->remove();
+		if( ball == nullptr )
+		{
+			ball->remove();
+		}
 	}
 
 	bool Level::StepSimulation( float timeDelta )

@@ -58,7 +58,7 @@ namespace Tuatara
 
 		// flag objects that fall out of the world to be automatically removed
 		worldInfo.m_broadPhaseBorderBehaviour = hkpWorldCinfo::BROADPHASE_BORDER_REMOVE_ENTITY;
-		//worldInfo.m_collisionTolerance = 0.01f;
+		worldInfo.m_collisionTolerance = 0.01f;
 
 		world = new hkpWorld( worldInfo );
 
@@ -149,6 +149,8 @@ namespace Tuatara
 				return hkVector4( x, y, z );
 			};
 
+			v->phantom->ensureDeterministicOrder();
+
 			// iterate through all overlapping bodies
 			for( int i = 0; i < v->phantom->getOverlappingCollidables().getSize(); ++i )
 			{
@@ -167,19 +169,20 @@ namespace Tuatara
 			}
 		}
 
+		exit->ensureDeterministicOrder();
 		// level completion check (bit of code duplication here, will look into it later)
-		/*for( int i = 0; i < exit->getOverlappingCollidables().getSize(); ++i )
+		for( int i = 0; i < exit->getOverlappingCollidables().getSize(); ++i )
 		{
-		hkpCollidable* c = exit->getOverlappingCollidables()[i];
-		if ( c->getType() == hkpWorldObject::BROAD_PHASE_ENTITY )
-		{
-		hkpRigidBody* rigidBody = hkpGetRigidBody( exit->getOverlappingCollidables()[i] );
-		if ( rigidBody )
-		{
-		levelComplete = true;
+			hkpCollidable* c = exit->getOverlappingCollidables()[i];
+			if ( c->getType() == hkpWorldObject::BROAD_PHASE_ENTITY )
+			{
+				hkpRigidBody* rigidBody = hkpGetRigidBody( exit->getOverlappingCollidables()[i] );
+				if ( rigidBody && rigidBody == ball)
+				{
+					levelComplete = true;
+				}
+			}
 		}
-		}
-		}*/
 	}
 
 	void PhysicsManager::CreatePhantom( const float& x, const float& y, const float& z, const Direction& dir, 
@@ -298,38 +301,38 @@ namespace Tuatara
 			{
 			case FORWARD:
 				{
-					info.m_min = hkVector4( min(0), min(1), min(2) - 1.f );
-					info.m_max = hkVector4( max(0), max(1), max(2) - 1.f );
+					info.m_min = hkVector4( min(0), min(1), min(2) - 2.f );
+					info.m_max = hkVector4( max(0), max(1), max(2) - 2.f );
 				}
 				break;
 			case BACKWARD:
 				{
-					info.m_min = hkVector4( min(0), min(1), min(2) + 1.f );
-					info.m_max = hkVector4( max(0), max(1), max(2) + 1.f );
+					info.m_min = hkVector4( min(0), min(1), min(2) + 2.f );
+					info.m_max = hkVector4( max(0), max(1), max(2) + 2.f );
 				}
 				break;
 			case LEFT:
 				{
-					info.m_min = hkVector4( min(0) + 1.f, min(1), min(2) );
-					info.m_max = hkVector4( max(0) + 1.f, max(1), max(2) );
+					info.m_min = hkVector4( min(0) + 2.f, min(1), min(2) );
+					info.m_max = hkVector4( max(0) + 2.f, max(1), max(2) );
 				}
 				break;
 			case RIGHT:
 				{
-					info.m_min = hkVector4( min(0) - 1.f, min(1), min(2) );
-					info.m_max = hkVector4( max(0) - 1.f, max(1), max(2) );
+					info.m_min = hkVector4( min(0) - 2.f, min(1), min(2) );
+					info.m_max = hkVector4( max(0) - 2.f, max(1), max(2) );
 				}
 				break;
 			case UP:
 				{
-					info.m_min = hkVector4( min(0), min(1) - 1.f, min(2) );
-					info.m_max = hkVector4( max(0), max(1) - 1.f, max(2) );
+					info.m_min = hkVector4( min(0), min(1) - 2.f, min(2) );
+					info.m_max = hkVector4( max(0), max(1) - 2.f, max(2) );
 				}
 				break;
 			case DOWN:
 				{
-					info.m_min = hkVector4( min(0), min(1) + 1.f, min(2) );
-					info.m_max = hkVector4( max(0), max(1) + 1.f, max(2) );
+					info.m_min = hkVector4( min(0), min(1) + 2.f, min(2) );
+					info.m_max = hkVector4( max(0), max(1) + 2.f, max(2) );
 				}
 				break;
 			default:

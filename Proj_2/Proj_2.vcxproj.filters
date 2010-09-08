@@ -208,5 +208,8 @@
     <None Include="media\ventSmoke.png">
       <Filter>Resource Files\media</Filter>
     </None>
+    <None Include="levels\level_1.xml">
+      <Filter>Resource Files\levels</Filter>
+    </None>
   </ItemGroup>
 </Project>

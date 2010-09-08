@@ -67,7 +67,7 @@ namespace Tuatara
 
 		if( !levelCreatedOK )
 		{
-			game->stateMachine->ChangeState( MainMenu::Instance() );
+			ResetGameState( game );
 		}
 	}
 
@@ -97,7 +97,7 @@ namespace Tuatara
 			// otherwise go back to the main menu
 			else
 			{
-				game->stateMachine->ChangeState( MainMenu::Instance() );
+				ResetGameState( game );
 			}
 		}
 	}
@@ -108,4 +108,9 @@ namespace Tuatara
 		camera->remove();
 	}
 
+	void GameState::ResetGameState( Game *game )
+	{
+		currentLevel = 0;
+		game->stateMachine->ChangeState( MainMenu::Instance() );
+	}
 }
