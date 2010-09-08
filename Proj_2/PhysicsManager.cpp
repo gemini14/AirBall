@@ -378,7 +378,7 @@ namespace Tuatara
 		ci.m_position = hkVector4( x, y, z );
 		// blocks will not move, so keep them fixed, but collidable
 		ci.m_qualityType = HK_COLLIDABLE_QUALITY_FIXED;
-		ci.m_friction = 100.f;
+		ci.m_friction = 0.25f;
 
 		// add the block and remove the reference
 		world->addEntity( new hkpRigidBody( ci ) )->removeReference();
@@ -389,8 +389,7 @@ namespace Tuatara
 
 	void PhysicsManager::CreateBall( const float& entryX, const float& entryY, const float& entryZ )
 	{
-		// half-extent radius of .125 for .25
-		hkReal radius = .25/*.125f*/;
+		hkReal radius = .25;
 		hkReal sphereMass = 5.f;
 		hkReal maxVelocity = 3.f;
 
@@ -402,10 +401,10 @@ namespace Tuatara
 		info.m_centerOfMass = massProperties.m_centerOfMass;
 		info.m_inertiaTensor = massProperties.m_inertiaTensor;
 		info.m_shape = new hkpSphereShape( radius );
-		info.m_friction = 2.f;
+		info.m_friction = 0.85f;
 		info.m_position = hkVector4( entryX, entryY, entryZ );
 
-		info.m_motionType = hkpMotion::MOTION_DYNAMIC;
+		info.m_motionType = hkpMotion::MOTION_SPHERE_INERTIA;
 		info.m_qualityType = HK_COLLIDABLE_QUALITY_MOVING;
 
 		hkpRigidBody *sphereRigidBody = new hkpRigidBody( info );
