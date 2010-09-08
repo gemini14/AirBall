@@ -2,7 +2,7 @@
 
 <level>
   <entry x="4.5" y="1" z="4.5"></entry>
-  <exit x="2" y="1" z="9"></exit>
+  <exit x="9" y="3" z="4"></exit>
   <vent x="4" y="0" z="8" strength="7"></vent>
   <vent x="4" y="0" z="7" strength="7"></vent>
   <vent x="3" y="0" z="8" strength="5"></vent>

@@ -283,6 +283,58 @@ namespace Tuatara
 			world->addPhantom( vent->phantom );
 			vents.push_back( vent );
 		}
+		else
+		{
+			AdjustAabbForExit( info, dir );
+			exit = new hkpAabbPhantom( info );
+			world->addPhantom( exit );
+		}
+	}
+
+	void PhysicsManager::AdjustAabbForExit( hkAabb &info, const Direction& dir )
+	{
+		hkVector4 min( info.m_min ), max( info.m_max );
+		switch( dir )
+			{
+			case FORWARD:
+				{
+					info.m_min = hkVector4( min(0), min(1), min(2) - 1.f );
+					info.m_max = hkVector4( max(0), max(1), max(2) - 1.f );
+				}
+				break;
+			case BACKWARD:
+				{
+					info.m_min = hkVector4( min(0), min(1), min(2) + 1.f );
+					info.m_max = hkVector4( max(0), max(1), max(2) + 1.f );
+				}
+				break;
+			case LEFT:
+				{
+					info.m_min = hkVector4( min(0) + 1.f, min(1), min(2) );
+					info.m_max = hkVector4( max(0) + 1.f, max(1), max(2) );
+				}
+				break;
+			case RIGHT:
+				{
+					info.m_min = hkVector4( min(0) - 1.f, min(1), min(2) );
+					info.m_max = hkVector4( max(0) - 1.f, max(1), max(2) );
+				}
+				break;
+			case UP:
+				{
+					info.m_min = hkVector4( min(0), min(1) - 1.f, min(2) );
+					info.m_max = hkVector4( max(0), max(1) - 1.f, max(2) );
+				}
+				break;
+			case DOWN:
+				{
+					info.m_min = hkVector4( min(0), min(1) + 1.f, min(2) );
+					info.m_max = hkVector4( max(0), max(1) + 1.f, max(2) );
+				}
+				break;
+			default:
+				printf( "AdjustAabbForExit: bad direction sent.\n" );
+			}
 	}
 
 	bool PhysicsManager::StepSimulation( float timeDelta )
@@ -402,13 +454,13 @@ namespace Tuatara
 		ball->applyLinearImpulse( impulse );
 	}
 
-	irr::core::vector3df PhysicsManager::GetBallPosition()
+	irr::core::vector3df PhysicsManager::GetBallPosition() const
 	{
 		hkVector4 ballPos = ball->getPosition();
 		return irr::core::vector3df( ballPos( 0 ), ballPos( 1 ), ballPos( 2 ) );
 	}
 
-	bool PhysicsManager::GetBallRotation( irr::core::vector3df& rotationVector )
+	bool PhysicsManager::GetBallRotation( irr::core::vector3df& rotationVector ) const
 	{
 		hkQuaternion ballRotation = ball->getRotation();
 		if( !ballRotation.hasValidAxis() )

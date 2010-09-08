@@ -77,6 +77,8 @@ namespace Tuatara
 		VentVector vents;
 
 		bool levelComplete;
+
+		void AdjustAabbForExit( hkAabb &info, const Direction& dir );
 		
 	public:
 
@@ -92,10 +94,8 @@ namespace Tuatara
 		bool StepSimulation( float timeDelta = 0 );
 
 		void ApplyImpulseToBall( Direction dir, const float& x = 0, const float& y = 0, const float& z = 0 );
-		irr::core::vector3df GetBallPosition();
-		bool GetBallRotation( irr::core::vector3df& rotationVector );
-
-		hkVector4 GetBallVel();
+		irr::core::vector3df GetBallPosition() const;
+		bool GetBallRotation( irr::core::vector3df& rotationVector ) const;
 
 		virtual void postSimulationCallback( hkpWorld* world );
 	};

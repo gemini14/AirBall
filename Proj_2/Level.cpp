@@ -169,6 +169,7 @@ namespace Tuatara
 	{
 		// set the texture for the exit block so that the player can find it
 		FindBlock( exitX, exitY, exitZ )->second->setMaterialTexture( 0, exitTex );
+		physics->CreatePhantom( exitX, exitY, exitZ, CalcDirection( exitX, exitY, exitZ ), 1, false );
 	}
 
 	void Level::CreateBall( irr::scene::ISceneManager *smgr, irr::video::ITexture *ballTex )
