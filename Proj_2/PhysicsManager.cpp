@@ -1,5 +1,50 @@
 #include "PhysicsManager.h"
 
+#include <stdio.h>
+#include <vector>
+
+#include <boost/foreach.hpp>
+
+#include "Game.h"
+
+// Havok directive for addtional debugging stuff
+#ifdef _DEBUG
+#define HK_DEBUG
+#endif
+
+///// Havok includes /////
+// Math and base include
+#include <Common/Base/hkBase.h>
+#include <Common/Base/System/hkBaseSystem.h>
+#include <Common/Base/System/Error/hkDefaultError.h>
+#include <Common/Base/Memory/System/Util/hkMemoryInitUtil.h>
+#include <Common/Base/Monitor/hkMonitorStream.h>
+#include <Common/Base/Memory/System/hkMemorySystem.h>
+
+// Dynamics includes
+#include <Physics/Collide/hkpCollide.h>										
+#include <Physics/Collide/Agent/ConvexAgent/SphereBox/hkpSphereBoxAgent.h>	
+#include <Physics/Collide/Shape/Convex/Box/hkpBoxShape.h>					
+#include <Physics/Collide/Shape/Convex/Sphere/hkpSphereShape.h>				
+#include <Physics/Collide/Dispatch/hkpAgentRegisterUtil.h>					
+
+#include <Physics/Collide/Query/CastUtil/hkpWorldRayCastInput.h>			
+#include <Physics/Collide/Query/CastUtil/hkpWorldRayCastOutput.h>			
+
+#include <Physics/Dynamics/World/hkpWorld.h>
+#include <Physics/Dynamics/World/Listener/hkpWorldPostSimulationListener.h>
+#include <Physics/Dynamics/Entity/hkpRigidBody.h>
+#include <Physics/Dynamics/Phantom/hkpAabbPhantom.h>
+#include <Physics/Utilities/Dynamics/Inertia/hkpInertiaTensorComputer.h>	
+
+#include <Common/Base/Thread/Job/ThreadPool/Cpu/hkCpuJobThreadPool.h>
+#include <Common/Base/Thread/Job/ThreadPool/Spu/hkSpuJobThreadPool.h>
+#include <Common/Base/Thread/JobQueue/hkJobQueue.h>
+
+// Visual Debugger includes
+#include <Common/Visualize/hkVisualDebugger.h>
+#include <Physics/Utilities/VisualDebugger/hkpPhysicsContext.h>	
+
 // Keycode
 #include <Common/Base/keycode.cxx>
 
@@ -7,15 +52,70 @@
 #error Physics is needed to build this demo. It is included in the common package for reference only.
 #endif
 
-
 // Classlists
 #define INCLUDE_HAVOK_PHYSICS_CLASSES
 #define HK_CLASSES_FILE <Common/Serialize/Classlist/hkClasses.h>
 #include <Common/Serialize/Util/hkBuiltinTypeRegistry.cxx>
 
+
 namespace Tuatara
 {
-	PhysicsManager::PhysicsManager() : levelComplete( false )
+	struct Physics_Manager : boost::noncopyable, hkpWorldPostSimulationListener
+	{
+		// variables
+
+		struct Vent
+		{
+			hkpAabbPhantom *phantom;
+			Direction direction;
+			int strength;
+		};
+
+		typedef std::vector<Vent*> VentVector;
+
+		hkJobThreadPool *threadPool;
+		hkJobQueue *jobQueue;
+
+		hkpWorld *world;
+		hkVisualDebugger *vdb;
+		hkpPhysicsContext *context;
+
+		hkpRigidBody *ball;
+		hkpAabbPhantom *exit;
+
+		VentVector vents;
+		
+		bool levelComplete;
+
+		// functions
+		Physics_Manager();
+		~Physics_Manager();
+
+		void AdjustAabbForExit( hkAabb &info, const Direction& dir );
+
+		void CreateBlock( const float& x, const float& y, const float& z);
+		void CreateBall( const float& entryX, const float& entryY, const float& entryZ );
+		void CreatePhantom( const float& x, const float& y, const float& z, const Direction& dir,
+			const int& strength, bool isVent = true );
+
+		bool StepSimulation( float timeDelta );
+
+		void ApplyImpulseToBall( Direction dir, const float& x = 0, const float& y = 0, const float& z = 0 );
+		irr::core::vector3df GetBallPosition() const;
+		bool GetBallRotation( irr::core::vector3df& rotationVector ) const;
+
+		virtual void postSimulationCallback( hkpWorld* world );
+	};
+	
+	static void HK_CALL errorReport(const char* msg, void* userArgGivenToInit)
+	{
+		printf("%s", msg);
+	}
+	
+
+	///// private implementation /////
+
+	Physics_Manager::Physics_Manager() : levelComplete( false )
 	{
 		// initialize base system and memory
 		hkMemoryRouter *memoryRouter = hkMemoryInitUtil::initDefault();
@@ -90,7 +190,7 @@ namespace Tuatara
 		world->addWorldPostSimulationListener( this );
 	}
 
-	PhysicsManager::~PhysicsManager()
+	Physics_Manager::~Physics_Manager()
 	{
 		world->removeWorldPostSimulationListener( this );
 
@@ -112,80 +212,103 @@ namespace Tuatara
 		hkBaseSystem::quit();
 		hkMemoryInitUtil::quit();
 	}
-
-	void PhysicsManager::postSimulationCallback( hkpWorld* world )
+	
+	void Physics_Manager::AdjustAabbForExit( hkAabb &info, const Direction& dir )
 	{
-		BOOST_FOREACH( Vent *v, vents )
-		{
-			// calculate impulse vector based on vent direction
-			auto impulse = [=]()->hkVector4
+		hkVector4 min( info.m_min ), max( info.m_max );
+		switch( dir )
 			{
-				float x( 0.f ), y( 0.f ), z( 0.f );
-				switch( v->direction )
+			case FORWARD:
 				{
-				case FORWARD:
-					z += 0.05f;
-					break;
-				case BACKWARD:
-					z -= 0.05f;
-					break;
-				case LEFT:
-					x -= 0.05f;
-					break;
-				case RIGHT:
-					x += 0.05f;
-					break;
-				case UP:
-					y += 0.05f;
-					break;
-				case DOWN:
-					y -= 0.05f;
-					break;
-				default:
-					printf( "postSimulationCallback: bad direction in vent structure.\n" );
-					return hkVector4( 0, 0, 0);
+					info.m_min = hkVector4( min(0), min(1), min(2) - 2.f );
+					info.m_max = hkVector4( max(0), max(1), max(2) - 2.f );
 				}
-
-				return hkVector4( x, y, z );
-			};
-
-			v->phantom->ensureDeterministicOrder();
-
-			// iterate through all overlapping bodies
-			for( int i = 0; i < v->phantom->getOverlappingCollidables().getSize(); ++i )
-			{
-				hkpCollidable* c = v->phantom->getOverlappingCollidables()[i];
-				// if collidable is the ball (which it will always be, only one dynamic object in game)
-				if ( c->getType() == hkpWorldObject::BROAD_PHASE_ENTITY )
+				break;
+			case BACKWARD:
 				{
-					// get the body
-					hkpRigidBody* rigidBody = hkpGetRigidBody( v->phantom->getOverlappingCollidables()[i] );
-					// add apply the impulse to it
-					if ( rigidBody )
-					{
-						rigidBody->applyLinearImpulse( impulse() );
-					}
+					info.m_min = hkVector4( min(0), min(1), min(2) + 2.f );
+					info.m_max = hkVector4( max(0), max(1), max(2) + 2.f );
 				}
+				break;
+			case LEFT:
+				{
+					info.m_min = hkVector4( min(0) + 2.f, min(1), min(2) );
+					info.m_max = hkVector4( max(0) + 2.f, max(1), max(2) );
+				}
+				break;
+			case RIGHT:
+				{
+					info.m_min = hkVector4( min(0) - 2.f, min(1), min(2) );
+					info.m_max = hkVector4( max(0) - 2.f, max(1), max(2) );
+				}
+				break;
+			case UP:
+				{
+					info.m_min = hkVector4( min(0), min(1) - 2.f, min(2) );
+					info.m_max = hkVector4( max(0), max(1) - 2.f, max(2) );
+				}
+				break;
+			case DOWN:
+				{
+					info.m_min = hkVector4( min(0), min(1) + 2.f, min(2) );
+					info.m_max = hkVector4( max(0), max(1) + 2.f, max(2) );
+				}
+				break;
+			default:
+				printf( "AdjustAabbForExit: bad direction sent.\n" );
 			}
-		}
+	}
+	
+	void Physics_Manager::CreateBlock( const float& x, const float& y, const float& z)
+	{
+		hkVector4 buildingBlockSize( 0.5f, 0.5f, 0.5f );
+		hkpConvexShape *buildingBlock = new hkpBoxShape( buildingBlockSize, 0 );
 
-		exit->ensureDeterministicOrder();
-		// level completion check (bit of code duplication here, will look into it later)
-		for( int i = 0; i < exit->getOverlappingCollidables().getSize(); ++i )
-		{
-			hkpCollidable* c = exit->getOverlappingCollidables()[i];
-			if ( c->getType() == hkpWorldObject::BROAD_PHASE_ENTITY )
-			{
-				hkpRigidBody* rigidBody = hkpGetRigidBody( exit->getOverlappingCollidables()[i] );
-				if ( rigidBody && rigidBody == ball)
-				{
-					levelComplete = true;
-				}
-			}
-		}
+		hkpRigidBodyCinfo ci;
+		ci.m_shape = buildingBlock;
+		ci.m_motionType = hkpMotion::MOTION_FIXED;
+		ci.m_position = hkVector4( x, y, z );
+		// blocks will not move, so keep them fixed, but collidable
+		ci.m_qualityType = HK_COLLIDABLE_QUALITY_FIXED;
+		ci.m_friction = 0.25f;
+
+		// add the block and remove the reference
+		world->addEntity( new hkpRigidBody( ci ) )->removeReference();
+
+		buildingBlock->removeReference();
+	}
+	
+	void Physics_Manager::CreateBall( const float& entryX, const float& entryY, const float& entryZ )
+	{
+		hkReal radius = .25;
+		hkReal sphereMass = 5.f;
+		hkReal maxVelocity = 3.f;
+
+		hkpRigidBodyCinfo info;
+		hkpMassProperties massProperties;
+		hkpInertiaTensorComputer::computeSphereVolumeMassProperties( radius, sphereMass, massProperties );
+
+		info.m_mass = massProperties.m_mass;
+		info.m_centerOfMass = massProperties.m_centerOfMass;
+		info.m_inertiaTensor = massProperties.m_inertiaTensor;
+		info.m_shape = new hkpSphereShape( radius );
+		info.m_friction = 0.85f;
+		info.m_position = hkVector4( entryX, entryY, entryZ );
+
+		info.m_motionType = hkpMotion::MOTION_SPHERE_INERTIA;
+		info.m_qualityType = HK_COLLIDABLE_QUALITY_MOVING;
+
+		hkpRigidBody *sphereRigidBody = new hkpRigidBody( info );
+		ball = sphereRigidBody;
+
+		ball->setMaxLinearVelocity(maxVelocity);
+
+		world->addEntity( sphereRigidBody );
+		sphereRigidBody->removeReference();
+		info.m_shape->removeReference();
 	}
 
-	void PhysicsManager::CreatePhantom( const float& x, const float& y, const float& z, const Direction& dir, 
+	void Physics_Manager::CreatePhantom( const float& x, const float& y, const float& z, const Direction& dir, 
 		const int& strength, bool isVent )
 	{
 		hkAabb info;
@@ -294,53 +417,7 @@ namespace Tuatara
 		}
 	}
 
-	void PhysicsManager::AdjustAabbForExit( hkAabb &info, const Direction& dir )
-	{
-		hkVector4 min( info.m_min ), max( info.m_max );
-		switch( dir )
-			{
-			case FORWARD:
-				{
-					info.m_min = hkVector4( min(0), min(1), min(2) - 2.f );
-					info.m_max = hkVector4( max(0), max(1), max(2) - 2.f );
-				}
-				break;
-			case BACKWARD:
-				{
-					info.m_min = hkVector4( min(0), min(1), min(2) + 2.f );
-					info.m_max = hkVector4( max(0), max(1), max(2) + 2.f );
-				}
-				break;
-			case LEFT:
-				{
-					info.m_min = hkVector4( min(0) + 2.f, min(1), min(2) );
-					info.m_max = hkVector4( max(0) + 2.f, max(1), max(2) );
-				}
-				break;
-			case RIGHT:
-				{
-					info.m_min = hkVector4( min(0) - 2.f, min(1), min(2) );
-					info.m_max = hkVector4( max(0) - 2.f, max(1), max(2) );
-				}
-				break;
-			case UP:
-				{
-					info.m_min = hkVector4( min(0), min(1) - 2.f, min(2) );
-					info.m_max = hkVector4( max(0), max(1) - 2.f, max(2) );
-				}
-				break;
-			case DOWN:
-				{
-					info.m_min = hkVector4( min(0), min(1) + 2.f, min(2) );
-					info.m_max = hkVector4( max(0), max(1) + 2.f, max(2) );
-				}
-				break;
-			default:
-				printf( "AdjustAabbForExit: bad direction sent.\n" );
-			}
-	}
-
-	bool PhysicsManager::StepSimulation( float timeDelta )
+	bool Physics_Manager::StepSimulation( float timeDelta )
 	{
 		// use the timeDelta if given, otherwise use 1/60th of a second
 		static hkReal timestep;
@@ -367,62 +444,7 @@ namespace Tuatara
 		return levelComplete;
 	}
 
-	void PhysicsManager::CreateBlock( const float& x, const float& y, const float& z)
-	{
-		hkVector4 buildingBlockSize( 0.5f, 0.5f, 0.5f );
-		hkpConvexShape *buildingBlock = new hkpBoxShape( buildingBlockSize, 0 );
-
-		hkpRigidBodyCinfo ci;
-		ci.m_shape = buildingBlock;
-		ci.m_motionType = hkpMotion::MOTION_FIXED;
-		ci.m_position = hkVector4( x, y, z );
-		// blocks will not move, so keep them fixed, but collidable
-		ci.m_qualityType = HK_COLLIDABLE_QUALITY_FIXED;
-		ci.m_friction = 0.25f;
-
-		// add the block and remove the reference
-		world->addEntity( new hkpRigidBody( ci ) )->removeReference();
-
-		buildingBlock->removeReference();
-
-	}
-
-	void PhysicsManager::CreateBall( const float& entryX, const float& entryY, const float& entryZ )
-	{
-		hkReal radius = .25;
-		hkReal sphereMass = 5.f;
-		hkReal maxVelocity = 3.f;
-
-		hkpRigidBodyCinfo info;
-		hkpMassProperties massProperties;
-		hkpInertiaTensorComputer::computeSphereVolumeMassProperties( radius, sphereMass, massProperties );
-
-		info.m_mass = massProperties.m_mass;
-		info.m_centerOfMass = massProperties.m_centerOfMass;
-		info.m_inertiaTensor = massProperties.m_inertiaTensor;
-		info.m_shape = new hkpSphereShape( radius );
-		info.m_friction = 0.85f;
-		info.m_position = hkVector4( entryX, entryY, entryZ );
-
-		info.m_motionType = hkpMotion::MOTION_SPHERE_INERTIA;
-		info.m_qualityType = HK_COLLIDABLE_QUALITY_MOVING;
-
-		hkpRigidBody *sphereRigidBody = new hkpRigidBody( info );
-		ball = sphereRigidBody;
-
-		ball->setMaxLinearVelocity(maxVelocity);
-
-		world->addEntity( sphereRigidBody );
-		sphereRigidBody->removeReference();
-		info.m_shape->removeReference();
-	}
-
-	static void HK_CALL errorReport(const char* msg, void* userArgGivenToInit)
-	{
-		printf("%s", msg);
-	}
-
-	void PhysicsManager::ApplyImpulseToBall( Direction dir, const float& x, const float& y, const float& z )
+	void Physics_Manager::ApplyImpulseToBall( Direction dir, const float& x, const float& y, const float& z )
 	{
 		hkVector4 impulse;
 
@@ -455,14 +477,14 @@ namespace Tuatara
 
 		ball->applyLinearImpulse( impulse );
 	}
-
-	irr::core::vector3df PhysicsManager::GetBallPosition() const
+	
+	irr::core::vector3df Physics_Manager::GetBallPosition() const
 	{
 		hkVector4 ballPos = ball->getPosition();
 		return irr::core::vector3df( ballPos( 0 ), ballPos( 1 ), ballPos( 2 ) );
 	}
 
-	bool PhysicsManager::GetBallRotation( irr::core::vector3df& rotationVector ) const
+	bool Physics_Manager::GetBallRotation( irr::core::vector3df& rotationVector ) const
 	{
 		hkQuaternion ballRotation = ball->getRotation();
 		if( !ballRotation.hasValidAxis() )
@@ -483,5 +505,125 @@ namespace Tuatara
 		rotationVector = rotationVector * irr::core::RADTODEG;
 
 		return true;
+	}
+
+	void Physics_Manager::postSimulationCallback( hkpWorld* world )
+	{
+		BOOST_FOREACH( Vent *v, vents )
+		{
+			// calculate impulse vector based on vent direction
+			auto impulse = [=]()->hkVector4
+			{
+				float x( 0.f ), y( 0.f ), z( 0.f );
+				switch( v->direction )
+				{
+				case FORWARD:
+					z += 0.05f;
+					break;
+				case BACKWARD:
+					z -= 0.05f;
+					break;
+				case LEFT:
+					x -= 0.05f;
+					break;
+				case RIGHT:
+					x += 0.05f;
+					break;
+				case UP:
+					y += 0.05f;
+					break;
+				case DOWN:
+					y -= 0.05f;
+					break;
+				default:
+					printf( "postSimulationCallback: bad direction in vent structure.\n" );
+					return hkVector4( 0, 0, 0);
+				}
+
+				return hkVector4( x, y, z );
+			};
+
+			v->phantom->ensureDeterministicOrder();
+
+			// iterate through all overlapping bodies
+			for( int i = 0; i < v->phantom->getOverlappingCollidables().getSize(); ++i )
+			{
+				hkpCollidable* c = v->phantom->getOverlappingCollidables()[i];
+				// if collidable is the ball (which it will always be, only one dynamic object in game)
+				if ( c->getType() == hkpWorldObject::BROAD_PHASE_ENTITY )
+				{
+					// get the body
+					hkpRigidBody* rigidBody = hkpGetRigidBody( v->phantom->getOverlappingCollidables()[i] );
+					// add apply the impulse to it
+					if ( rigidBody )
+					{
+						rigidBody->applyLinearImpulse( impulse() );
+					}
+				}
+			}
+		}
+
+		exit->ensureDeterministicOrder();
+		// level completion check (bit of code duplication here, will look into it later)
+		for( int i = 0; i < exit->getOverlappingCollidables().getSize(); ++i )
+		{
+			hkpCollidable* c = exit->getOverlappingCollidables()[i];
+			if ( c->getType() == hkpWorldObject::BROAD_PHASE_ENTITY )
+			{
+				hkpRigidBody* rigidBody = hkpGetRigidBody( exit->getOverlappingCollidables()[i] );
+				if ( rigidBody && rigidBody == ball)
+				{
+					levelComplete = true;
+				}
+			}
+		}
+	}
+
+
+
+	///// public implementation /////
+
+	PhysicsManager::PhysicsManager() : physics( new Physics_Manager )
+	{		
+	}
+
+	PhysicsManager::~PhysicsManager()
+	{		
+	}
+
+	void PhysicsManager::CreateBlock( const float& x, const float& y, const float& z)
+	{
+		physics->CreateBlock( x, y, z );
+	}
+
+	void PhysicsManager::CreateBall( const float& entryX, const float& entryY, const float& entryZ )
+	{
+		physics->CreateBall( entryX, entryY, entryZ );
+	}
+
+	void PhysicsManager::CreatePhantom( const float& x, const float& y, const float& z, const Direction& dir, 
+		const int& strength, bool isVent )
+	{
+		physics->CreatePhantom( x, y, z, dir, strength, isVent );
+	}
+
+	bool PhysicsManager::StepSimulation( float timeDelta )
+	{
+		return physics->StepSimulation( timeDelta );
+	}
+
+	void PhysicsManager::ApplyImpulseToBall( Direction dir, const float& x, const float& y, const float& z )
+	{
+		physics->ApplyImpulseToBall( dir, x, y, z );
+	}
+
+	irr::core::vector3df PhysicsManager::GetBallPosition() const
+	{
+		return physics->GetBallPosition();
+	}
+
+	bool PhysicsManager::GetBallRotation( irr::core::vector3df& rotationVector ) const
+	{
+		return physics->GetBallRotation( rotationVector );
 	}
 }

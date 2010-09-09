@@ -1,11 +1,13 @@
 #ifndef VENTPARTICLES_H
 #define VENTPARTICLES_H
 
-#include <irrlicht.h>
+
 #include <string>
 
+#include <irrlicht.h>
+
 #include "EnumsConstants.h"
-//#include "Game.h"
+
 
 namespace Tuatara
 {

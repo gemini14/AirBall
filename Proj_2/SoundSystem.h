@@ -1,32 +1,26 @@
 #ifndef SOUNDSYSTEM_H
 #define SOUNDSYSTEM_H
 
+#include <memory>
 
-#include <fmod.hpp>
-#include <fmod_errors.h>
-#include <iostream>
-#include <string>
-#include <vector>
-
+#include <boost/noncopyable.hpp>
 
 namespace Tuatara
 {
-	class SoundSystem
+	struct FMOD_System;
+
+	class SoundSystem : boost::noncopyable
 	{
 	private:
 
-		FMOD::System *system;
-
-		bool init;
-
-		void DisplayError( FMOD_RESULT result, const std::string& functionName );
+		std::shared_ptr<FMOD_System> system;
 
 	public:
 
 		SoundSystem();
 		~SoundSystem();
 
-		bool SoundSystemInitOK() const { return init; }
+		bool SoundSystemInitOK() const;
 		
 	};
 }
