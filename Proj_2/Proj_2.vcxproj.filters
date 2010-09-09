@@ -223,5 +223,11 @@
     <None Include="levels\level_1.xml">
       <Filter>Resource Files\levels</Filter>
     </None>
+    <None Include="fmodex.dll">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="fmodexL.dll">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

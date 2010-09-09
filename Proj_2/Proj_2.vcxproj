@@ -126,6 +126,8 @@
     <ClInclude Include="VentParticles.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="fmodex.dll" />
+    <None Include="fmodexL.dll" />
     <None Include="Irrlicht.dll" />
     <None Include="levels\config.txt" />
     <None Include="levels\level_0.xml">
