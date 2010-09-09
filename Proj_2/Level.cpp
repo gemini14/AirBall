@@ -2,7 +2,7 @@
 
 namespace Tuatara
 {
-	Level::Level() : physics( new PhysicsManager ), ball( nullptr )
+	Level::Level() : physics( new PhysicsManager ), ball( nullptr ), soundSystem( new SoundSystem )
 	{
 	}
 
@@ -287,6 +287,6 @@ namespace Tuatara
 		// creating physics blocks is last because the exit has to be removed
 		CreatePhysicsBlocks();
 
-		return true;
+		return soundSystem->SoundSystemInitOK();
 	}
 }

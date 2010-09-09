@@ -14,6 +14,7 @@
 #include <vector>
 
 #include "PhysicsManager.h"
+#include "SoundSystem.h"
 #include "VentParticles.h"
 
 
@@ -62,6 +63,8 @@ namespace Tuatara
 		float exitX, exitY, exitZ;
 
 		irr::scene::IMeshSceneNode *ball;
+
+		std::shared_ptr<SoundSystem> soundSystem;
 
 		bool LoadLevelData( irr::io::IFileSystem *fileSystem, std::string& levelFile );
 		void CreateBall( irr::scene::ISceneManager *smgr, irr::video::ITexture *ballTex );
