@@ -281,7 +281,7 @@ namespace Tuatara
 	void Physics_Manager::CreateBall( const float& entryX, const float& entryY, const float& entryZ )
 	{
 		hkReal radius = .25;
-		hkReal sphereMass = 5.f;
+		hkReal sphereMass = 4.f;
 		hkReal maxVelocity = 3.f;
 
 		hkpRigidBodyCinfo info;
