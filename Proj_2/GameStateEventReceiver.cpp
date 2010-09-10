@@ -107,19 +107,19 @@ namespace Tuatara
 				return true;
 
 			case KEY_KEY_W:
-				gameState->level->physics->ApplyImpulseToBall( FORWARD, 0.f, 0.f, 0.6f);
+				gameState->level->ApplyImpulseToBall( FORWARD, 0.f, 0.f, 0.6f);
 				return true;
 
 			case KEY_KEY_A:
-				gameState->level->physics->ApplyImpulseToBall( LEFT, -0.6f, 0.f, 0.f);
+				gameState->level->ApplyImpulseToBall( LEFT, -0.6f, 0.f, 0.f);
 				return true;
 
 			case KEY_KEY_S:
-				gameState->level->physics->ApplyImpulseToBall( BACKWARD, 0.f, 0.f, -0.6f);
+				gameState->level->ApplyImpulseToBall( BACKWARD, 0.f, 0.f, -0.6f);
 				return true;
 
 			case KEY_KEY_D:
-				gameState->level->physics->ApplyImpulseToBall( RIGHT, 0.6f, 0.f, 0.f);
+				gameState->level->ApplyImpulseToBall( RIGHT, 0.6f, 0.f, 0.f);
 				return true;
 
 			case KEY_KEY_Q:
@@ -128,7 +128,7 @@ namespace Tuatara
 					static u32 then;
 					static auto Q_Action = [&]()
 					{
-						gameState->level->physics->ApplyImpulseToBall( UP, 0, 5.f, 0 );
+						gameState->level->ApplyImpulseToBall( UP, 0, 5.f, 0 );
 
 						then = game->manager->device->getTimer()->getTime();
 						okToExecute = !okToExecute;

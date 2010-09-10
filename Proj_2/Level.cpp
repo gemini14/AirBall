@@ -1,19 +1,108 @@
 #include "Level.h"
 
+
+#include <algorithm>
+#include <fstream>
+#include <map>
+
+#include <sstream>
+#include <vector>
+
+#include <boost/foreach.hpp>
+
+#include "PhysicsManager.h"
+#include "SoundSystem.h"
+#include "VentParticles.h"
+
+
 namespace Tuatara
 {
-	Level::Level() : physics( new PhysicsManager ), ball( nullptr ), soundSystem( new SoundSystem )
+	class PhysicsManager;
+
+	// private implementation
+	struct Level_ : boost::noncopyable
+	{
+		// Definitions ////
+		struct VentInfo
+		{
+			float x;
+			float y;
+			float z;
+			Direction direction;
+			int strength;
+			std::shared_ptr<VentParticles> particle;
+		};
+
+		typedef std::vector<VentInfo*> VentVector;
+
+		struct NodePos
+		{
+			float x;
+			float y;
+			float z;
+		};
+
+		struct NodePosCriterion
+		{
+			bool operator()( const NodePos& lhs, const NodePos& rhs ) const
+			{
+				return lhs.x < rhs.x;
+			}
+		};
+		typedef std::multimap<NodePos, irr::scene::IMeshSceneNode*, NodePosCriterion> BuildingBlockMap;
+
+
+		// Variables
+		VentVector vents;
+		BuildingBlockMap levelBlocks;
+
+		float entryX, entryY, entryZ;
+		float exitX, exitY, exitZ;
+
+		irr::scene::IMeshSceneNode *ball;
+
+		std::shared_ptr<SoundSystem> soundSystem;
+
+		std::shared_ptr<PhysicsManager> physics;
+
+
+		// Functions
+		Level_();
+		~Level_();
+
+		bool InitLevel( irr::scene::ISceneManager *smgr, irr::io::IFileSystem *fileSystem, const std::string& levelFile, 
+			irr::video::ITexture *wall, irr::video::ITexture *ballTex, irr::video::ITexture *exitTex,
+			irr::video::ITexture *ventTex, irr::video::ITexture *ventFXTex );
+		bool StepSimulation( float timeDelta );
+
+		bool LoadLevelData( irr::io::IFileSystem *fileSystem, const std::string& levelFile );
+
+		void CreateBall( irr::scene::ISceneManager *smgr, irr::video::ITexture *ballTex );
+		void CreateExit( irr::video::ITexture *exitTex );
+		void CreatePhysicsBlocks();
+		void CreateRenderBlocks( irr::scene::ISceneManager *smgr, irr::video::ITexture *wall );
+		void CreateVents( irr::scene::ISceneManager *smgr, irr::video::ITexture *particleTex,
+			irr::video::ITexture *ventTex );
+
+		void ApplyImpulseToBall( Direction dir, const float& x, const float& y, const float& z );
+		Direction CalcDirection( const float& x, const float& y, const float& z );
+		BuildingBlockMap::iterator FindBlock( const float& x, const float& y, const float& z );
+		void RemoveBlock( float x, float y, float z );	
+	};
+
+
+	Level_::Level_() : physics( new PhysicsManager ), ball( nullptr ), soundSystem( new SoundSystem )
 	{
 	}
 
-	Level::~Level()
+	Level_::~Level_()
 	{
 		// memory cleanup
 		BOOST_FOREACH( VentInfo *v, vents )
 		{
 			delete v;
 		}
-		
+
 		std::for_each( levelBlocks.begin(), levelBlocks.end(), []( std::pair<NodePos, irr::scene::IMeshSceneNode*> p )
 		{
 			p.second->remove();
@@ -25,7 +114,30 @@ namespace Tuatara
 		}
 	}
 
-	bool Level::StepSimulation( float timeDelta )
+	bool Level_::InitLevel( irr::scene::ISceneManager *smgr, irr::io::IFileSystem *fileSystem, const std::string& levelFile, 
+		irr::video::ITexture *wall, irr::video::ITexture *ballTex, irr::video::ITexture *exitTex,
+		irr::video::ITexture *ventTex, irr::video::ITexture *ventFXTex )
+	{
+		using namespace irr;
+		using namespace std;
+
+		// make sure level data was read in correctly
+		if( !LoadLevelData( fileSystem, levelFile ) )
+		{
+			return false;
+		}
+
+		CreateBall( smgr, ballTex );
+		CreateRenderBlocks( smgr, wall );
+		CreateVents( smgr, ventFXTex, ventTex );
+		CreateExit( exitTex );
+		// creating physics blocks is last because the exit has to be removed
+		CreatePhysicsBlocks();
+
+		return soundSystem->SoundSystemInitOK();
+	}
+
+	bool Level_::StepSimulation( float timeDelta )
 	{
 		bool levelComplete = physics->StepSimulation( timeDelta );
 		// set ball position:
@@ -41,7 +153,7 @@ namespace Tuatara
 		return levelComplete;
 	}
 
-	bool Level::LoadLevelData( irr::io::IFileSystem *fileSystem, std::string& levelFile )
+	bool Level_::LoadLevelData( irr::io::IFileSystem *fileSystem, const std::string& levelFile )
 	{
 		using namespace irr;
 		using namespace std;
@@ -89,39 +201,84 @@ namespace Tuatara
 		return true;
 	}
 
-	Direction Level::CalcDirection( const float& x, const float& y, const float& z )
+	void Level_::CreateBall( irr::scene::ISceneManager *smgr, irr::video::ITexture *ballTex )
 	{
-		// calculate the direction of the vent based on it's position on the cube's wall
-		if( z == 0 )
-		{
-			return FORWARD;
-		}
-		else if( z == levelSize )
-		{
-			return BACKWARD;
-		}
-		else if( x == 0 && ( z != 0 && z != levelSize ) )
-		{
-			return RIGHT;
-		}
-		else if( x == levelSize && ( z != 0 && z != levelSize ) )
-		{
-			return LEFT;
-		}
-		else if( y == levelSize )
-		{
-			return DOWN;
-		}
-		else if( y == 0 )
-		{
-			return UP;
-		}
+		using namespace irr;
 
-		return NONE;
+		// create the scene node for the ball and set its properties
+		ball = smgr->addSphereSceneNode( 0.25f, 64, 0, -1, core::vector3df( entryX, entryY, entryZ ) );
+		ball->setMaterialFlag( video::EMF_LIGHTING, false );
+		ball->setMaterialTexture( 0, ballTex );
+
+		// create the ball's physical counterpart
+		physics->CreateBall( entryX, entryY, entryZ );
 	}
 
-	void Level::CreateVents( irr::scene::ISceneManager *smgr, irr::video::ITexture *particleTex,
-			irr::video::ITexture *ventTex )
+	void Level_::CreateExit( irr::video::ITexture *exitTex )
+	{
+		// set the texture for the exit block so that the player can find it
+		FindBlock( exitX, exitY, exitZ )->second->setMaterialTexture( 0, exitTex );
+		physics->CreatePhantom( exitX, exitY, exitZ, CalcDirection( exitX, exitY, exitZ ), 1, false );
+	}
+
+	void Level_::CreatePhysicsBlocks()
+	{
+		// iterate through all the blocks and create their physical counterparts (skip the exit or the player 
+		// can't get out)
+		std::for_each( levelBlocks.begin(), levelBlocks.end(), 
+			[=](std::pair<NodePos, irr::scene::IMeshSceneNode*> pair)
+		{
+			if( pair.first.x == exitX && pair.first.y == exitY && pair.first.z == exitZ )
+			{
+				return;
+			}
+			physics->CreateBlock( pair.first.x, pair.first.y, pair.first.z );
+		});
+	}
+
+	void Level_::CreateRenderBlocks( irr::scene::ISceneManager *smgr, irr::video::ITexture *wall )
+	{
+		using namespace irr;
+		using namespace std;
+
+		for( int cubeLevel = 0; cubeLevel <= levelSize; ++cubeLevel )
+		{
+			for( int x = 0; x <= levelSize; ++x )
+			{
+				for( int z = 0; z <= levelSize; ++z )
+				{
+					if( // bottom or top level
+						( cubeLevel == 0 || cubeLevel == levelSize ) 
+						|| 
+						// or one of the edges of the mid levels
+						( cubeLevel != 0 && cubeLevel != levelSize && 
+						// (this part of the test weeds out blocks in the center portion of the cube)
+						( ( z == 0 || z == levelSize ) || ( z > 0 && z < levelSize && ( x == 0 || x == levelSize ) ) )
+						) )
+					{
+						NodePos nodePos;
+						// store the x,y,z positions
+						nodePos.x = static_cast<float>(x);
+						nodePos.y = static_cast<float>(cubeLevel);
+						nodePos.z = static_cast<float>(z);
+
+						// create the node in the scene and set its properties
+						scene::IMeshSceneNode *node = smgr->addCubeSceneNode( 1.f, 0, -1, 
+							core::vector3df( static_cast<float>(x), static_cast<float>(cubeLevel),
+							static_cast<float>(z) ) );
+						node->setMaterialFlag( video::EMF_LIGHTING, false );
+						node->setMaterialTexture( 0, wall );
+
+						// store the NodePos and ISceneNode
+						levelBlocks.insert( make_pair( nodePos, node ) );
+					}
+				}
+			}
+		}
+	}
+
+	void Level_::CreateVents( irr::scene::ISceneManager *smgr, irr::video::ITexture *particleTex,
+		irr::video::ITexture *ventTex )
 	{
 		using namespace irr::core;
 
@@ -168,68 +325,53 @@ namespace Tuatara
 		}
 	}
 
-	void Level::CreateExit( irr::video::ITexture *exitTex )
+	void Level_::ApplyImpulseToBall( Direction dir, const float& x, const float& y, const float& z )
 	{
-		// set the texture for the exit block so that the player can find it
-		FindBlock( exitX, exitY, exitZ )->second->setMaterialTexture( 0, exitTex );
-		physics->CreatePhantom( exitX, exitY, exitZ, CalcDirection( exitX, exitY, exitZ ), 1, false );
+		physics->ApplyImpulseToBall( dir, x, y, z );
 	}
-
-	void Level::CreateBall( irr::scene::ISceneManager *smgr, irr::video::ITexture *ballTex )
+	
+	Direction Level_::CalcDirection( const float& x, const float& y, const float& z )
 	{
-		using namespace irr;
-
-		// create the scene node for the ball and set its properties
-		ball = smgr->addSphereSceneNode( 0.25f, 64, 0, -1, core::vector3df( entryX, entryY, entryZ ) );
-		ball->setMaterialFlag( video::EMF_LIGHTING, false );
-		ball->setMaterialTexture( 0, ballTex );
-
-		// create the ball's physical counterpart
-		physics->CreateBall( entryX, entryY, entryZ );
-	}
-
-	void Level::CreateRenderBlocks( irr::scene::ISceneManager *smgr, irr::video::ITexture *wall )
-	{
-		using namespace irr;
-		using namespace std;
-
-		for( int cubeLevel = 0; cubeLevel <= levelSize; ++cubeLevel )
+		// calculate the direction of the vent based on it's position on the cube's wall
+		if( z == 0 )
 		{
-			for( int x = 0; x <= levelSize; ++x )
-			{
-				for( int z = 0; z <= levelSize; ++z )
-				{
-					if( // bottom or top level
-						( cubeLevel == 0 || cubeLevel == levelSize ) 
-						|| 
-						// or one of the edges of the mid levels
-						( cubeLevel != 0 && cubeLevel != levelSize && 
-						// (this part of the test weeds out blocks in the center portion of the cube)
-						( ( z == 0 || z == levelSize ) || ( z > 0 && z < levelSize && ( x == 0 || x == levelSize ) ) )
-						) )
-					{
-						NodePos nodePos;
-						// store the x,y,z positions
-						nodePos.x = static_cast<float>(x);
-						nodePos.y = static_cast<float>(cubeLevel);
-						nodePos.z = static_cast<float>(z);
-
-						// create the node in the scene and set its properties
-						scene::IMeshSceneNode *node = smgr->addCubeSceneNode( 1.f, 0, -1, 
-							core::vector3df( static_cast<float>(x), static_cast<float>(cubeLevel),
-							static_cast<float>(z) ) );
-						node->setMaterialFlag( video::EMF_LIGHTING, false );
-						node->setMaterialTexture( 0, wall );
-
-						// store the NodePos and ISceneNode
-						levelBlocks.insert( make_pair( nodePos, node ) );
-					}
-				}
-			}
+			return FORWARD;
 		}
+		else if( z == levelSize )
+		{
+			return BACKWARD;
+		}
+		else if( x == 0 && ( z != 0 && z != levelSize ) )
+		{
+			return RIGHT;
+		}
+		else if( x == levelSize && ( z != 0 && z != levelSize ) )
+		{
+			return LEFT;
+		}
+		else if( y == levelSize )
+		{
+			return DOWN;
+		}
+		else if( y == 0 )
+		{
+			return UP;
+		}
+
+		return NONE;
 	}
 
-	void Level::RemoveBlock( float x, float y, float z )
+	Level_::BuildingBlockMap::iterator Level_::FindBlock( const float& x, const float& y, const float& z )
+	{
+		// return the iterator to the block entry that matches the x, y, z coordinates, if any
+		return std::find_if( levelBlocks.begin(), levelBlocks.end(), 
+			[=](std::pair<NodePos, irr::scene::IMeshSceneNode*> pair)->bool
+		{
+			return pair.first.x == x && pair.first.y == y && pair.first.z == z;
+		});
+	}	
+
+	void Level_::RemoveBlock( float x, float y, float z )
 	{
 		// remove block (and its entry in the map) if it matches the x, y, z coordinates
 		auto iter = std::find_if( levelBlocks.begin(), levelBlocks.end(), 
@@ -242,51 +384,31 @@ namespace Tuatara
 		levelBlocks.erase( iter );
 	}
 
-	Level::BuildingBlockMap::iterator Level::FindBlock( const float& x, const float& y, const float& z )
+
+
+	//public implementation
+	Level::Level() : level_( new Level_ )
 	{
-		// return the iterator to the block entry that matches the x, y, z coordinates, if any
-		return std::find_if( levelBlocks.begin(), levelBlocks.end(), 
-			[=](std::pair<NodePos, irr::scene::IMeshSceneNode*> pair)->bool
-		{
-			return pair.first.x == x && pair.first.y == y && pair.first.z == z;
-		});
 	}
 
-	void Level::CreatePhysicsBlocks()
-	{
-		// iterate through all the blocks and create their physical counterparts (skip the exit or the player 
-		// can't get out)
-		std::for_each( levelBlocks.begin(), levelBlocks.end(), 
-			[=](std::pair<NodePos, irr::scene::IMeshSceneNode*> pair)
-		{
-			if( pair.first.x == exitX && pair.first.y == exitY && pair.first.z == exitZ )
-			{
-				return;
-			}
-			physics->CreateBlock( pair.first.x, pair.first.y, pair.first.z );
-		});
+	Level::~Level()
+	{		
 	}
 
-	bool Level::InitLevel( irr::scene::ISceneManager *smgr, irr::io::IFileSystem *fileSystem, std::string& levelFile, 
+	bool Level::InitLevel( irr::scene::ISceneManager *smgr, irr::io::IFileSystem *fileSystem, const std::string& levelFile, 
 		irr::video::ITexture *wall, irr::video::ITexture *ballTex, irr::video::ITexture *exitTex,
 		irr::video::ITexture *ventTex, irr::video::ITexture *ventFXTex )
 	{
-		using namespace irr;
-		using namespace std;
+		return level_->InitLevel( smgr, fileSystem, levelFile, wall, ballTex, exitTex, ventTex, ventFXTex );
+	}
 
-		// make sure level data was read in correctly
-		if( !LoadLevelData( fileSystem, levelFile ) )
-		{
-			return false;
-		}
+	void Level::ApplyImpulseToBall( Direction dir, const float& x, const float& y, const float& z )
+	{
+		level_->ApplyImpulseToBall( dir, x, y, z );
+	}
 
-		CreateBall( smgr, ballTex );
-		CreateRenderBlocks( smgr, wall );
-		CreateVents( smgr, ventFXTex, ventTex );
-		CreateExit( exitTex );
-		// creating physics blocks is last because the exit has to be removed
-		CreatePhysicsBlocks();
-
-		return soundSystem->SoundSystemInitOK();
+	bool Level::StepSimulation( float timeDelta )
+	{
+		return level_->StepSimulation( timeDelta );
 	}
 }
