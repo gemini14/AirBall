@@ -16,7 +16,7 @@ namespace Tuatara
 		windowRect.addInternalPoint( windowWidth, windowHeight );
 
 		// add archives to Irr device's file system
-		manager->device->getFileSystem()->addFileArchive( "media\\" );
+		manager->device->getFileSystem()->addFileArchive( "art\\" );
 		manager->device->getFileSystem()->addFileArchive( "levels\\" );
 
 		// create the FSM

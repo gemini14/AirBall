@@ -38,7 +38,7 @@ namespace Tuatara
 	{
 		using namespace irr;
 
-		pausedOrExited = false;
+		paused = false;
 
 		// set event receiver on entry (replaces any current receiver)
 		gameEventRcvr->SetGame( game, this );
@@ -112,5 +112,18 @@ namespace Tuatara
 	{
 		currentLevel = 0;
 		game->stateMachine->ChangeState( MainMenu::Instance() );
+	}
+
+	void GameState::Pause( bool pause )
+	{
+		paused = pause;
+		if( paused )
+		{
+			level->Pause( paused );
+		}
+		else
+		{
+			level->Pause( paused );
+		}
 	}
 }

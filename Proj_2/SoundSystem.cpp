@@ -13,57 +13,117 @@ namespace Tuatara
 
 	struct FMOD_System
 	{
+		typedef std::map<std::string, std::string> SoundFilenameMap;
+
 		FMOD::System *system;
 		bool init;
+		FMOD_RESULT result;
+
+		FMOD::Sound *bgmusic;
 
 		FMOD_System();
 		~FMOD_System();
-		void DisplayError( FMOD_RESULT& result, const std::string& functionName );
+		
+		void ErrorCheck( const FMOD_RESULT& result );
+		void DisplayError( const FMOD_RESULT& result );
+		
 		bool SoundSystemInitOK() const;
+		void CreateSounds( const SoundFilenameMap& soundFilenames );
+		
+		void StartPlayingLoopingSounds();
+		void PausePlayback();
+		void ResumePlayback();
+
+		void Update();
 	};
 
 	///// private implementation /////
 
-	FMOD_System::FMOD_System() : init( false )
+	FMOD_System::FMOD_System() : init( false ), system( nullptr ), bgmusic( nullptr )
 	{
-		FMOD_RESULT result;
-		result = FMOD::System_Create( &system );
+		ErrorCheck( FMOD::System_Create( &system ) );
 
+		result = system->init( 500, FMOD_INIT_NORMAL, nullptr );
 		if( result != FMOD_OK )
 		{
-			DisplayError( result, "SoundSystem::Constructor" );
+			DisplayError( result );
 		}
 		else
 		{
-			result = system->init( 500, FMOD_INIT_NORMAL, nullptr );
-			if( result != FMOD_OK )
-			{
-				DisplayError( result, "SoundSystem::Constructor" );
-			}
-			else
-			{
-				init = true;
-			}
+			init = true;
 		}
 	}
 
 	FMOD_System::~FMOD_System()
 	{
-		if( system != nullptr )
+		if( init )
 		{
+			bgmusic->release();
+
 			system->release();
 		}
 	}
 
-	void FMOD_System::DisplayError( FMOD_RESULT& result, const std::string& functionName )
+	void FMOD_System::ErrorCheck( const FMOD_RESULT& result )
 	{
-		std::cout << "FMOD error in " << functionName << ": " << FMOD_ErrorString( result ) << "\n";
+		if( result != FMOD_OK )
+		{
+			DisplayError( result );
+		}
+	}
+
+	void FMOD_System::DisplayError( const FMOD_RESULT& result )
+	{
+		std::cout << "FMOD error: " << FMOD_ErrorString( result ) << "\n";
 	}
 
 	bool FMOD_System::SoundSystemInitOK() const
 	{
 		return init;
 	}
+
+	void FMOD_System::CreateSounds( const SoundFilenameMap& soundFilenames )
+	{
+		auto isPresent = [=]( const std::string& key ) -> bool
+		{
+			return ( soundFilenames.find( key ) != soundFilenames.end() ) ? true : false;
+		};
+		
+		if( isPresent( "bgmusic" ) )
+		{
+			ErrorCheck( system->createSound( soundFilenames.at("bgmusic").c_str(), FMOD_LOOP_NORMAL, nullptr, &bgmusic ) );
+			bgmusic->setLoopCount( -1 );
+			bgmusic->setDefaults( 44100, 0.5f, 0.f, 128 );
+		}
+	}
+
+	void FMOD_System::StartPlayingLoopingSounds()
+	{
+		if( bgmusic != nullptr )
+		{
+			system->playSound( FMOD_CHANNEL_FREE, bgmusic, false, nullptr );
+		}
+	}
+
+	void FMOD_System::PausePlayback()
+	{
+		FMOD::ChannelGroup *masterGroup;
+		system->getMasterChannelGroup( &masterGroup );
+		masterGroup->setPaused( true );
+	}
+
+	void FMOD_System::ResumePlayback()
+	{
+		FMOD::ChannelGroup *masterGroup;
+		system->getMasterChannelGroup( &masterGroup );
+		masterGroup->setPaused( false );
+	}
+
+	void FMOD_System::Update()
+	{
+		system->update();
+	}
+
 
 	///// public implementation /////
 	
@@ -78,5 +138,30 @@ namespace Tuatara
 	bool SoundSystem::SoundSystemInitOK() const
 	{
 		return system->SoundSystemInitOK();
+	}
+
+	void SoundSystem::CreateSounds( const SoundFilenameMap& soundFilenameMap )
+	{
+		system->CreateSounds( soundFilenameMap );
+	}
+
+	void SoundSystem::StartPlayingLoopingSounds()
+	{
+		system->StartPlayingLoopingSounds();
+	}
+
+	void SoundSystem::PausePlayback()
+	{
+		system->PausePlayback();
+	}
+
+	void SoundSystem::ResumePlayback()
+	{
+		system->ResumePlayback();
+	}
+
+	void SoundSystem::Update()
+	{
+		system->Update();
 	}
 }

@@ -31,7 +31,8 @@ namespace Tuatara
 
 		int currentLevel;
 		int numberOfLevels;
-		
+		bool paused;
+
 		std::shared_ptr<GameStateEventReceiver> gameEventRcvr;
 		Level *level;
 
@@ -46,7 +47,7 @@ namespace Tuatara
 		virtual void Execute( Game* game );
 		virtual void Exit( Game* game );
 
-		bool pausedOrExited;
+		void Pause( bool pause );
 
 		friend class GameStateEventReceiver;
 

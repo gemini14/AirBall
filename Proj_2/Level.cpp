@@ -51,10 +51,12 @@ namespace Tuatara
 		};
 		typedef std::multimap<NodePos, irr::scene::IMeshSceneNode*, NodePosCriterion> BuildingBlockMap;
 
+		typedef std::map<std::string, std::string> SoundFilenameMap;
 
 		// Variables
 		VentVector vents;
 		BuildingBlockMap levelBlocks;
+		SoundFilenameMap soundFilenameMap;
 
 		float entryX, entryY, entryZ;
 		float exitX, exitY, exitZ;
@@ -84,10 +86,13 @@ namespace Tuatara
 		void CreateVents( irr::scene::ISceneManager *smgr, irr::video::ITexture *particleTex,
 			irr::video::ITexture *ventTex );
 
+		void AddPairToSoundFilenameMap( const std::string& key, const std::string& value );
 		void ApplyImpulseToBall( Direction dir, const float& x, const float& y, const float& z );
 		Direction CalcDirection( const float& x, const float& y, const float& z );
 		BuildingBlockMap::iterator FindBlock( const float& x, const float& y, const float& z );
-		void RemoveBlock( float x, float y, float z );	
+		void RemoveBlock( float x, float y, float z );
+
+		void Pause( bool pause );
 	};
 
 
@@ -122,6 +127,7 @@ namespace Tuatara
 		using namespace std;
 
 		// make sure level data was read in correctly
+		// note that this part can be extended to read in other info like music location
 		if( !LoadLevelData( fileSystem, levelFile ) )
 		{
 			return false;
@@ -134,7 +140,15 @@ namespace Tuatara
 		// creating physics blocks is last because the exit has to be removed
 		CreatePhysicsBlocks();
 
-		return soundSystem->SoundSystemInitOK();
+		if( !soundSystem->SoundSystemInitOK() )
+		{
+			return false;
+		}
+
+		soundSystem->CreateSounds( soundFilenameMap );
+		soundSystem->StartPlayingLoopingSounds();
+
+		return true;
 	}
 
 	bool Level_::StepSimulation( float timeDelta )
@@ -149,6 +163,8 @@ namespace Tuatara
 		{
 			ball->setRotation( rotation );
 		}
+
+		soundSystem->Update();
 
 		return levelComplete;
 	}
@@ -193,6 +209,22 @@ namespace Tuatara
 					v->strength = levelReader->getAttributeValueAsInt( "strength" );
 					v->direction = CalcDirection( v->x, v->y, v->z );
 					vents.push_back( v );
+				}
+				else if( name == "bgmusic\0" )
+				{
+					AddPairToSoundFilenameMap( "bgmusic", levelReader->getAttributeValueSafe( "file" ) );
+				}
+				else if( name == "collision\0" )
+				{
+					AddPairToSoundFilenameMap( "collision", levelReader->getAttributeValueSafe( "file" ) );
+				}
+				else if( name == "vent\0" )
+				{
+					AddPairToSoundFilenameMap( "vent", levelReader->getAttributeValueSafe( "file" ) );
+				}
+				else if( name == "jet\0" )
+				{
+					AddPairToSoundFilenameMap( "jet", levelReader->getAttributeValueSafe( "file" ) );
 				}
 			}
 		}
@@ -321,10 +353,20 @@ namespace Tuatara
 			FindBlock( v->x, v->y, v->z )->second->setMaterialTexture( 0, ventTex );
 			physics->CreatePhantom( v->x, v->y, v->z, v->direction, v->strength );
 			v->particle.reset( new VentParticles(smgr, particleTex, vector3df( v->x, v->y, v->z ), 
-				normalGenerator( v->direction ), v->strength ) );
+				normalGenerator( v->direction ), static_cast<float>(v->strength) ) );
 		}
 	}
 
+	void Level_::AddPairToSoundFilenameMap( const std::string& key, const std::string& value )
+	{
+		using namespace std;
+
+		if( !value.length() == 0 )
+		{
+			soundFilenameMap.insert( make_pair<string, string>( key, value ) );
+		}
+	}
+	
 	void Level_::ApplyImpulseToBall( Direction dir, const float& x, const float& y, const float& z )
 	{
 		physics->ApplyImpulseToBall( dir, x, y, z );
@@ -384,7 +426,17 @@ namespace Tuatara
 		levelBlocks.erase( iter );
 	}
 
-
+	void Level_::Pause( bool pause )
+	{
+		if( pause )
+		{
+			soundSystem->PausePlayback();
+		}
+		else
+		{
+			soundSystem->ResumePlayback();
+		}
+	}
 
 	//public implementation
 	Level::Level() : level_( new Level_ )
@@ -410,5 +462,10 @@ namespace Tuatara
 	bool Level::StepSimulation( float timeDelta )
 	{
 		return level_->StepSimulation( timeDelta );
+	}
+
+	void Level::Pause( bool pause )
+	{
+		level_->Pause( pause );
 	}
 }

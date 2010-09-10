@@ -55,14 +55,17 @@
     <Filter Include="Resource Files\levels">
       <UniqueIdentifier>{6da7d67e-e72a-4f31-95dc-b38e8827e557}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Resource Files\media">
-      <UniqueIdentifier>{f6862ea7-526f-4c8b-827d-5f5412b6b7e7}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\Sound">
       <UniqueIdentifier>{b3bebac0-f57b-4400-ad5d-8bf2f978c403}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\Sound">
       <UniqueIdentifier>{ea563731-a7c2-4072-b76f-3f57550d8b2b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\art">
+      <UniqueIdentifier>{f6862ea7-526f-4c8b-827d-5f5412b6b7e7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\sound">
+      <UniqueIdentifier>{6756dbf2-a4b4-44f9-a782-ffb5bf109b94}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -182,16 +185,16 @@
       <Filter>Resource Files</Filter>
     </None>
     <None Include="media\mainMenuButton.png">
-      <Filter>Resource Files\media</Filter>
+      <Filter>Resource Files\art</Filter>
     </None>
     <None Include="media\menuBackground.jpg">
-      <Filter>Resource Files\media</Filter>
+      <Filter>Resource Files\art</Filter>
     </None>
     <None Include="media\pauseBackground.jpg">
-      <Filter>Resource Files\media</Filter>
+      <Filter>Resource Files\art</Filter>
     </None>
     <None Include="media\returnToGameButton.png">
-      <Filter>Resource Files\media</Filter>
+      <Filter>Resource Files\art</Filter>
     </None>
     <None Include="levels\config.txt">
       <Filter>Resource Files\levels</Filter>
@@ -200,25 +203,25 @@
       <Filter>Resource Files\levels</Filter>
     </None>
     <None Include="media\defaultButton.png">
-      <Filter>Resource Files\media</Filter>
+      <Filter>Resource Files\art</Filter>
     </None>
     <None Include="media\defaultHoverButton.png">
-      <Filter>Resource Files\media</Filter>
+      <Filter>Resource Files\art</Filter>
     </None>
     <None Include="media\tuatara.jpg">
-      <Filter>Resource Files\media</Filter>
+      <Filter>Resource Files\art</Filter>
     </None>
     <None Include="media\tile.png">
-      <Filter>Resource Files\media</Filter>
+      <Filter>Resource Files\art</Filter>
     </None>
     <None Include="media\exit.png">
-      <Filter>Resource Files\media</Filter>
+      <Filter>Resource Files\art</Filter>
     </None>
     <None Include="media\tileVent.png">
-      <Filter>Resource Files\media</Filter>
+      <Filter>Resource Files\art</Filter>
     </None>
     <None Include="media\ventSmoke.png">
-      <Filter>Resource Files\media</Filter>
+      <Filter>Resource Files\art</Filter>
     </None>
     <None Include="levels\level_1.xml">
       <Filter>Resource Files\levels</Filter>
@@ -228,6 +231,9 @@
     </None>
     <None Include="fmodexL.dll">
       <Filter>Resource Files</Filter>
+    </None>
+    <None Include="sound\level_0_bg.ogg">
+      <Filter>Resource Files\sound</Filter>
     </None>
   </ItemGroup>
 </Project>

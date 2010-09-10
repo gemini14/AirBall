@@ -83,7 +83,6 @@ namespace Tuatara
 			{
 			case KEY_ESCAPE:
 				game->stateMachine->ChangeState( MainMenu::Instance() );
-				gameState->pausedOrExited = true;
 				return true;
 
 			case KEY_LEFT:

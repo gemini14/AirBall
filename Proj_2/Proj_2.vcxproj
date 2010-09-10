@@ -148,6 +148,7 @@
     <None Include="media\tuatara.jpg" />
     <None Include="media\ventSmoke.png" />
     <None Include="pala.ttf" />
+    <None Include="sound\level_0_bg.ogg" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

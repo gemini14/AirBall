@@ -21,6 +21,7 @@
 
 #include "Game.h"
 #include "GameExit.h"
+#include "GameState.h"
 
 
 namespace Tuatara
@@ -68,9 +69,20 @@ int main()
 	{
 		if (game.manager->device->isWindowActive())
 		{
+			if( game.stateMachine->isInState( *GameState::Instance() ) )
+			{
+				GameState::Instance()->Pause( false );
+			}
 			game.Update();
 		}
-		else device->yield();
+		else
+		{
+			if( game.stateMachine->isInState( *GameState::Instance() ) )
+			{
+				GameState::Instance()->Pause( true );
+			}
+			device->yield();
+		}
 	}
 	return 0;
 }
