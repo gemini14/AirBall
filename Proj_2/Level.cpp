@@ -20,6 +20,8 @@ namespace Tuatara
 		});
 
 		ball->remove();
+		light1->remove();
+		light2->remove();
 	}
 
 	bool Level::StepSimulation( float timeDelta )
@@ -174,14 +176,26 @@ namespace Tuatara
 	void Level::CreateBall( irr::scene::ISceneManager *smgr, irr::video::ITexture *ballTex )
 	{
 		using namespace irr;
-
+		scene::IAnimatedMesh* mesh;
 		// create the scene node for the ball and set its properties
-		ball = smgr->addSphereSceneNode( 0.125f, 64, 0, -1, core::vector3df( entryX, entryY, entryZ ) );
-		ball->setMaterialFlag( video::EMF_LIGHTING, false );
+		mesh = smgr->getMesh("sphere.x");
+		ball = smgr->addAnimatedMeshSceneNode(mesh);
+		ball->setPosition(core::vector3df( entryX, entryY, entryZ ));
+		ball->addShadowVolumeSceneNode();
+		smgr->setShadowColor(video::SColor(150,0,0,0));
+		//ball = smgr->addSphereSceneNode( 0.125f, 64, 0, -1, core::vector3df( entryX, entryY, entryZ ) );
+		ball->setMaterialFlag( video::EMF_LIGHTING, true ); //false );
 		ball->setMaterialTexture( 0, ballTex );
 
 		// create the ball's physical counterpart
 		physics->CreateBall( entryX, entryY, entryZ );
+	}
+
+	void Level::CreateLight( irr::scene::ISceneManager* smgr)
+	{
+
+		light1 = smgr->addLightSceneNode(0, irr::core::vector3df(levelSize / 2, levelSize, levelSize / 2), irr::video::SColorf(255, 255, 255), levelSize * 2);
+		light2 = smgr->addLightSceneNode(0, irr::core::vector3df(levelSize / 2, 0, levelSize / 2), irr::video::SColorf(128, 128, 128), levelSize * 2);
 	}
 
 	void Level::CreateRenderBlocks( irr::scene::ISceneManager *smgr, irr::video::ITexture *wall )
@@ -214,7 +228,7 @@ namespace Tuatara
 						scene::IMeshSceneNode *node = smgr->addCubeSceneNode( 1.f, 0, -1, 
 							core::vector3df( static_cast<float>(x), static_cast<float>(cubeLevel),
 							static_cast<float>(z) ) );
-						node->setMaterialFlag( video::EMF_LIGHTING, false );
+						node->setMaterialFlag( video::EMF_LIGHTING, true ); //false );
 						node->setMaterialTexture( 0, wall );
 
 						// store the NodePos and ISceneNode
@@ -277,6 +291,7 @@ namespace Tuatara
 		}
 
 		CreateBall( smgr, ballTex );
+		CreateLight( smgr );
 		CreateRenderBlocks( smgr, wall );
 		CreateVents( smgr, ventFXTex, ventTex );
 		CreateExit( exitTex );

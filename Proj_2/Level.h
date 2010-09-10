@@ -57,14 +57,17 @@ namespace Tuatara
 		// Declarations
 		VentVector vents;
 		BuildingBlockMap levelBlocks;
+		irr::scene::ILightSceneNode* light1;
+		irr::scene::ILightSceneNode* light2;
 
 		float entryX, entryY, entryZ;
 		float exitX, exitY, exitZ;
 
-		irr::scene::IMeshSceneNode *ball;
+		irr::scene::IAnimatedMeshSceneNode *ball;
 
 		bool LoadLevelData( irr::io::IFileSystem *fileSystem, std::string& levelFile );
 		void CreateBall( irr::scene::ISceneManager *smgr, irr::video::ITexture *ballTex );
+		void CreateLight( irr::scene::ISceneManager* smgr);
 		void CreateRenderBlocks( irr::scene::ISceneManager *smgr, irr::video::ITexture *wall );
 		Direction CalcDirection( const float& x, const float& y, const float& z );
 		void CreatePhysicsBlocks();
