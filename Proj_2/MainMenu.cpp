@@ -17,7 +17,7 @@ namespace Tuatara
 		buttonList[MAINMENU_BUTTON_NEWGAME] = newGameButton;
 		buttonList[MAINMENU_BUTTON_EXIT] = exitButton;
 
-		backgroundPath = "menuBackground.jpg";
+		backgroundPath = "menuBackground.png";
 	}
 
 	// return the one and only instance of the pause menu:

@@ -18,7 +18,7 @@ namespace Tuatara
 		buttonList[PAUSEMENU_BUTTON_MAINMENU] = mainMenuButton;
 
 		// path to image for background:
-		backgroundPath = "pauseBackground.jpg";
+		backgroundPath = "pauseBackground.png";
 
 	}
 

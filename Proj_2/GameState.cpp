@@ -61,7 +61,7 @@ namespace Tuatara
 
 		bool levelCreatedOK = level->InitLevel( game->manager->smgr, game->manager->device->getFileSystem(),
 			levelFilenameGenerator( currentLevel ), game->manager->driver->getTexture( "tile.png" ),
-			game->manager->driver->getTexture( "tuatara.jpg" ), game->manager->driver->getTexture( "exit.png" ),
+			game->manager->driver->getTexture( "ball.png" ), game->manager->driver->getTexture( "exit.png" ),
 			game->manager->driver->getTexture( "tileVent.png" ), 
 			game->manager->driver->getTexture( "ventSmoke.png" ) );
 

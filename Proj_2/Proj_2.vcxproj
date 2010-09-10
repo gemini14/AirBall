@@ -128,6 +128,9 @@
     <ClInclude Include="VentParticles.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="art\ball.png" />
+    <None Include="art\menuBackground.png" />
+    <None Include="art\pauseBackground.png" />
     <None Include="fmodex.dll" />
     <None Include="fmodexL.dll" />
     <None Include="Irrlicht.dll" />
@@ -140,12 +143,9 @@
     <None Include="media\defaultHoverButton.png" />
     <None Include="media\exit.png" />
     <None Include="media\mainMenuButton.png" />
-    <None Include="media\menuBackground.jpg" />
-    <None Include="media\pauseBackground.jpg" />
     <None Include="media\returnToGameButton.png" />
     <None Include="media\tile.png" />
     <None Include="media\tileVent.png" />
-    <None Include="media\tuatara.jpg" />
     <None Include="media\ventSmoke.png" />
     <None Include="pala.ttf" />
     <None Include="sound\level_0_bg.ogg" />
