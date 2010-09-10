@@ -141,7 +141,7 @@ namespace Tuatara
 					else
 					{
 						u32 now = game->manager->device->getTimer()->getTime();
-						if( (now - then) / 1000.f >= 1.f )
+						if( (now - then) / 1000.f >= 1.5f )
 						{
 							Q_Action();
 						}
