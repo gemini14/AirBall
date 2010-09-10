@@ -117,6 +117,8 @@ namespace Tuatara
 		{
 			ball->remove();
 		}
+		light1->remove();
+		light2->remove();
 	}
 
 	bool Level_::InitLevel( irr::scene::ISceneManager *smgr, irr::io::IFileSystem *fileSystem, const std::string& levelFile, 
@@ -371,6 +373,7 @@ namespace Tuatara
 	{
 		physics->ApplyImpulseToBall( dir, x, y, z );
 	}
+
 	
 	Direction Level_::CalcDirection( const float& x, const float& y, const float& z )
 	{
