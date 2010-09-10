@@ -61,7 +61,9 @@ namespace Tuatara
 		float entryX, entryY, entryZ;
 		float exitX, exitY, exitZ;
 
-		irr::scene::IMeshSceneNode *ball;
+		irr::scene::ILightSceneNode* light1;
+		irr::scene::ILightSceneNode* light2;
+		irr::scene::IAnimatedMeshSceneNode *ball;
 
 		std::shared_ptr<SoundSystem> soundSystem;
 
@@ -80,6 +82,7 @@ namespace Tuatara
 		bool LoadLevelData( irr::io::IFileSystem *fileSystem, const std::string& levelFile );
 
 		void CreateBall( irr::scene::ISceneManager *smgr, irr::video::ITexture *ballTex );
+		void CreateLights( irr::scene::ISceneManager* smgr);
 		void CreateExit( irr::video::ITexture *exitTex );
 		void CreatePhysicsBlocks();
 		void CreateRenderBlocks( irr::scene::ISceneManager *smgr, irr::video::ITexture *wall );
@@ -96,7 +99,7 @@ namespace Tuatara
 	};
 
 
-	Level_::Level_() : physics( new PhysicsManager ), ball( nullptr ), soundSystem( new SoundSystem )
+	Level_::Level_() : physics( new PhysicsManager ), ball( nullptr ), soundSystem( new SoundSystem ), light1( nullptr ), light2( nullptr )
 	{
 	}
 
@@ -117,8 +120,17 @@ namespace Tuatara
 		{
 			ball->remove();
 		}
-		light1->remove();
-		light2->remove();
+
+		if ( light1 != nullptr )
+		{
+			light1->remove();
+			light1 = nullptr;
+		}
+		if ( light2 != nullptr )
+		{
+			light2->remove();
+			light2 = nullptr;
+		}
 	}
 
 	bool Level_::InitLevel( irr::scene::ISceneManager *smgr, irr::io::IFileSystem *fileSystem, const std::string& levelFile, 
@@ -136,6 +148,7 @@ namespace Tuatara
 		}
 
 		CreateBall( smgr, ballTex );
+		CreateLights( smgr );
 		CreateRenderBlocks( smgr, wall );
 		CreateVents( smgr, ventFXTex, ventTex );
 		CreateExit( exitTex );
@@ -240,12 +253,24 @@ namespace Tuatara
 		using namespace irr;
 
 		// create the scene node for the ball and set its properties
-		ball = smgr->addSphereSceneNode( 0.25f, 64, 0, -1, core::vector3df( entryX, entryY, entryZ ) );
-		ball->setMaterialFlag( video::EMF_LIGHTING, false );
+		scene::IAnimatedMesh* mesh;
+		mesh = smgr->getMesh("sphere.x");
+		ball = smgr->addAnimatedMeshSceneNode(mesh);
+		ball->setPosition(core::vector3df( entryX, entryY, entryZ ));
+		ball->addShadowVolumeSceneNode();
+		smgr->setShadowColor(video::SColor(150,0,0,0));
+		ball->setMaterialFlag( video::EMF_LIGHTING, true );
 		ball->setMaterialTexture( 0, ballTex );
 
 		// create the ball's physical counterpart
 		physics->CreateBall( entryX, entryY, entryZ );
+	}
+
+	void Level_::CreateLights( irr::scene::ISceneManager* smgr)
+	{
+
+		light1 = smgr->addLightSceneNode(0, irr::core::vector3df((float)levelSize / 2, (float)levelSize, (float)levelSize / 2), irr::video::SColorf(255, 255, 255), (float)levelSize * 2);
+		light2 = smgr->addLightSceneNode(0, irr::core::vector3df((float)levelSize / 2, 0, (float)levelSize / 2), irr::video::SColorf(128, 128, 128), (float)levelSize * 2);
 	}
 
 	void Level_::CreateExit( irr::video::ITexture *exitTex )
@@ -300,7 +325,7 @@ namespace Tuatara
 						scene::IMeshSceneNode *node = smgr->addCubeSceneNode( 1.f, 0, -1, 
 							core::vector3df( static_cast<float>(x), static_cast<float>(cubeLevel),
 							static_cast<float>(z) ) );
-						node->setMaterialFlag( video::EMF_LIGHTING, false );
+						node->setMaterialFlag( video::EMF_LIGHTING, true );
 						node->setMaterialTexture( 0, wall );
 
 						// store the NodePos and ISceneNode
