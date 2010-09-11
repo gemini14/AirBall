@@ -254,13 +254,17 @@ namespace Tuatara
 
 		// create the scene node for the ball and set its properties
 		scene::IAnimatedMesh* mesh;
-		mesh = smgr->getMesh("sphere.x");
+		mesh = smgr->getMesh("ball250.x");
 		ball = smgr->addAnimatedMeshSceneNode(mesh);
 		ball->setPosition(core::vector3df( entryX, entryY, entryZ ));
 		ball->addShadowVolumeSceneNode();
 		smgr->setShadowColor(video::SColor(150,0,0,0));
 		ball->setMaterialFlag( video::EMF_LIGHTING, true );
 		ball->setMaterialTexture( 0, ballTex );
+        // if we need to resize the ball, we can scall it with these two lines:
+		//ball->setScale(core::vector3df(4,4,4));
+        //ball->setMaterialFlag(video::EMF_NORMALIZE_NORMALS, true);
+
 
 		// create the ball's physical counterpart
 		physics->CreateBall( entryX, entryY, entryZ );
