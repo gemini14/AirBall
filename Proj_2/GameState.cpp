@@ -46,8 +46,8 @@ namespace Tuatara
 
 		// add camera
 		camera = game->manager->smgr->addCameraSceneNode( 0, 
-			core::vector3df( 1.f, levelSize - 1.f, 1.f ), 
-			core::vector3df( levelSize - 1, 1.f, levelSize - 1 ) );
+			core::vector3df( (float)levelSize / 2, (float)levelSize / 2, 1.f ), 
+			core::vector3df( (float)levelSize / 2, (float)levelSize / 2, levelSize - 1 ) );
 
 		level = new Level;
 		

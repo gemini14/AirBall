@@ -61,8 +61,8 @@ namespace Tuatara
 		float entryX, entryY, entryZ;
 		float exitX, exitY, exitZ;
 
-		irr::scene::ILightSceneNode* light1;
-		irr::scene::ILightSceneNode* light2;
+		irr::scene::ILightSceneNode* lightDir;
+		irr::scene::ILightSceneNode* lightAmb;
 		irr::scene::IAnimatedMeshSceneNode *ball;
 
 		std::shared_ptr<SoundSystem> soundSystem;
@@ -101,7 +101,7 @@ namespace Tuatara
 	};
 
 
-	Level_::Level_() : physics( new PhysicsManager ), ball( nullptr ), soundSystem( new SoundSystem ), light1( nullptr ), light2( nullptr )
+	Level_::Level_() : physics( new PhysicsManager ), ball( nullptr ), soundSystem( new SoundSystem ), lightDir( nullptr ), lightAmb( nullptr )
 	{
 	}
 
@@ -130,8 +130,8 @@ namespace Tuatara
 		};
 
 		safeDelete( ball );
-		safeDelete( light1 );
-		safeDelete( light2 );
+		safeDelete( lightDir );
+		safeDelete( lightAmb );
 	}
 
 	bool Level_::InitLevel( irr::scene::ISceneManager *smgr, irr::io::IFileSystem *fileSystem, const std::string& levelFile, 
@@ -242,7 +242,7 @@ namespace Tuatara
 				{
 					AddPairToSoundFilenameMap( "bgmusic", levelReader->getAttributeValueSafe( "file" ) );
 				}
-				else if( name == "collision\0" )
+				else if( name == "collisionSound\0" )
 				{
 					AddPairToSoundFilenameMap( "collision", levelReader->getAttributeValueSafe( "file" ) );
 				}
@@ -250,7 +250,7 @@ namespace Tuatara
 				{
 					AddPairToSoundFilenameMap( "vent", levelReader->getAttributeValueSafe( "file" ) );
 				}
-				else if( name == "jet\0" )
+				else if( name == "jetSound\0" )
 				{
 					AddPairToSoundFilenameMap( "jet", levelReader->getAttributeValueSafe( "file" ) );
 				}
@@ -273,11 +273,10 @@ namespace Tuatara
 		ball->addShadowVolumeSceneNode();
 		smgr->setShadowColor(video::SColor(150,0,0,0));
 		ball->setMaterialFlag( video::EMF_LIGHTING, true );
-		ball->setMaterialFlag( video::EMF_NORMALIZE_NORMALS, true );
 		ball->setMaterialTexture( 0, ballTex );
         // if we need to resize the ball, we can scale it with these two lines:
 		//ball->setScale(core::vector3df(4,4,4));
-        //ball->setMaterialFlag(video::EMF_NORMALIZE_NORMALS, true);
+        ball->setMaterialFlag(video::EMF_NORMALIZE_NORMALS, true);
 
 
 		// create the ball's physical counterpart
@@ -286,9 +285,16 @@ namespace Tuatara
 
 	void Level_::CreateLights( irr::scene::ISceneManager* smgr)
 	{
+		// Create directional light, for shadow:
+		// TODO: Get this to work... it's not right now, because the position part doesn't seem to be working...
+		//lightDir = smgr->addLightSceneNode(0, irr::core::vector3df(0, 1, 0), irr::video::SColorf(1, 1, 1), levelSize * 2);
+		//lightDir->setLightType( irr::video::ELT_DIRECTIONAL );
+		//lightDir->setPosition(irr::core::vector3df(0, 1, 0));
+		lightDir = smgr->addLightSceneNode(0, irr::core::vector3df((float)levelSize / 2, (float)levelSize * 5, (float)levelSize / 2), irr::video::SColorf(255, 255, 255), (float)levelSize * 5);
 
-		light1 = smgr->addLightSceneNode(0, irr::core::vector3df((float)levelSize / 2, (float)levelSize, (float)levelSize / 2), irr::video::SColorf(255, 255, 255), (float)levelSize * 2);
-		light2 = smgr->addLightSceneNode(0, irr::core::vector3df((float)levelSize / 2, 0, (float)levelSize / 2), irr::video::SColorf(128, 128, 128), (float)levelSize * 2);
+		// Create an ambient light, so everything's not quite so dark...
+		lightAmb = smgr->addLightSceneNode(0, irr::core::vector3df((float)levelSize / 2, 1, (float)levelSize / 2), irr::video::SColorf(128, 128, 128), (float)levelSize * 2);
+		lightAmb->enableCastShadow(false);
 	}
 
 	void Level_::CreateExit( irr::video::ITexture *exitTex )

@@ -9,4 +9,9 @@
   <vent x="5" y="0" z="4" strength="1"></vent>
   <vent x="2" y="9" z="3" strength="2"></vent>
   <vent x="7" y="1" z="9" strength="2"></vent>
+
+  <bgmusic file="sound/level_0_bg.ogg"></bgmusic>
+  <collisionSound file=""></collisionSound>
+  <ventSound file="sound/vent.ogg"></ventSound>
+  <jetSound file="sound/jet.ogg"></jetSound>
 </level>
