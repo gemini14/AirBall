@@ -235,9 +235,12 @@
     <None Include="art\pauseBackground.png">
       <Filter>Resource Files\art</Filter>
     </None>
-    <None Include="art\sphere.x">
-      <Filter>Resource Files\art</Filter>
+    <None Include="levels\level_2.xml">
+      <Filter>Resource Files\levels</Filter>
     </None>
+    <None Include="levels\level_3.xml">
+      <Filter>Resource Files\levels</Filter>
+    </None>    
     <None Include="art\Ball125.x">
       <Filter>Resource Files\art</Filter>
     </None>

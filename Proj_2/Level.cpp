@@ -275,8 +275,10 @@ namespace Tuatara
 		ball->setMaterialFlag( video::EMF_LIGHTING, true );
 		ball->setMaterialFlag( video::EMF_NORMALIZE_NORMALS, true );
 		ball->setMaterialTexture( 0, ballTex );
-        // if we need to resize the ball, we can scale it with this:
+        // if we need to resize the ball, we can scale it with these two lines:
 		//ball->setScale(core::vector3df(4,4,4));
+        //ball->setMaterialFlag(video::EMF_NORMALIZE_NORMALS, true);
+
 
 		// create the ball's physical counterpart
 		physics->CreateBall( entryX, entryY, entryZ );
