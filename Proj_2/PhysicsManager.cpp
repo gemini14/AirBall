@@ -103,6 +103,7 @@ namespace Tuatara
 		void ApplyImpulseToBall( Direction dir, const float& x = 0, const float& y = 0, const float& z = 0 );
 		irr::core::vector3df GetBallPosition() const;
 		bool GetBallRotation( irr::core::vector3df& rotationVector ) const;
+		irr::core::vector3df GetBallVelocity() const;
 
 		virtual void postSimulationCallback( hkpWorld* world );
 	};
@@ -491,7 +492,7 @@ namespace Tuatara
 		{
 			return false;
 		}
-
+		
 		static hkVector4 originalAxis;
 		ballRotation.getAxis( originalAxis );
 		irr::core::vector3df axis( originalAxis( 0 ), originalAxis( 1 ), originalAxis( 2 ) );
@@ -507,6 +508,12 @@ namespace Tuatara
 		return true;
 	}
 
+	irr::core::vector3df Physics_Manager::GetBallVelocity() const
+	{
+		hkVector4 vel = ball->getLinearVelocity();
+		return irr::core::vector3df( vel(0), vel(1), vel(2) );
+	}
+
 	void Physics_Manager::postSimulationCallback( hkpWorld* world )
 	{
 		BOOST_FOREACH( Vent *v, vents )
@@ -515,25 +522,26 @@ namespace Tuatara
 			auto impulse = [=]()->hkVector4
 			{
 				float x( 0.f ), y( 0.f ), z( 0.f );
+				float impulseValue = 0.05f;
 				switch( v->direction )
 				{
 				case FORWARD:
-					z += 0.05f;
+					z += impulseValue;
 					break;
 				case BACKWARD:
-					z -= 0.05f;
+					z -= impulseValue;
 					break;
 				case LEFT:
-					x -= 0.05f;
+					x -= impulseValue;
 					break;
 				case RIGHT:
-					x += 0.05f;
+					x += impulseValue;
 					break;
 				case UP:
-					y += 0.05f;
+					y += impulseValue;
 					break;
 				case DOWN:
-					y -= 0.05f;
+					y -= impulseValue;
 					break;
 				default:
 					printf( "postSimulationCallback: bad direction in vent structure.\n" );
@@ -564,7 +572,7 @@ namespace Tuatara
 		}
 
 		exit->ensureDeterministicOrder();
-		// level completion check (bit of code duplication here, will look into it later)
+		// level completion check
 		for( int i = 0; i < exit->getOverlappingCollidables().getSize(); ++i )
 		{
 			hkpCollidable* c = exit->getOverlappingCollidables()[i];
@@ -625,5 +633,10 @@ namespace Tuatara
 	bool PhysicsManager::GetBallRotation( irr::core::vector3df& rotationVector ) const
 	{
 		return physics->GetBallRotation( rotationVector );
+	}
+
+	irr::core::vector3df PhysicsManager::GetBallVelocity() const
+	{
+		return physics->GetBallVelocity();
 	}
 }

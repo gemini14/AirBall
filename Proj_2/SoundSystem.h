@@ -27,10 +27,13 @@ namespace Tuatara
 		void CreateSounds( const SoundFilenameMap& soundFilenameMap );
 		
 		void StartPlayingLoopingSounds();
+		void PlayJetSound();
 		void PausePlayback();
 		void ResumePlayback();
 		
-		void Update();
+		void Update( const float& posX, const float& posY, const float& posZ, 
+			 const float& velocityX, const float& velocityY, const float& velocityZ, 
+			  const float& forwardX, const float& forwardY, const float& forwardZ );
 		
 	};
 }

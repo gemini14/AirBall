@@ -96,6 +96,7 @@ namespace Tuatara
 		void RemoveBlock( float x, float y, float z );
 
 		void Pause( bool pause );
+		void PlayJetSound();
 	};
 
 
@@ -168,18 +169,29 @@ namespace Tuatara
 
 	bool Level_::StepSimulation( float timeDelta )
 	{
+		using namespace irr::core;
 		bool levelComplete = physics->StepSimulation( timeDelta );
+		
+		static vector3df lastpos = ball->getPosition();
 		// set ball position:
-		ball->setPosition( physics->GetBallPosition() );
+		vector3df position = physics->GetBallPosition();
+		ball->setPosition( position );
 
 		// set ball rotation (if there is a valid rotation)
-		static irr::core::vector3df rotation;
+		static vector3df rotation;
 		if( physics->GetBallRotation( rotation ) ) 
 		{
 			ball->setRotation( rotation );
 		}
 
-		soundSystem->Update();
+		vector3df soundSysVelocity = ( position - lastpos ) / ( 1.f / 60.f );
+		vector3df ballVelocity = physics->GetBallVelocity().normalize();
+		
+		soundSystem->Update( position.X, position.Y, position.Z,			// position
+			soundSysVelocity.X, soundSysVelocity.Y, soundSysVelocity.Z,		// velocity
+			ballVelocity.X, ballVelocity.Y, ballVelocity.Z );				// forward vector
+
+		lastpos = position;
 
 		return levelComplete;
 	}
@@ -260,11 +272,10 @@ namespace Tuatara
 		ball->addShadowVolumeSceneNode();
 		smgr->setShadowColor(video::SColor(150,0,0,0));
 		ball->setMaterialFlag( video::EMF_LIGHTING, true );
+		ball->setMaterialFlag( video::EMF_NORMALIZE_NORMALS, true );
 		ball->setMaterialTexture( 0, ballTex );
-        // if we need to resize the ball, we can scall it with these two lines:
+        // if we need to resize the ball, we can scale it with this:
 		//ball->setScale(core::vector3df(4,4,4));
-        //ball->setMaterialFlag(video::EMF_NORMALIZE_NORMALS, true);
-
 
 		// create the ball's physical counterpart
 		physics->CreateBall( entryX, entryY, entryZ );
@@ -470,6 +481,13 @@ namespace Tuatara
 		}
 	}
 
+	void Level_::PlayJetSound()
+	{
+		soundSystem->PlayJetSound();
+	}
+
+
+
 	//public implementation
 	Level::Level() : level_( new Level_ )
 	{
@@ -499,5 +517,10 @@ namespace Tuatara
 	void Level::Pause( bool pause )
 	{
 		level_->Pause( pause );
+	}
+
+	void Level::PlayJetSound()
+	{
+		level_->PlayJetSound();
 	}
 }

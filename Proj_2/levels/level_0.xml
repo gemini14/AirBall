@@ -18,6 +18,6 @@
   
   <bgmusic file="sound/level_0_bg.ogg"></bgmusic>
   <collision file=""></collision>
-  <vent file=""></vent>
-  <jet file=""></jet>
+  <vent file="sound/vent.ogg"></vent>
+  <jet file="sound/jet.ogg"></jet>
 </level>

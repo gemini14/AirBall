@@ -107,18 +107,22 @@ namespace Tuatara
 
 			case KEY_KEY_W:
 				gameState->level->ApplyImpulseToBall( FORWARD, 0.f, 0.f, 0.6f);
+				gameState->level->PlayJetSound();
 				return true;
 
 			case KEY_KEY_A:
 				gameState->level->ApplyImpulseToBall( LEFT, -0.6f, 0.f, 0.f);
+				gameState->level->PlayJetSound();
 				return true;
 
 			case KEY_KEY_S:
 				gameState->level->ApplyImpulseToBall( BACKWARD, 0.f, 0.f, -0.6f);
+				gameState->level->PlayJetSound();
 				return true;
 
 			case KEY_KEY_D:
 				gameState->level->ApplyImpulseToBall( RIGHT, 0.6f, 0.f, 0.f);
+				gameState->level->PlayJetSound();
 				return true;
 
 			case KEY_KEY_Q:
@@ -128,6 +132,7 @@ namespace Tuatara
 					static auto Q_Action = [&]()
 					{
 						gameState->level->ApplyImpulseToBall( UP, 0, 5.f, 0 );
+						gameState->level->PlayJetSound();
 
 						then = game->manager->device->getTimer()->getTime();
 						okToExecute = !okToExecute;

@@ -129,8 +129,11 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="art\ball.png" />
+    <None Include="art\Ball125.x" />
+    <None Include="art\Ball250.x" />
     <None Include="art\menuBackground.png" />
     <None Include="art\pauseBackground.png" />
+    <None Include="art\sphere.x" />
     <None Include="fmodex.dll" />
     <None Include="fmodexL.dll" />
     <None Include="Irrlicht.dll" />
@@ -149,6 +152,7 @@
     <None Include="media\ventSmoke.png" />
     <None Include="pala.ttf" />
     <None Include="sound\level_0_bg.ogg" />
+    <None Include="sound\vent.ogg" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

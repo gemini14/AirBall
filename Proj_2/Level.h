@@ -32,7 +32,8 @@ namespace Tuatara
 		
 		void ApplyImpulseToBall( Direction dir, const float& x = 0, const float& y = 0, const float& z = 0);
 		void Pause( bool pause );
-		bool StepSimulation( float timeDelta = 0 );	
+		bool StepSimulation( float timeDelta = 0 );
+		void PlayJetSound();
 	};
 
 }

@@ -20,6 +20,7 @@ namespace Tuatara
 		FMOD_RESULT result;
 
 		FMOD::Sound *bgmusic;
+		FMOD::Sound *jet;
 
 		FMOD_System();
 		~FMOD_System();
@@ -31,15 +32,18 @@ namespace Tuatara
 		void CreateSounds( const SoundFilenameMap& soundFilenames );
 		
 		void StartPlayingLoopingSounds();
+		void PlayJetSound();
 		void PausePlayback();
 		void ResumePlayback();
 
-		void Update();
+		void Update( const float& posX, const float& posY, const float& posZ, 
+			 const float& velocityX, const float& velocityY, const float& velocityZ, 
+			  const float& forwardX, const float& forwardY, const float& forwardZ );
 	};
 
 	///// private implementation /////
 
-	FMOD_System::FMOD_System() : init( false ), system( nullptr ), bgmusic( nullptr )
+	FMOD_System::FMOD_System() : init( false ), system( nullptr ), bgmusic( nullptr ), jet( nullptr )
 	{
 		ErrorCheck( FMOD::System_Create( &system ) );
 
@@ -91,9 +95,14 @@ namespace Tuatara
 		
 		if( isPresent( "bgmusic" ) )
 		{
-			ErrorCheck( system->createSound( soundFilenames.at("bgmusic").c_str(), FMOD_LOOP_NORMAL, nullptr, &bgmusic ) );
+			ErrorCheck( system->createStream( soundFilenames.at("bgmusic").c_str(), FMOD_LOOP_NORMAL,
+				nullptr, &bgmusic ) );
 			bgmusic->setLoopCount( -1 );
 			bgmusic->setDefaults( 44100, 0.5f, 0.f, 128 );
+		}
+		if( isPresent( "jet" ) )
+		{
+			ErrorCheck( system->createSound( soundFilenames.at( "jet" ).c_str(), FMOD_DEFAULT, nullptr, &jet ) );
 		}
 	}
 
@@ -102,6 +111,18 @@ namespace Tuatara
 		if( bgmusic != nullptr )
 		{
 			system->playSound( FMOD_CHANNEL_FREE, bgmusic, false, nullptr );
+		}
+	}
+
+	void FMOD_System::PlayJetSound()
+	{
+		if( jet != nullptr )
+		{
+			//FMOD::Channel *jet_channel;
+			system->playSound( FMOD_CHANNEL_FREE, jet, false, nullptr/*&jet_channel*/ );
+			//FMOD_VECTOR position = { x, y, z };
+			//jet_channel->set3DAttributes( &position, nullptr );
+			//jet_channel->setPaused( false );
 		}
 	}
 
@@ -119,8 +140,14 @@ namespace Tuatara
 		masterGroup->setPaused( false );
 	}
 
-	void FMOD_System::Update()
+	void FMOD_System::Update( const float& posX, const float& posY, const float& posZ, 
+			 const float& velocityX, const float& velocityY, const float& velocityZ, 
+			  const float& forwardX, const float& forwardY, const float& forwardZ )
 	{
+		FMOD_VECTOR position = { posX, posY, posZ };
+		FMOD_VECTOR velocity = { velocityX, velocityY, velocityZ };
+		FMOD_VECTOR forward = { forwardX, forwardY, forwardZ };
+		system->set3DListenerAttributes( 0, &position, &velocity, &forward, nullptr );
 		system->update();
 	}
 
@@ -150,6 +177,11 @@ namespace Tuatara
 		system->StartPlayingLoopingSounds();
 	}
 
+	void SoundSystem::PlayJetSound()
+	{
+		system->PlayJetSound();
+	}
+
 	void SoundSystem::PausePlayback()
 	{
 		system->PausePlayback();
@@ -160,8 +192,10 @@ namespace Tuatara
 		system->ResumePlayback();
 	}
 
-	void SoundSystem::Update()
+	void SoundSystem::Update( const float& posX, const float& posY, const float& posZ, 
+			 const float& velocityX, const float& velocityY, const float& velocityZ, 
+			  const float& forwardX, const float& forwardY, const float& forwardZ )
 	{
-		system->Update();
+		system->Update( posX, posY, posZ, velocityX, velocityY, velocityZ, forwardX, forwardY, forwardZ );
 	}
 }
