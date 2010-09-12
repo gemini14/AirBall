@@ -261,7 +261,7 @@ namespace Tuatara
 		smgr->setShadowColor(video::SColor(150,0,0,0));
 		ball->setMaterialFlag( video::EMF_LIGHTING, true );
 		ball->setMaterialTexture( 0, ballTex );
-        // if we need to resize the ball, we can scall it with these two lines:
+        // if we need to resize the ball, we can scale it with these two lines:
 		//ball->setScale(core::vector3df(4,4,4));
         //ball->setMaterialFlag(video::EMF_NORMALIZE_NORMALS, true);
 
