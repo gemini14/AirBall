@@ -1,5 +1,6 @@
 #include "SoundSystem.h"
 
+#include <algorithm>
 #include <iostream>
 #include <string>
 #include <vector>
@@ -21,6 +22,13 @@ namespace Tuatara
 
 		FMOD::Sound *bgmusic;
 		FMOD::Sound *jet;
+		FMOD::Sound *ventSound;
+		
+		struct VentPoint
+		{
+			float x, y, z;
+		};
+		std::vector<VentPoint> vents;
 
 		FMOD_System();
 		~FMOD_System();
@@ -30,6 +38,7 @@ namespace Tuatara
 		
 		bool SoundSystemInitOK() const;
 		void CreateSounds( const SoundFilenameMap& soundFilenames );
+		void CreateVentSound( const float& x, const float& y, const float& z );
 		
 		void StartPlayingLoopingSounds();
 		void PlayJetSound();
@@ -43,7 +52,8 @@ namespace Tuatara
 
 	///// private implementation /////
 
-	FMOD_System::FMOD_System() : init( false ), system( nullptr ), bgmusic( nullptr ), jet( nullptr )
+	FMOD_System::FMOD_System() : init( false ), system( nullptr ), bgmusic( nullptr ), 
+		jet( nullptr ), ventSound( nullptr )
 	{
 		ErrorCheck( FMOD::System_Create( &system ) );
 
@@ -60,9 +70,19 @@ namespace Tuatara
 
 	FMOD_System::~FMOD_System()
 	{
+		auto safeDelete = []( FMOD::Sound* sound )
+		{
+			if( sound != nullptr )
+			{
+				sound->release();
+			}
+		};
+
 		if( init )
 		{
-			bgmusic->release();
+			safeDelete( bgmusic );
+			safeDelete( jet );
+			safeDelete( ventSound );
 
 			system->release();
 		}
@@ -95,15 +115,26 @@ namespace Tuatara
 		
 		if( isPresent( "bgmusic" ) )
 		{
-			ErrorCheck( system->createStream( soundFilenames.at("bgmusic").c_str(), FMOD_LOOP_NORMAL,
+			ErrorCheck( system->createStream( soundFilenames.at("bgmusic").c_str(), FMOD_LOOP_NORMAL | FMOD_CREATESTREAM,
 				nullptr, &bgmusic ) );
-			bgmusic->setLoopCount( -1 );
 			bgmusic->setDefaults( 44100, 0.5f, 0.f, 128 );
 		}
 		if( isPresent( "jet" ) )
 		{
 			ErrorCheck( system->createSound( soundFilenames.at( "jet" ).c_str(), FMOD_DEFAULT, nullptr, &jet ) );
 		}
+		if( isPresent( "vent" ) )
+		{
+			ErrorCheck( system->createSound( soundFilenames.at( "vent" ).c_str(), FMOD_3D | FMOD_LOOP_NORMAL,
+				nullptr, &ventSound ) );
+			ventSound->setDefaults( 44100, 0.02f, 0.f, 128 );
+		}
+	}
+
+	void FMOD_System::CreateVentSound( const float& x, const float& y, const float& z )
+	{
+		VentPoint v = { x, y, z };
+		vents.push_back( v );
 	}
 
 	void FMOD_System::StartPlayingLoopingSounds()
@@ -112,17 +143,25 @@ namespace Tuatara
 		{
 			system->playSound( FMOD_CHANNEL_FREE, bgmusic, false, nullptr );
 		}
+
+		if( ventSound != nullptr )
+		{
+			std::for_each( vents.begin(), vents.end(), [&]( VentPoint v )
+			{
+				FMOD::Channel *vent_channel;
+				FMOD_System::system->playSound( FMOD_CHANNEL_FREE, ventSound, true, &vent_channel );
+				FMOD_VECTOR position = { v.x, v.y, v.z };
+				vent_channel->set3DAttributes( &position, nullptr );
+				vent_channel->setPaused( false );
+			});
+		}
 	}
 
 	void FMOD_System::PlayJetSound()
 	{
 		if( jet != nullptr )
 		{
-			//FMOD::Channel *jet_channel;
-			system->playSound( FMOD_CHANNEL_FREE, jet, false, nullptr/*&jet_channel*/ );
-			//FMOD_VECTOR position = { x, y, z };
-			//jet_channel->set3DAttributes( &position, nullptr );
-			//jet_channel->setPaused( false );
+			system->playSound( FMOD_CHANNEL_FREE, jet, false, nullptr);
 		}
 	}
 
@@ -170,6 +209,11 @@ namespace Tuatara
 	void SoundSystem::CreateSounds( const SoundFilenameMap& soundFilenameMap )
 	{
 		system->CreateSounds( soundFilenameMap );
+	}
+
+	void SoundSystem::CreateVentSound( const float& x, const float& y, const float& z )
+	{
+		system->CreateVentSound( x, y, z );
 	}
 
 	void SoundSystem::StartPlayingLoopingSounds()

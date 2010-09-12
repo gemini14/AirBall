@@ -247,5 +247,8 @@
     <None Include="sound\vent.ogg">
       <Filter>Resource Files\sound</Filter>
     </None>
+    <None Include="sound\jet.ogg">
+      <Filter>Resource Files\sound</Filter>
+    </None>
   </ItemGroup>
 </Project>

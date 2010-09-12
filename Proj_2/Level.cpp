@@ -88,6 +88,7 @@ namespace Tuatara
 		void CreateRenderBlocks( irr::scene::ISceneManager *smgr, irr::video::ITexture *wall );
 		void CreateVents( irr::scene::ISceneManager *smgr, irr::video::ITexture *particleTex,
 			irr::video::ITexture *ventTex );
+		void CreateVentSounds();
 
 		void AddPairToSoundFilenameMap( const std::string& key, const std::string& value );
 		void ApplyImpulseToBall( Direction dir, const float& x, const float& y, const float& z );
@@ -106,6 +107,9 @@ namespace Tuatara
 
 	Level_::~Level_()
 	{
+		// to prevent user from hearing sounds as level is deleted
+		soundSystem->PausePlayback();
+
 		// memory cleanup
 		BOOST_FOREACH( VentInfo *v, vents )
 		{
@@ -117,21 +121,17 @@ namespace Tuatara
 			p.second->remove();
 		});
 
-		if( ball == nullptr )
+		auto safeDelete = []( irr::scene::ISceneNode *node )
 		{
-			ball->remove();
-		}
+			if( node != nullptr )
+			{
+				node->remove();
+			}
+		};
 
-		if ( light1 != nullptr )
-		{
-			light1->remove();
-			light1 = nullptr;
-		}
-		if ( light2 != nullptr )
-		{
-			light2->remove();
-			light2 = nullptr;
-		}
+		safeDelete( ball );
+		safeDelete( light1 );
+		safeDelete( light2 );
 	}
 
 	bool Level_::InitLevel( irr::scene::ISceneManager *smgr, irr::io::IFileSystem *fileSystem, const std::string& levelFile, 
@@ -140,6 +140,11 @@ namespace Tuatara
 	{
 		using namespace irr;
 		using namespace std;
+
+		if( !soundSystem->SoundSystemInitOK() )
+		{
+			return false;
+		}
 
 		// make sure level data was read in correctly
 		// note that this part can be extended to read in other info like music location
@@ -156,12 +161,8 @@ namespace Tuatara
 		// creating physics blocks is last because the exit has to be removed
 		CreatePhysicsBlocks();
 
-		if( !soundSystem->SoundSystemInitOK() )
-		{
-			return false;
-		}
-
 		soundSystem->CreateSounds( soundFilenameMap );
+		CreateVentSounds();
 		soundSystem->StartPlayingLoopingSounds();
 
 		return true;
@@ -245,7 +246,7 @@ namespace Tuatara
 				{
 					AddPairToSoundFilenameMap( "collision", levelReader->getAttributeValueSafe( "file" ) );
 				}
-				else if( name == "vent\0" )
+				else if( name == "ventSound\0" )
 				{
 					AddPairToSoundFilenameMap( "vent", levelReader->getAttributeValueSafe( "file" ) );
 				}
@@ -397,6 +398,14 @@ namespace Tuatara
 			v->particle.reset( new VentParticles(smgr, particleTex, vector3df( v->x, v->y, v->z ), 
 				normalGenerator( v->direction ), static_cast<float>(v->strength) ) );
 		}
+	}
+
+	void Level_::CreateVentSounds()
+	{
+		std::for_each( vents.begin(), vents.end(), [&]( VentInfo *v )
+		{
+			soundSystem->CreateVentSound( v->x, v->y, v->z );
+		});
 	}
 
 	void Level_::AddPairToSoundFilenameMap( const std::string& key, const std::string& value )

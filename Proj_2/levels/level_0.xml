@@ -3,7 +3,7 @@
 <level>
   <entry x="4.5" y="1" z="4.5"></entry>
   <exit x="6" y="1" z="0"></exit>
-  
+
   <vent x="4" y="0" z="8" strength="8"></vent>
   <vent x="4" y="0" z="7" strength="8"></vent>
   <vent x="3" y="0" z="8" strength="5"></vent>
@@ -15,9 +15,9 @@
   <vent x="5" y="0" z="4" strength="1"></vent>
   <vent x="2" y="9" z="3" strength="2"></vent>
   <vent x="7" y="1" z="9" strength="2"></vent>
-  
+
   <bgmusic file="sound/level_0_bg.ogg"></bgmusic>
   <collision file=""></collision>
-  <vent file="sound/vent.ogg"></vent>
+  <ventSound file="sound/vent.ogg"></ventSound>
   <jet file="sound/jet.ogg"></jet>
 </level>

@@ -25,6 +25,7 @@ namespace Tuatara
 
 		bool SoundSystemInitOK() const;
 		void CreateSounds( const SoundFilenameMap& soundFilenameMap );
+		void CreateVentSound( const float& x, const float& y, const float& z );
 		
 		void StartPlayingLoopingSounds();
 		void PlayJetSound();
