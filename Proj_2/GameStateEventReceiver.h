@@ -24,11 +24,6 @@ namespace Tuatara
 		Game *game;
 		GameState *gameState;
 
-		const irr::core::vector3df GetNewCameraTarget( const irr::core::vector3df& currentPos,
-			const irr::core::vector3df& target, const Direction& dir );
-		const irr::core::vector3df GetCameraLookVector();
-		const irr::core::vector3df GetCameraUpVector();
-
 	public:
 
 		GameStateEventReceiver();

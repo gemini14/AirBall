@@ -13,6 +13,6 @@
   <bgmusic file=""></bgmusic>
   <collisionSound file=""></collisionSound>
   <ventSound file="sound/vent.ogg"></ventSound>
-  <jetSound file="sound/jet.ogg"></jetSound>
+  <jetSound></jetSound>
 
 </level>

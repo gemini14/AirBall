@@ -44,11 +44,6 @@ namespace Tuatara
 		gameEventRcvr->SetGame( game, this );
 		game->manager->device->setEventReceiver( gameEventRcvr.get() );
 
-		// add camera
-		camera = game->manager->smgr->addCameraSceneNode( 0, 
-			core::vector3df( (float)levelSize / 2, (float)levelSize / 2, 1.f ), 
-			core::vector3df( (float)levelSize / 2, (float)levelSize / 2, levelSize - 1 ) );
-
 		level = new Level;
 		
 		// returns the correct filename for the level file based on which level the player is on
@@ -105,7 +100,6 @@ namespace Tuatara
 	void GameState::Exit( Game *game )
 	{
 		delete level;
-		camera->remove();
 	}
 
 	void GameState::ResetGameState( Game *game )

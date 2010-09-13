@@ -31,6 +31,7 @@ namespace Tuatara
 			irr::video::ITexture *ventTex, irr::video::ITexture *ventFXTex );
 		
 		void ApplyImpulseToBall( Direction dir, const float& x = 0, const float& y = 0, const float& z = 0);
+		void ApplyDirectionToCamera( Direction dir );
 		void Pause( bool pause );
 		bool StepSimulation( float timeDelta = 0 );
 		void PlayJetSound();

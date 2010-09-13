@@ -36,7 +36,6 @@ namespace Tuatara
 		std::shared_ptr<GameStateEventReceiver> gameEventRcvr;
 		Level *level;
 
-		irr::scene::ICameraSceneNode *camera;
 		void ResetGameState( Game *game );
 
 	public:
