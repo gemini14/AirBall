@@ -58,7 +58,7 @@ namespace Tuatara
 			levelFilenameGenerator( currentLevel ), game->manager->driver->getTexture( "tile.png" ),
 			game->manager->driver->getTexture( "ball.png" ), game->manager->driver->getTexture( "exit.png" ),
 			game->manager->driver->getTexture( "tileVent.png" ), 
-			game->manager->driver->getTexture( "ventSmoke.png" ), game->manager->driver->getTexture( "tile2.png" ) );
+			game->manager->driver->getTexture( "ventSmoke.png" ), game->manager->driver->getTexture( "tileTransparent.png" ) );
 
 		if( !levelCreatedOK )
 		{
