@@ -134,6 +134,7 @@
     <None Include="art\menuBackground.png" />
     <None Include="art\pauseBackground.png" />
     <None Include="art\sphere.x" />
+    <None Include="art\tileTransparent.png" />
     <None Include="fmodex.dll" />
     <None Include="fmodexL.dll" />
     <None Include="Irrlicht.dll" />

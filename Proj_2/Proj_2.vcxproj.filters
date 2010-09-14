@@ -240,7 +240,7 @@
     </None>
     <None Include="levels\level_3.xml">
       <Filter>Resource Files\levels</Filter>
-    </None>    
+    </None>
     <None Include="art\Ball125.x">
       <Filter>Resource Files\art</Filter>
     </None>
@@ -252,6 +252,10 @@
     </None>
     <None Include="sound\jet.ogg">
       <Filter>Resource Files\sound</Filter>
+    </None>
+    <None Include="art\sphere.x" />
+    <None Include="art\tileTransparent.png">
+      <Filter>Resource Files\art</Filter>
     </None>
   </ItemGroup>
 </Project>
