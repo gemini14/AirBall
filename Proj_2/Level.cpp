@@ -79,7 +79,7 @@ namespace Tuatara
 
 		bool InitLevel( irr::scene::ISceneManager *smgr, irr::io::IFileSystem *fileSystem, const std::string& levelFile, 
 			irr::video::ITexture *wall, irr::video::ITexture *ballTex, irr::video::ITexture *exitTex,
-			irr::video::ITexture *ventTex, irr::video::ITexture *ventFXTex );
+			irr::video::ITexture *ventTex, irr::video::ITexture *ventFXTex, irr::video::ITexture *transTex );
 		bool StepSimulation( float timeDelta );
 
 		bool LoadLevelData( irr::io::IFileSystem *fileSystem, const std::string& levelFile );
@@ -90,7 +90,7 @@ namespace Tuatara
 		void CreateWallNodes( irr::scene::ISceneManager* smgr );
 		void CreateExit( irr::video::ITexture *exitTex );
 		void CreatePhysicsBlocks();
-		void CreateRenderBlocks( irr::scene::ISceneManager *smgr, irr::video::ITexture *wall );
+		void CreateRenderBlocks( irr::scene::ISceneManager *smgr, irr::video::ITexture *wall, irr::video::ITexture *transTex );
 		void CreateVents( irr::scene::ISceneManager *smgr, irr::video::ITexture *particleTex,
 			irr::video::ITexture *ventTex );
 		void CreateVentSounds();
@@ -163,7 +163,7 @@ namespace Tuatara
 
 	bool Level_::InitLevel( irr::scene::ISceneManager *smgr, irr::io::IFileSystem *fileSystem, const std::string& levelFile, 
 		irr::video::ITexture *wall, irr::video::ITexture *ballTex, irr::video::ITexture *exitTex,
-		irr::video::ITexture *ventTex, irr::video::ITexture *ventFXTex )
+		irr::video::ITexture *ventTex, irr::video::ITexture *ventFXTex, irr::video::ITexture *transTex )
 	{
 		using namespace irr;
 		using namespace std;
@@ -184,7 +184,7 @@ namespace Tuatara
 		CreateWallNodes( smgr );
 		CreateBall( smgr, ballTex );
 		CreateLights( smgr );
-		CreateRenderBlocks( smgr, wall );
+		CreateRenderBlocks( smgr, wall, transTex );
 		CreateVents( smgr, ventFXTex, ventTex );
 		CreateExit( exitTex );
 		// creating physics blocks is last because the exit has to be removed
@@ -317,10 +317,6 @@ namespace Tuatara
 	void Level_::CreateLights( irr::scene::ISceneManager* smgr )
 	{
 		// Create directional light, for shadow:
-		// TODO: Get this to work... it's not right now, because the position part doesn't seem to be working...
-		//lightDir = smgr->addLightSceneNode(0, irr::core::vector3df(0, 1, 0), irr::video::SColorf(1, 1, 1), levelSize * 2);
-		//lightDir->setLightType( irr::video::ELT_DIRECTIONAL );
-		//lightDir->setPosition(irr::core::vector3df(0, 1, 0));
 		lightDir = smgr->addLightSceneNode(0, irr::core::vector3df((float)levelSize / 2, (float)levelSize * 5, (float)levelSize / 2), irr::video::SColorf(255, 255, 255), (float)levelSize * 5);
 
 		// Create an ambient light, so everything's not quite so dark...
@@ -369,7 +365,7 @@ namespace Tuatara
 		});
 	}
 
-	void Level_::CreateRenderBlocks( irr::scene::ISceneManager *smgr, irr::video::ITexture *wall )
+	void Level_::CreateRenderBlocks( irr::scene::ISceneManager *smgr, irr::video::ITexture *wall, irr::video::ITexture *transTex )
 	{
 		using namespace irr;
 		using namespace std;
@@ -389,9 +385,6 @@ namespace Tuatara
 						( ( z == 0 || z == levelSize ) || ( z > 0 && z < levelSize && ( x == 0 || x == levelSize ) ) )
 						) )
 					{
-						scene::ISceneNode* parent;
-						parent = GetParentWall(x, cubeLevel, z);
-
 						NodePos nodePos;
 						// store the x,y,z positions
 						nodePos.x = static_cast<float>(x);
@@ -399,6 +392,8 @@ namespace Tuatara
 						nodePos.z = static_cast<float>(z);
 
 						// create the node in the scene and set its properties
+						scene::ISceneNode* parent;
+						parent = GetParentWall(x, cubeLevel, z);
 						scene::IMeshSceneNode *node = smgr->addCubeSceneNode( 1.f, parent, -1, 
 							core::vector3df( static_cast<float>(x), static_cast<float>(cubeLevel),
 							static_cast<float>(z) ) );
@@ -408,16 +403,13 @@ namespace Tuatara
 						// store the NodePos and ISceneNode
 						levelBlocks.insert( make_pair( nodePos, node ) );
 
+						// create transparent node in scene...
 						scene::IMeshSceneNode *transNode = smgr->addCubeSceneNode( 1.f, 0, -1, 
 							core::vector3df( static_cast<float>(x), static_cast<float>(cubeLevel),
 							static_cast<float>(z) ) );
-						scene::IMesh *mesh = transNode->getMesh();
-						scene::IMeshManipulator* man = smgr->getMeshManipulator();
-						man->setVertexColorAlpha(mesh, 0.8f);
-						transNode->setMaterialFlag( video::EMF_LIGHTING, false );
-						//transNode->setMaterialFlag( video::EMF_WIREFRAME, true );
-						transNode->setMaterialTexture( 0, wall );
-						transNode->setMaterialType(video::EMT_TRANSPARENT_VERTEX_ALPHA);
+						transNode->setMaterialFlag( video::EMF_LIGHTING, true );
+						transNode->setMaterialTexture( 0, transTex );
+						transNode->setMaterialType(video::EMT_TRANSPARENT_ALPHA_CHANNEL);
 
 						levelTransBlocks.insert( make_pair( nodePos, transNode ) );
 					}
@@ -705,9 +697,9 @@ namespace Tuatara
 
 	bool Level::InitLevel( irr::scene::ISceneManager *smgr, irr::io::IFileSystem *fileSystem, const std::string& levelFile, 
 		irr::video::ITexture *wall, irr::video::ITexture *ballTex, irr::video::ITexture *exitTex,
-		irr::video::ITexture *ventTex, irr::video::ITexture *ventFXTex )
+		irr::video::ITexture *ventTex, irr::video::ITexture *ventFXTex, irr::video::ITexture *transTex )
 	{
-		return level_->InitLevel( smgr, fileSystem, levelFile, wall, ballTex, exitTex, ventTex, ventFXTex );
+		return level_->InitLevel( smgr, fileSystem, levelFile, wall, ballTex, exitTex, ventTex, ventFXTex, transTex );
 	}
 
 	void Level::ApplyImpulseToBall( Direction dir, const float& x, const float& y, const float& z )
