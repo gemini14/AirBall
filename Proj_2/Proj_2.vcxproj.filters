@@ -253,8 +253,10 @@
     <None Include="sound\jet.ogg">
       <Filter>Resource Files\sound</Filter>
     </None>
-    <None Include="art\sphere.x" />
     <None Include="art\tileTransparent.png">
+      <Filter>Resource Files\art</Filter>
+    </None>
+    <None Include="art\sphere.x">
       <Filter>Resource Files\art</Filter>
     </None>
   </ItemGroup>

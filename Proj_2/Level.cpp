@@ -23,6 +23,21 @@ namespace Tuatara
 	struct Level_ : boost::noncopyable
 	{
 		// Definitions ////
+		enum TriggerType
+		{
+			triggerLocation,
+			triggerNamed,
+		};
+
+		struct Trigger // simple trigger mechanism for tutorials
+		{
+			TriggerType type;
+			irr::core::vector3di blockLoc;	// some triggers are based on ball location
+			std::string name;				// some triggers are on specific named events
+			std::string prompt;				// the text to display
+			bool triggered;					// has it already been triggered?
+		};
+		
 		struct VentInfo
 		{
 			float x;
@@ -58,7 +73,8 @@ namespace Tuatara
 		BuildingBlockMap levelBlocks;
 		BuildingBlockMap levelTransBlocks;
 		SoundFilenameMap soundFilenameMap;
-		irr::scene::ISceneNode *TopWall, *BottomWall, *LeftWall, *RightWall, *FrontWall, *BackWall;
+		irr::scene::ISceneNode *topWall, *bottomWall, *leftWall, *rightWall, *frontWall, *backWall;
+		std::vector<Trigger> triggers;
 
 		float entryX, entryY, entryZ;
 		float exitX, exitY, exitZ;
@@ -102,6 +118,7 @@ namespace Tuatara
 		BuildingBlockMap::iterator FindBlock( const float& x, const float& y, const float& z );
 		void RemoveBlock( float x, float y, float z );
 		irr::scene::ISceneNode* GetParentWall( float x, float y, float z);
+		void CheckForLocationTrigger(irr::core::vector3df ballPosition);
 
 		void Pause( bool pause );
 		void PlayJetSound();
@@ -114,7 +131,7 @@ namespace Tuatara
 
 
 	Level_::Level_() : physics( new PhysicsManager ), ball( nullptr ), soundSystem( new SoundSystem ), lightDir( nullptr ), lightAmb( nullptr ),
-		camera( nullptr ), TopWall( nullptr ), BottomWall( nullptr ), LeftWall( nullptr ), RightWall( nullptr ), FrontWall( nullptr ), BackWall( nullptr )
+		camera( nullptr ), topWall( nullptr ), bottomWall( nullptr ), leftWall( nullptr ), rightWall( nullptr ), frontWall( nullptr ), backWall( nullptr )
 	{
 	}
 
@@ -152,12 +169,12 @@ namespace Tuatara
 		safeDelete( ball );
 		safeDelete( lightDir );
 		safeDelete( lightAmb );
-		safeDelete( TopWall );
-		safeDelete( BottomWall );
-		safeDelete( LeftWall );
-		safeDelete( RightWall );
-		safeDelete( FrontWall );
-		safeDelete( BackWall );
+		safeDelete( topWall );
+		safeDelete( bottomWall );
+		safeDelete( leftWall );
+		safeDelete( rightWall );
+		safeDelete( frontWall );
+		safeDelete( backWall );
 		safeDelete( camera );
 	}
 
@@ -225,6 +242,8 @@ namespace Tuatara
 
 		lastpos = position;
 
+		CheckForLocationTrigger(position);
+
 		return levelComplete;
 	}
 
@@ -285,6 +304,26 @@ namespace Tuatara
 				{
 					AddPairToSoundFilenameMap( "jet", levelReader->getAttributeValueSafe( "file" ) );
 				}
+				else if( name == "trigger\0" )
+				{
+					Trigger trigger;
+					char* eventName = (char*)levelReader->getAttributeValue("event");
+					if ( eventName == 0 )
+					{
+						trigger.type = triggerLocation;
+						irr::core::vector3di loc(levelReader->getAttributeValueAsInt("x"), 
+							levelReader->getAttributeValueAsInt("y"), 
+							levelReader->getAttributeValueAsInt("z") );
+						trigger.blockLoc = loc;
+					}
+					else
+					{
+						trigger.type = triggerNamed;
+						trigger.name = eventName;
+					}
+					trigger.prompt = (char*)levelReader->getAttributeValueSafe( "prompt" );
+					triggers.push_back(trigger);
+				}
 			}
 		}
 
@@ -328,19 +367,19 @@ namespace Tuatara
 	{
 		// add camera
 		camera = smgr->addCameraSceneNode( 0, 
-			irr::core::vector3df( (float)levelSize / 2, (float)levelSize / 2, -8.f ), 
+			irr::core::vector3df( (float)levelSize / 2, (float)levelSize - 2, -8.f ), 
 			irr::core::vector3df( (float)levelSize / 2, (float)levelSize / 2, levelSize - 1 ) );
 	}
 
 	void Level_::CreateWallNodes( irr::scene::ISceneManager* smgr )
 	{
 		// These are used as parents, so we can selectively turn them on/off:
-		TopWall = smgr->addEmptySceneNode();
-		BottomWall = smgr->addEmptySceneNode();
-		LeftWall = smgr->addEmptySceneNode();
-		RightWall = smgr->addEmptySceneNode();
-		FrontWall = smgr->addEmptySceneNode();
-		BackWall = smgr->addEmptySceneNode();
+		topWall = smgr->addEmptySceneNode();
+		bottomWall = smgr->addEmptySceneNode();
+		leftWall = smgr->addEmptySceneNode();
+		rightWall = smgr->addEmptySceneNode();
+		frontWall = smgr->addEmptySceneNode();
+		backWall = smgr->addEmptySceneNode();
 	}
 
 	void Level_::CreateExit( irr::video::ITexture *exitTex )
@@ -393,7 +432,7 @@ namespace Tuatara
 
 						// create the node in the scene and set its properties
 						scene::ISceneNode* parent;
-						parent = GetParentWall(x, cubeLevel, z);
+						parent = GetParentWall(static_cast<float>(x), static_cast<float>(cubeLevel), static_cast<float>(z));
 						scene::IMeshSceneNode *node = smgr->addCubeSceneNode( 1.f, parent, -1, 
 							core::vector3df( static_cast<float>(x), static_cast<float>(cubeLevel),
 							static_cast<float>(z) ) );
@@ -416,7 +455,7 @@ namespace Tuatara
 				}
 			}
 		}
-		FrontWall->setVisible(false);
+		frontWall->setVisible(false);
 	}
 
 	void Level_::CreateVents( irr::scene::ISceneManager *smgr, irr::video::ITexture *particleTex,
@@ -515,12 +554,12 @@ namespace Tuatara
 		}
 		camera->setPosition( pos );
 
-		if ( pos.X < 0 ) LeftWall->setVisible(false); else LeftWall->setVisible(true);
-		if ( pos.Y < 0 ) BottomWall->setVisible(false); else BottomWall->setVisible(true);
-		if ( pos.Z < 0 ) FrontWall->setVisible(false); else FrontWall->setVisible(true);
-		if ( pos.X > levelSize ) RightWall->setVisible(false); else RightWall->setVisible(true);
-		if ( pos.Y > levelSize ) TopWall->setVisible(false); else TopWall->setVisible(true);
-		if ( pos.Z > levelSize ) BackWall->setVisible(false); else BackWall->setVisible(true);
+		if ( pos.X < 0 ) leftWall->setVisible(false); else leftWall->setVisible(true);
+		if ( pos.Y < 0 ) bottomWall->setVisible(false); else bottomWall->setVisible(true);
+		if ( pos.Z < 0 ) frontWall->setVisible(false); else frontWall->setVisible(true);
+		if ( pos.X > levelSize ) rightWall->setVisible(false); else rightWall->setVisible(true);
+		if ( pos.Y > levelSize ) topWall->setVisible(false); else topWall->setVisible(true);
+		if ( pos.Z > levelSize ) backWall->setVisible(false); else backWall->setVisible(true);
 	}
 
 	const irr::core::vector3df Level_::GetNewCameraTarget( const irr::core::vector3df& currentPos, 
@@ -614,6 +653,25 @@ namespace Tuatara
 		return NONE;
 	}
 
+	void Level_::CheckForLocationTrigger( irr::core::vector3df ballPosition )
+	{
+		irr::core::vector3di ballGridLoc((int)ballPosition.X, (int)ballPosition.Y, (int)ballPosition.Z );
+		for (int i = 0; i < triggers.size(); i++)
+		{
+			if (triggers[i].type == triggerLocation &&
+				triggers[i].triggered == false)
+			{
+				if ( ballGridLoc.X == triggers[i].blockLoc.X &&
+					 ballGridLoc.Y == triggers[i].blockLoc.Y &&
+					 ballGridLoc.Z == triggers[i].blockLoc.Z )
+				{
+					triggers[i].triggered = true;
+					#pragma message("TODO: Finish handling triggers")
+				}
+			}
+		}
+	}
+
 	Level_::BuildingBlockMap::iterator Level_::FindBlock( const float& x, const float& y, const float& z )
 	{
 		// return the iterator to the block entry that matches the x, y, z coordinates, if any
@@ -639,30 +697,31 @@ namespace Tuatara
 
 	irr::scene::ISceneNode* Level_::GetParentWall(float x, float y, float z)
 	{
+		// Finds the parent node for a new wall block based on location
 		irr::scene::ISceneNode* parent = 0;
 		if (z == 0)
 		{
-			parent = FrontWall;
+			parent = frontWall;
 		}
 		else if (x == levelSize)
 		{
-			parent = RightWall;
+			parent = rightWall;
 		}
 		else if (x == 0)
 		{
-			parent = LeftWall;
+			parent = leftWall;
 		}
 		else if (z == levelSize)
 		{
-			parent = BackWall;
+			parent = backWall;
 		}
 		else if (y == levelSize)
 		{
-			parent = TopWall;
+			parent = topWall;
 		}
 		else if (y == 0)
 		{
-			parent = BottomWall;
+			parent = bottomWall;
 		}
 		return parent;
 	}

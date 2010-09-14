@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <level>
-  <entry x="5" y="1" z="4"></entry>
-  <exit x="6" y="1" z="9"></exit>
+  <entry x="5" y="3" z="4"></entry>
+  <exit x="5" y="1" z="9"></exit>
+
+  <trigger x="5" y="1" z="4" prompt="Use the WASD keys to\nmove the ball.\nAim for the exit straight ahead."></trigger>
+  <trigger event="onExit" prompt="Perfect, you found the exit!"></trigger>
 
   <bgmusic file="sound/level_0_bg.ogg"></bgmusic>
   <collisionSound file=""></collisionSound>
