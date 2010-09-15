@@ -44,32 +44,37 @@ namespace Tuatara
 				return true;
 
 			case KEY_KEY_W:
-				gameState->level->ApplyImpulseToBall( FORWARD, 0.f, 0.f, 0.6f);
-				gameState->level->PlayJetSound();
-				return true;
-
+				{
+					gameState->level->ApplyImpulseToBall( FORWARD );
+					gameState->level->PlayJetSound();
+					return true;
+				}
 			case KEY_KEY_A:
-				gameState->level->ApplyImpulseToBall( LEFT, -0.6f, 0.f, 0.f);
-				gameState->level->PlayJetSound();
-				return true;
-
+				{
+					gameState->level->ApplyImpulseToBall( LEFT );
+					gameState->level->PlayJetSound();
+					return true;
+				}
 			case KEY_KEY_S:
-				gameState->level->ApplyImpulseToBall( BACKWARD, 0.f, 0.f, -0.6f);
-				gameState->level->PlayJetSound();
-				return true;
-
+				{
+					gameState->level->ApplyImpulseToBall( BACKWARD );
+					gameState->level->PlayJetSound();
+					return true;
+				}
 			case KEY_KEY_D:
-				gameState->level->ApplyImpulseToBall( RIGHT, 0.6f, 0.f, 0.f);
-				gameState->level->PlayJetSound();
-				return true;
-
+				{
+					gameState->level->ApplyImpulseToBall( RIGHT );
+					gameState->level->PlayJetSound();
+					return true;
+				}
 			case KEY_KEY_Q:
+				if( !event.KeyInput.PressedDown )
 				{
 					static bool okToExecute = true;
 					static u32 then;
 					static auto Q_Action = [&]()
 					{
-						gameState->level->ApplyImpulseToBall( UP, 0, 5.f, 0 );
+						gameState->level->ApplyImpulseToBall( UP, 0, 5.5f, 0 );
 						gameState->level->PlayJetSound();
 
 						then = game->manager->device->getTimer()->getTime();
@@ -90,7 +95,6 @@ namespace Tuatara
 					}
 				}
 				return true;
-
 			default:
 				return false;
 			}
