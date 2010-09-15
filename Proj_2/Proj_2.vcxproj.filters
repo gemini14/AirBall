@@ -117,6 +117,9 @@
     <ClCompile Include="SoundSystem.cpp">
       <Filter>Source Files\Sound</Filter>
     </ClCompile>
+    <ClCompile Include="LightSoundSystem.cpp">
+      <Filter>Source Files\Sound</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="IrrManager.h">
@@ -174,6 +177,9 @@
       <Filter>Header Files\Level</Filter>
     </ClInclude>
     <ClInclude Include="SoundSystem.h">
+      <Filter>Header Files\Sound</Filter>
+    </ClInclude>
+    <ClInclude Include="LightSoundSystem.h">
       <Filter>Header Files\Sound</Filter>
     </ClInclude>
   </ItemGroup>
@@ -240,7 +246,7 @@
     </None>
     <None Include="levels\level_3.xml">
       <Filter>Resource Files\levels</Filter>
-    </None>    
+    </None>
     <None Include="art\Ball125.x">
       <Filter>Resource Files\art</Filter>
     </None>
@@ -251,6 +257,15 @@
       <Filter>Resource Files\sound</Filter>
     </None>
     <None Include="sound\jet.ogg">
+      <Filter>Resource Files\sound</Filter>
+    </None>
+    <None Include="art\bowlingballtexsm.png">
+      <Filter>Resource Files\art</Filter>
+    </None>
+    <None Include="art\glowy.png">
+      <Filter>Resource Files\art</Filter>
+    </None>
+    <None Include="sound\menuBackMusic.ogg">
       <Filter>Resource Files\sound</Filter>
     </None>
   </ItemGroup>

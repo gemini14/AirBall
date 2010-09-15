@@ -98,7 +98,9 @@ namespace Tuatara
 
 	void FMOD_System::DisplayError( const FMOD_RESULT& result )
 	{
+#if defined(_DEBUG) | defined(DEBUG)
 		std::cout << "FMOD error: " << FMOD_ErrorString( result ) << "\n";
+#endif
 	}
 
 	bool FMOD_System::SoundSystemInitOK() const

@@ -1,10 +1,14 @@
-#include "MainMenu.h"
-#include "GameState.h"
+#include "EnumsConstants.h"
 #include "GameExit.h"
+#include "GameState.h"
+#include "GUIButton.h"
+#include "LightSoundSystem.h"
+#include "MainMenu.h"
+
 
 namespace Tuatara
 {
-	MainMenu::MainMenu() : ScreenBase()
+	MainMenu::MainMenu() : ScreenBase(), soundSystem ( new LightSoundSystem( "sound/menuBackMusic.ogg" ) )
 	{
 		// Create buttons:
 		newGameButton = new GUIButton(MAINMENU_BUTTON_NEWGAME, L"New Game", this);
@@ -18,6 +22,7 @@ namespace Tuatara
 		buttonList[MAINMENU_BUTTON_EXIT] = exitButton;
 
 		backgroundPath = "menuBackground.png";
+
 	}
 
 	// return the one and only instance of the pause menu:
@@ -25,6 +30,25 @@ namespace Tuatara
 	{
 		static MainMenu instance;
 		return &instance;
+	}
+
+	void MainMenu::Enter( Game *game )
+	{
+		soundSystem->StartPlayback( true );
+		soundSystem->AdjustVolume( 0.2f );
+		ScreenBase::Enter( game );
+	}
+
+	void MainMenu::Execute( Game *game )
+	{
+		soundSystem->Update();
+		ScreenBase::Execute( game );
+	}
+
+	void MainMenu::Exit( Game *game )
+	{
+		soundSystem->StopPlayback();
+		ScreenBase::Exit( game );
 	}
 
 	// Button event (call back from GUIButton):
@@ -65,6 +89,18 @@ namespace Tuatara
 
 			default:
 				return false;
+		}
+	}
+
+	void MainMenu::Pause( bool pause )
+	{
+		if( pause )
+		{
+			soundSystem->PausePlayback();
+		}
+		else
+		{
+			soundSystem->ResumePlayback();
 		}
 	}
 

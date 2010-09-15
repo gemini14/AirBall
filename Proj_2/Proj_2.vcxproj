@@ -96,6 +96,7 @@
     <ClCompile Include="GameStateEventReceiver.cpp" />
     <ClCompile Include="GUIButton.cpp" />
     <ClCompile Include="Level.cpp" />
+    <ClCompile Include="LightSoundSystem.cpp" />
     <ClCompile Include="PhysicsManager.cpp" />
     <ClCompile Include="ScreenBase.cpp" />
     <ClCompile Include="SoundSystem.cpp" />
@@ -116,6 +117,7 @@
     <ClInclude Include="GameStateEventReceiver.h" />
     <ClInclude Include="GUIButton.h" />
     <ClInclude Include="Level.h" />
+    <ClInclude Include="LightSoundSystem.h" />
     <ClInclude Include="PhysicsManager.h" />
     <ClInclude Include="ScreenBase.h" />
     <ClInclude Include="SoundSystem.h" />
@@ -131,9 +133,10 @@
     <None Include="art\ball.png" />
     <None Include="art\Ball125.x" />
     <None Include="art\Ball250.x" />
+    <None Include="art\bowlingballtexsm.png" />
+    <None Include="art\glowy.png" />
     <None Include="art\menuBackground.png" />
     <None Include="art\pauseBackground.png" />
-    <None Include="art\sphere.x" />
     <None Include="fmodex.dll" />
     <None Include="fmodexL.dll" />
     <None Include="Irrlicht.dll" />
@@ -141,7 +144,9 @@
     <None Include="levels\level_0.xml">
       <SubType>Designer</SubType>
     </None>
-    <None Include="levels\level_1.xml" />
+    <None Include="levels\level_1.xml">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="levels\level_2.xml" />
     <None Include="levels\level_3.xml" />
     <None Include="media\defaultButton.png" />
@@ -155,6 +160,7 @@
     <None Include="pala.ttf" />
     <None Include="sound\jet.ogg" />
     <None Include="sound\level_0_bg.ogg" />
+    <None Include="sound\menuBackMusic.ogg" />
     <None Include="sound\vent.ogg" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

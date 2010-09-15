@@ -73,6 +73,10 @@ int main()
 			{
 				GameState::Instance()->Pause( false );
 			}
+			else if( game.stateMachine->isInState( *MainMenu::Instance() ) )
+			{
+				MainMenu::Instance()->Pause( false );
+			}
 			game.Update();
 		}
 		else
@@ -80,6 +84,10 @@ int main()
 			if( game.stateMachine->isInState( *GameState::Instance() ) )
 			{
 				GameState::Instance()->Pause( true );
+			}
+			else if( game.stateMachine->isInState( *MainMenu::Instance() ) )
+			{
+				MainMenu::Instance()->Pause( true );
 			}
 			device->yield();
 		}
