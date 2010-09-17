@@ -5,7 +5,7 @@
   <exit x="6" y="1" z="9"></exit>
 
   <bgmusic file="sound/level_0_bg.ogg"></bgmusic>
-  <collisionSound file=""></collisionSound>
+  <collisionSound file="sound/collision.ogg"></collisionSound>
   <ventSound file="sound/vent.ogg"></ventSound>
   <jetSound></jetSound>
 </level>

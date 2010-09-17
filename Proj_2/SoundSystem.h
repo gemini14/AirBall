@@ -28,6 +28,7 @@ namespace Tuatara
 		void CreateVentSound( const float& x, const float& y, const float& z );
 		
 		void StartPlayingLoopingSounds();
+		void PlayCollisionSound();
 		void PlayJetSound();
 		void PausePlayback();
 		void ResumePlayback();

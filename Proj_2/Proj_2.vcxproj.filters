@@ -120,6 +120,9 @@
     <ClCompile Include="LightSoundSystem.cpp">
       <Filter>Source Files\Sound</Filter>
     </ClCompile>
+    <ClCompile Include="BallContactListener.cpp">
+      <Filter>Source Files\Physics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="IrrManager.h">
@@ -181,6 +184,9 @@
     </ClInclude>
     <ClInclude Include="LightSoundSystem.h">
       <Filter>Header Files\Sound</Filter>
+    </ClInclude>
+    <ClInclude Include="BallContactListener.h">
+      <Filter>Header Files\Physics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -310,7 +310,7 @@ namespace Tuatara
 
 
 		// create the ball's physical counterpart
-		physics->CreateBall( entryX, entryY, entryZ );
+		physics->CreateBall( entryX, entryY, entryZ, soundSystem.get() );
 	}
 
 	void Level_::CreateCamera( irr::scene::ISceneManager* smgr )
@@ -382,7 +382,7 @@ namespace Tuatara
 						// create the node in the scene and set its properties
 						scene::ISceneNode* parent;
 						parent = GetParentWall( static_cast<float>(x), static_cast<float>(cubeLevel), static_cast<float>(z) );
-						scene::IMeshSceneNode *node = smgr->addCubeSceneNode( 1.f, parent, -1, 
+						scene::IMeshSceneNode *node = smgr->addCubeSceneNode( BLOCK_HALF_EXTENT * 2, parent, -1, 
 							core::vector3df( static_cast<float>(x), static_cast<float>(cubeLevel),
 							static_cast<float>(z) ) );
 						node->setMaterialFlag( video::EMF_LIGHTING, false );
@@ -717,7 +717,7 @@ namespace Tuatara
 
 		vector3df soundSysVelocity = ( position - lastpos ) / ( 1.f / 60.f );
 		vector3df ballVelocity = physics->GetBallVelocity().normalize();
-
+		
 		soundSystem->Update( position.X, position.Y, position.Z,			// position
 			soundSysVelocity.X, soundSysVelocity.Y, soundSysVelocity.Z,		// velocity
 			ballVelocity.X, ballVelocity.Y, ballVelocity.Z );				// forward vector

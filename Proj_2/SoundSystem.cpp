@@ -21,6 +21,7 @@ namespace Tuatara
 		FMOD_RESULT result;
 
 		FMOD::Sound *bgmusic;
+		FMOD::Sound *collision;
 		FMOD::Sound *jet;
 		FMOD::Sound *ventSound;
 		
@@ -41,6 +42,7 @@ namespace Tuatara
 		void CreateVentSound( const float& x, const float& y, const float& z );
 		
 		void StartPlayingLoopingSounds();
+		void PlayCollisionSound();
 		void PlayJetSound();
 		void PausePlayback();
 		void ResumePlayback();
@@ -52,7 +54,7 @@ namespace Tuatara
 
 	///// private implementation /////
 
-	FMOD_System::FMOD_System() : init( false ), system( nullptr ), bgmusic( nullptr ), 
+	FMOD_System::FMOD_System() : init( false ), system( nullptr ), bgmusic( nullptr ), collision( nullptr ),
 		jet( nullptr ), ventSound( nullptr )
 	{
 		ErrorCheck( FMOD::System_Create( &system ) );
@@ -131,6 +133,11 @@ namespace Tuatara
 				nullptr, &ventSound ) );
 			ventSound->setDefaults( 44100, 0.02f, 0.f, 128 );
 		}
+		if( isPresent( "collision" ) )
+		{
+			ErrorCheck( system->createSound( soundFilenames.at( "collision" ).c_str(), FMOD_DEFAULT, nullptr, &collision ) );
+			collision->setDefaults( 44100, 0.2f, 0.f, 128 );
+		}
 	}
 
 	void FMOD_System::CreateVentSound( const float& x, const float& y, const float& z )
@@ -159,11 +166,19 @@ namespace Tuatara
 		}
 	}
 
+	void FMOD_System::PlayCollisionSound()
+	{
+		if( collision != nullptr )
+		{
+			system->playSound( FMOD_CHANNEL_FREE, collision, false, nullptr );
+		}
+	}
+
 	void FMOD_System::PlayJetSound()
 	{
 		if( jet != nullptr )
 		{
-			system->playSound( FMOD_CHANNEL_FREE, jet, false, nullptr);
+			system->playSound( FMOD_CHANNEL_FREE, jet, false, nullptr );
 		}
 	}
 
@@ -221,6 +236,11 @@ namespace Tuatara
 	void SoundSystem::StartPlayingLoopingSounds()
 	{
 		system->StartPlayingLoopingSounds();
+	}
+
+	void SoundSystem::PlayCollisionSound()
+	{
+		system->PlayCollisionSound();
 	}
 
 	void SoundSystem::PlayJetSound()

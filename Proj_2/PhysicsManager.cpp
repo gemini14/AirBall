@@ -5,6 +5,8 @@
 
 #include <boost/foreach.hpp>
 
+#include "BallContactListener.h"
+#include "EnumsConstants.h"
 #include "Game.h"
 
 // Havok directive for addtional debugging stuff
@@ -81,6 +83,7 @@ namespace Tuatara
 		hkpPhysicsContext *context;
 
 		hkpRigidBody *ball;
+		BallContactListener *ballListener;
 		hkpAabbPhantom *exit;
 
 		VentVector vents;
@@ -94,12 +97,12 @@ namespace Tuatara
 		void AdjustAabbForExit( hkAabb &info, const Direction& dir );
 
 		void CreateBlock( const float& x, const float& y, const float& z);
-		void CreateBall( const float& entryX, const float& entryY, const float& entryZ );
+		void CreateBall( const float& entryX, const float& entryY, const float& entryZ, SoundSystem *sound );
 		void CreatePhantom( const float& x, const float& y, const float& z, const Direction& dir,
 			const int& strength, bool isVent = true );
 
 		bool StepSimulation( float timeDelta );
-
+		
 		void ApplyImpulseToBall( Direction dir, const float& x = 0, const float& y = 0, const float& z = 0 );
 		irr::core::vector3df GetBallPosition() const;
 		bool GetBallRotation( irr::core::vector3df& rotationVector ) const;
@@ -198,8 +201,13 @@ namespace Tuatara
 		// memory cleanup
 		BOOST_FOREACH( Vent *v, vents )
 		{
+			v->phantom->removeReference();
 			delete v;
 		}
+
+		exit->removeReference();
+		ball->removeContactListener( ballListener );
+		ball->removeReference();
 
 		world->removeReference();
 		vdb->removeReference();
@@ -262,7 +270,7 @@ namespace Tuatara
 	
 	void Physics_Manager::CreateBlock( const float& x, const float& y, const float& z)
 	{
-		hkVector4 buildingBlockSize( 0.5f, 0.5f, 0.5f );
+		hkVector4 buildingBlockSize( BLOCK_HALF_EXTENT, BLOCK_HALF_EXTENT, BLOCK_HALF_EXTENT );
 		hkpConvexShape *buildingBlock = new hkpBoxShape( buildingBlockSize, 0 );
 
 		hkpRigidBodyCinfo ci;
@@ -279,9 +287,9 @@ namespace Tuatara
 		buildingBlock->removeReference();
 	}
 	
-	void Physics_Manager::CreateBall( const float& entryX, const float& entryY, const float& entryZ )
+	void Physics_Manager::CreateBall( const float& entryX, const float& entryY, const float& entryZ, SoundSystem *sound )
 	{
-		hkReal radius = .25;
+		hkReal radius = BALL_RADIUS;
 		hkReal sphereMass = 4.f;
 		hkReal maxVelocity = 3.f;
 
@@ -298,14 +306,15 @@ namespace Tuatara
 
 		info.m_motionType = hkpMotion::MOTION_SPHERE_INERTIA;
 		info.m_qualityType = HK_COLLIDABLE_QUALITY_MOVING;
+		info.m_contactPointCallbackDelay = 0;
 
-		hkpRigidBody *sphereRigidBody = new hkpRigidBody( info );
-		ball = sphereRigidBody;
-
+		ball = new hkpRigidBody( info );
+		
 		ball->setMaxLinearVelocity(maxVelocity);
 
-		world->addEntity( sphereRigidBody );
-		sphereRigidBody->removeReference();
+		world->addEntity( ball );
+		ballListener = new BallContactListener( sound );
+		ball->addContactListener( ballListener );
 		info.m_shape->removeReference();
 	}
 
@@ -604,9 +613,9 @@ namespace Tuatara
 		physics->CreateBlock( x, y, z );
 	}
 
-	void PhysicsManager::CreateBall( const float& entryX, const float& entryY, const float& entryZ )
+	void PhysicsManager::CreateBall( const float& entryX, const float& entryY, const float& entryZ, SoundSystem *sound )
 	{
-		physics->CreateBall( entryX, entryY, entryZ );
+		physics->CreateBall( entryX, entryY, entryZ, sound );
 	}
 
 	void PhysicsManager::CreatePhantom( const float& x, const float& y, const float& z, const Direction& dir, 
