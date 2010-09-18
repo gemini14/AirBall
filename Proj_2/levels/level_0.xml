@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <level>
-  <entry x="5" y="1" z="4"></entry>
-  <exit x="6" y="1" z="9"></exit>
+  <entry x="5" y="3" z="4"></entry>
+  <exit x="5" y="1" z="9"></exit>
 
   <bgmusic file="sound/level_0_bg.ogg"></bgmusic>
   <collisionSound file="sound/collision.ogg"></collisionSound>
   <ventSound file="sound/vent.ogg"></ventSound>
   <jetSound></jetSound>
 
-  <helpText text="Try rolling the ball around with W (forward), A (left), S (right), and D (backward).  Roll the ball through the hole to beat the level."></helpText>
+  <trigger x="5" y="1" z="4" prompt="Use the WASD keys to move the ball. Aim for the exit straight ahead."></trigger>
+  <trigger event="onExit" prompt="Perfect, you found the exit!"></trigger>
 </level>

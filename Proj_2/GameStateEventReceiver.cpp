@@ -18,8 +18,30 @@ namespace Tuatara
 	{
 		using namespace irr;
 
+		// Handle mouse input
+		if ( event.EventType == irr::EET_MOUSE_INPUT_EVENT )
+		{
+			switch(event.MouseInput.Event)
+			{
+			case EMIE_LMOUSE_LEFT_UP: // only case currently handled...
+				gameState->level->HandleMouseClick( event.MouseInput.X, event.MouseInput.Y );
+				break;
 
-		if( event.EventType == EET_KEY_INPUT_EVENT )
+			// could add more:
+			//case EMIE_LMOUSE_PRESSED_DOWN:
+			//	break;
+
+			//case EMIE_MOUSE_MOVED:
+			//	break;
+
+			default:
+				// We won't use the wheel
+				break;
+			}
+
+		}
+		// handle keyboard input:
+		else if( event.EventType == EET_KEY_INPUT_EVENT )
 		{
 			switch( event.KeyInput.Key )
 			{

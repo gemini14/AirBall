@@ -54,11 +54,11 @@ namespace Tuatara
 			return filename.str();
 		};
 
-		bool levelCreatedOK = level->InitLevel( game, game->manager->device->getFileSystem(),
+		bool levelCreatedOK = level->InitLevel( game->manager->smgr, game->manager->device->getFileSystem(),
 			levelFilenameGenerator( currentLevel ), game->manager->driver->getTexture( "tile.png" ),
 			game->manager->driver->getTexture( "ball.png" ), game->manager->driver->getTexture( "exit.png" ),
 			game->manager->driver->getTexture( "tileVent.png" ), 
-			game->manager->driver->getTexture( "ventSmoke.png" ), game->manager->driver->getTexture( "tile2.png" ) );
+			game->manager->driver->getTexture( "ventSmoke.png" ), game->manager->driver->getTexture( "tileTransparent.png" ) );
 
 		if( !levelCreatedOK )
 		{
@@ -75,10 +75,10 @@ namespace Tuatara
 		levelComplete = level->StepSimulation();
 
 		game->manager->driver->beginScene( true, true, video::SColor(255, 100, 101, 140) );
-
-		game->manager->smgr->drawAll();
-		game->manager->guienv->drawAll();
-
+			// draw 3D scene:
+			game->manager->smgr->drawAll();
+			// draw GUI:
+			game->manager->guienv->drawAll();
 		game->manager->driver->endScene();
 
 		if( levelComplete )

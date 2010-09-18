@@ -102,6 +102,7 @@
     <ClCompile Include="PhysicsManager.cpp" />
     <ClCompile Include="ScreenBase.cpp" />
     <ClCompile Include="SoundSystem.cpp" />
+    <ClCompile Include="Trigger.cpp" />
     <ClCompile Include="TTF_Irr.cpp" />
     <ClCompile Include="IrrManager.cpp" />
     <ClCompile Include="main.cpp" />
@@ -125,6 +126,7 @@
     <ClInclude Include="PhysicsManager.h" />
     <ClInclude Include="ScreenBase.h" />
     <ClInclude Include="SoundSystem.h" />
+    <ClInclude Include="Trigger.h" />
     <ClInclude Include="TTF_Irr.h" />
     <ClInclude Include="IrrManager.h" />
     <ClInclude Include="MainMenu.h" />
@@ -141,6 +143,8 @@
     <None Include="art\glowy.png" />
     <None Include="art\menuBackground.png" />
     <None Include="art\pauseBackground.png" />
+    <None Include="art\tileTransparent.png" />
+    <None Include="art\TriggerPopUp.png" />
     <None Include="fmodex.dll" />
     <None Include="fmodexL.dll" />
     <None Include="Irrlicht.dll" />

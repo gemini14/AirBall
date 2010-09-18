@@ -126,6 +126,9 @@
     <ClCompile Include="HelpText.cpp">
       <Filter>Source Files\Level</Filter>
     </ClCompile>
+    <ClCompile Include="Trigger.cpp">
+      <Filter>Source Files\Level</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="IrrManager.h">
@@ -192,6 +195,9 @@
       <Filter>Header Files\Physics</Filter>
     </ClInclude>
     <ClInclude Include="HelpText.h">
+      <Filter>Header Files\Level</Filter>
+    </ClInclude>
+    <ClInclude Include="Trigger.h">
       <Filter>Header Files\Level</Filter>
     </ClInclude>
   </ItemGroup>
@@ -279,6 +285,12 @@
     </None>
     <None Include="sound\menuBackMusic.ogg">
       <Filter>Resource Files\sound</Filter>
+    </None>
+    <None Include="art\tileTransparent.png">
+      <Filter>Resource Files\art</Filter>
+    </None>
+    <None Include="art\TriggerPopUp.png">
+      <Filter>Resource Files\art</Filter>
     </None>
   </ItemGroup>
 </Project>

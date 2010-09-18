@@ -1,5 +1,4 @@
-#ifndef MAINMENU_H
-#define MAINMENU_H
+#pragma once
 
 #include <boost/noncopyable.hpp>
 #include <irrlicht.h>
@@ -42,5 +41,3 @@ namespace Tuatara
 		void Pause( bool pause );
 	};
 }
-
-#endif
