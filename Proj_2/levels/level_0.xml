@@ -8,4 +8,6 @@
   <collisionSound file="sound/collision.ogg"></collisionSound>
   <ventSound file="sound/vent.ogg"></ventSound>
   <jetSound></jetSound>
+
+  <helpText text="Try rolling the ball around with W (forward), A (left), S (right), and D (backward).  Roll the ball through the hole to beat the level."></helpText>
 </level>

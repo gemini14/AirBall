@@ -11,6 +11,8 @@
 #include <boost/foreach.hpp>
 
 #include "EnumsConstants.h"
+#include "Game.h"
+#include "HelpText.h"
 #include "PhysicsManager.h"
 #include "SoundSystem.h"
 #include "VentParticles.h"
@@ -65,6 +67,7 @@ namespace Tuatara
 		irr::scene::ILightSceneNode* lightAmb;
 		irr::scene::IAnimatedMeshSceneNode *ball;
 
+		std::shared_ptr<HelpText> helpText;
 		std::shared_ptr<SoundSystem> soundSystem;
 		std::shared_ptr<PhysicsManager> physics;
 
@@ -97,10 +100,10 @@ namespace Tuatara
 		const irr::core::vector3df GetNewCameraPosition( const irr::core::vector3df& currentPos,
 			const Direction& dir );
 		irr::scene::ISceneNode* GetParentWall( const float& x, const float& y, const float& z );
-		bool InitLevel( irr::scene::ISceneManager *smgr, irr::io::IFileSystem *fileSystem, const std::string& levelFile, 
+		bool InitLevel( Game *game, irr::io::IFileSystem *fileSystem, const std::string& levelFile, 
 			irr::video::ITexture *wall, irr::video::ITexture *ballTex, irr::video::ITexture *exitTex,
 			irr::video::ITexture *ventTex, irr::video::ITexture *ventFXTex, irr::video::ITexture *transTex );
-		bool LoadLevelData( irr::io::IFileSystem *fileSystem, const std::string& levelFile );
+		bool LoadLevelData( irr::io::IFileSystem *fileSystem, const std::string& levelFile, irr::gui::IGUIEnvironment *guienv );
 		void Pause( bool pause );
 		void PlayJetSound();
 		void RemoveBlock( float x, float y, float z );
@@ -568,7 +571,7 @@ namespace Tuatara
 		return parent;
 	}
 
-	bool Level_::InitLevel( irr::scene::ISceneManager *smgr, irr::io::IFileSystem *fileSystem, const std::string& levelFile, 
+	bool Level_::InitLevel( Game *game, irr::io::IFileSystem *fileSystem, const std::string& levelFile, 
 		irr::video::ITexture *wall, irr::video::ITexture *ballTex, irr::video::ITexture *exitTex,
 		irr::video::ITexture *ventTex, irr::video::ITexture *ventFXTex, irr::video::ITexture *transTex )
 	{
@@ -582,10 +585,13 @@ namespace Tuatara
 
 		// make sure level data was read in correctly
 		// note that this part can be extended to read in other info like music location
-		if( !LoadLevelData( fileSystem, levelFile ) )
+		if( !LoadLevelData( fileSystem, levelFile, game->manager->guienv ) )
 		{
 			return false;
 		}
+
+		game->manager->font->ChangeFontSize( 12 );
+		auto smgr = game->manager->smgr;
 
 		CreateCamera( smgr );
 		CreateWallNodes( smgr );
@@ -604,7 +610,8 @@ namespace Tuatara
 		return true;
 	}
 
-	bool Level_::LoadLevelData( irr::io::IFileSystem *fileSystem, const std::string& levelFile )
+	bool Level_::LoadLevelData( irr::io::IFileSystem *fileSystem, const std::string& levelFile,
+		irr::gui::IGUIEnvironment *guienv )
 	{
 		using namespace irr;
 		using namespace std;
@@ -660,6 +667,14 @@ namespace Tuatara
 				else if( name == "jetSound\0" )
 				{
 					AddPairToSoundFilenameMap( "jet", levelReader->getAttributeValueSafe( "file" ) );
+				}
+				else if( name == "helpText\0" )
+				{
+					std::string text = levelReader->getAttributeValue( "text" );
+					if( text.length() > 0 )
+					{
+						helpText.reset( new HelpText( guienv, 5, 5, 375, 85, text ) );
+					}
 				}
 			}
 		}
@@ -748,11 +763,11 @@ namespace Tuatara
 		level_->ApplyImpulseToBall( dir, x, y, z );
 	}
 
-	bool Level::InitLevel( irr::scene::ISceneManager *smgr, irr::io::IFileSystem *fileSystem, const std::string& levelFile, 
+	bool Level::InitLevel( Game *game, irr::io::IFileSystem *fileSystem, const std::string& levelFile, 
 		irr::video::ITexture *wall, irr::video::ITexture *ballTex, irr::video::ITexture *exitTex,
 		irr::video::ITexture *ventTex, irr::video::ITexture *ventFXTex, irr::video::ITexture *transTex )
 	{
-		return level_->InitLevel( smgr, fileSystem, levelFile, wall, ballTex, exitTex, ventTex, ventFXTex, transTex );
+		return level_->InitLevel( game, fileSystem, levelFile, wall, ballTex, exitTex, ventTex, ventFXTex, transTex );
 	}
 
 	void Level::Pause( bool pause )

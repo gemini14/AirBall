@@ -15,4 +15,5 @@
   <ventSound file="sound/vent.ogg"></ventSound>
   <jetSound></jetSound>
 
+  <helpText text="Try rolling into the air being blown out by vents to move around the level in different ways."></helpText>
 </level>
