@@ -1,5 +1,4 @@
-#ifndef VENTPARTICLES_H
-#define VENTPARTICLES_H
+#pragma once
 
 
 #include <string>
@@ -22,5 +21,3 @@ namespace Tuatara
 		~VentParticles();
 	};
 }
-
-#endif

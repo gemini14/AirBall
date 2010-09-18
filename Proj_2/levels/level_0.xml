@@ -4,11 +4,11 @@
   <entry x="5" y="3" z="4"></entry>
   <exit x="5" y="1" z="9"></exit>
 
-  <trigger x="5" y="1" z="4" prompt="Use the WASD keys to move the ball. Aim for the exit straight ahead."></trigger>
-  <trigger event="onExit" prompt="Perfect, you found the exit!"></trigger>
-
   <bgmusic file="sound/level_0_bg.ogg"></bgmusic>
-  <collisionSound file=""></collisionSound>
+  <collisionSound file="sound/collision.ogg"></collisionSound>
   <ventSound file="sound/vent.ogg"></ventSound>
   <jetSound></jetSound>
+
+  <trigger x="5" y="1" z="4" prompt="Use the WASD keys to move the ball. Aim for the exit straight ahead."></trigger>
+  <trigger event="onExit" prompt="Perfect, you found the exit!"></trigger>
 </level>

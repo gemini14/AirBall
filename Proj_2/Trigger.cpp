@@ -72,7 +72,7 @@ namespace Tuatara
 			}
 			else
 			{
-				currentStep = 0;
+				//currentStep = 0;
 				currentState = displaying;
 			}
 			break;
@@ -106,6 +106,7 @@ namespace Tuatara
 				text->remove();
 				promptShown = false;
 			}
+
 			if (currentStep > 0)
 			{
 				float currentWidth = FINAL_X_SIZE * ((float)currentStep / NUM_STEPS);
@@ -120,7 +121,7 @@ namespace Tuatara
 			else
 			{
 				img->setRelativePosition(irr::core::rect<irr::s32>(-2, -2, 1, 1) );
-				currentStep = 0;
+				//currentStep = 0;
 				currentState = unknown;
 				return false;
 			}

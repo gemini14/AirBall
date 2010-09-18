@@ -1,6 +1,4 @@
-#ifndef LEVEL_H
-#define LEVEL_H
-
+#pragma once
 
 #include <memory>
 #include <string>
@@ -13,6 +11,7 @@
 
 namespace Tuatara
 {
+	class Game;
 	struct Level_;
 
 	class Level : boost::noncopyable
@@ -29,7 +28,6 @@ namespace Tuatara
 		bool InitLevel( irr::scene::ISceneManager *smgr, irr::io::IFileSystem *fileSystem, const std::string& levelFile, 
 			irr::video::ITexture *wall, irr::video::ITexture *ballTex, irr::video::ITexture *exitTex,
 			irr::video::ITexture *ventTex, irr::video::ITexture *ventFXTex, irr::video::ITexture *transTex );
-		
 		void HandleMouseClick( irr::s32 x, irr::s32 y );
 		void ApplyImpulseToBall( Direction dir, const float& x = 0, const float& y = 0, const float& z = 0);
 		void ApplyDirectionToCamera( Direction dir );
@@ -39,5 +37,3 @@ namespace Tuatara
 	};
 
 }
-
-#endif

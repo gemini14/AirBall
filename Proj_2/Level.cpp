@@ -10,6 +10,9 @@
 
 #include <boost/foreach.hpp>
 
+#include "EnumsConstants.h"
+#include "Game.h"
+#include "HelpText.h"
 #include "PhysicsManager.h"
 #include "SoundSystem.h"
 #include "VentParticles.h"
@@ -24,18 +27,6 @@ namespace Tuatara
 	struct Level_ : boost::noncopyable
 	{
 		// Definitions ////
-		struct VentInfo
-		{
-			float x;
-			float y;
-			float z;
-			Direction direction;
-			int strength;
-			std::shared_ptr<VentParticles> particle;
-		};
-
-		typedef std::vector<VentInfo*> VentVector;
-
 		struct NodePos
 		{
 			float x;
@@ -50,75 +41,84 @@ namespace Tuatara
 				return lhs.x < rhs.x;
 			}
 		};
-		typedef std::multimap<NodePos, irr::scene::IMeshSceneNode*, NodePosCriterion> BuildingBlockMap;
 
+		struct VentInfo
+		{
+			float x;
+			float y;
+			float z;
+			Direction direction;
+			int strength;
+			std::shared_ptr<VentParticles> particle;
+		};
+
+		typedef std::vector<VentInfo*> VentVector;
+		typedef std::multimap<NodePos, irr::scene::IMeshSceneNode*, NodePosCriterion> BuildingBlockMap;
 		typedef std::map<std::string, std::string> SoundFilenameMap;
 
 		// Variables
-		VentVector vents;
 		BuildingBlockMap levelBlocks;
 		BuildingBlockMap levelTransBlocks;
 		SoundFilenameMap soundFilenameMap;
+		VentVector vents;
+
 		irr::scene::ISceneNode *topWall, *bottomWall, *leftWall, *rightWall, *frontWall, *backWall;
-		
-		std::vector<Trigger> triggers;
-		bool inTrigger;
-		Trigger* currentTrigger;
-
-
-		float entryX, entryY, entryZ;
-		float exitX, exitY, exitZ;
-
 		irr::scene::ICameraSceneNode *camera;
 		irr::scene::ILightSceneNode* lightDir;
 		irr::scene::ILightSceneNode* lightAmb;
 		irr::scene::IAnimatedMeshSceneNode *ball;
 
-		std::shared_ptr<SoundSystem> soundSystem;
+		//std::shared_ptr<HelpText> helpText;
+		std::vector<Trigger> triggers;
+		bool inTrigger;
+		Trigger* currentTrigger;
 
+		std::shared_ptr<SoundSystem> soundSystem;
 		std::shared_ptr<PhysicsManager> physics;
 
+		float entryX, entryY, entryZ;
+		float exitX, exitY, exitZ;
+		float cameraRotation;
 
 		// Functions
 		Level_();
 		~Level_();
 
-		bool InitLevel( irr::scene::ISceneManager *smgr, irr::io::IFileSystem *fileSystem, const std::string& levelFile, 
-			irr::video::ITexture *wall, irr::video::ITexture *ballTex, irr::video::ITexture *exitTex,
-			irr::video::ITexture *ventTex, irr::video::ITexture *ventFXTex, irr::video::ITexture *transTex );
-		bool StepSimulation( float timeDelta );
-
-		bool LoadLevelData( irr::io::IFileSystem *fileSystem, const std::string& levelFile, irr::scene::ISceneManager *smgr );
-
+		void AddPairToSoundFilenameMap( const std::string& key, const std::string& value );
+		void AdjustWallVisibility( const irr::core::vector3df& cameraPos );
+		void ApplyImpulseToBall( Direction dir, const float& x, const float& y, const float& z );
+		void ApplyDirectionToCamera( Direction dir );
+		Direction CalcDirection( const float& x, const float& y, const float& z ) const;
 		void CreateBall( irr::scene::ISceneManager *smgr, irr::video::ITexture *ballTex );
 		void CreateCamera( irr::scene::ISceneManager *smgr );
-		void CreateLights( irr::scene::ISceneManager* smgr );
-		void CreateWallNodes( irr::scene::ISceneManager* smgr );
 		void CreateExit( irr::video::ITexture *exitTex );
+		void CreateLights( irr::scene::ISceneManager* smgr );
 		void CreatePhysicsBlocks();
 		void CreateRenderBlocks( irr::scene::ISceneManager *smgr, irr::video::ITexture *wall, irr::video::ITexture *transTex );
 		void CreateVents( irr::scene::ISceneManager *smgr, irr::video::ITexture *particleTex,
 			irr::video::ITexture *ventTex );
 		void CreateVentSounds();
-
-		void AddPairToSoundFilenameMap( const std::string& key, const std::string& value );
-		void ApplyImpulseToBall( Direction dir, const float& x, const float& y, const float& z );
-		void ApplyDirectionToCamera( Direction dir );
-		Direction CalcDirection( const float& x, const float& y, const float& z );
+		void CreateWallNodes( irr::scene::ISceneManager* smgr );
 		BuildingBlockMap::iterator FindBlock( const float& x, const float& y, const float& z );
-		void RemoveBlock( float x, float y, float z );
-		irr::scene::ISceneNode* GetParentWall( float x, float y, float z);
-		void CheckForLocationTrigger(irr::core::vector3df ballPosition);
-		Trigger* FindNamedTrigger(std::string name);
-
-		void HandleMouseClick( irr::s32 x, irr::s32 y );
+		irr::scene::ISceneNode* GetParentWall( const float& x, const float& y, const float& z );
+		bool InitLevel( irr::scene::ISceneManager *smgr, irr::io::IFileSystem *fileSystem, const std::string& levelFile, 
+			irr::video::ITexture *wall, irr::video::ITexture *ballTex, irr::video::ITexture *exitTex,
+			irr::video::ITexture *ventTex, irr::video::ITexture *ventFXTex, irr::video::ITexture *transTex );
+		bool LoadLevelData( irr::io::IFileSystem *fileSystem, const std::string& levelFile, irr::scene::ISceneManager *smgr );
 		void Pause( bool pause );
 		void PlayJetSound();
+		void RemoveBlock( float x, float y, float z );
+		bool StepSimulation( float timeDelta );
+		void CheckForLocationTrigger(irr::core::vector3df ballPosition);
+		Trigger* FindNamedTrigger(std::string name);
+		void HandleMouseClick( irr::s32 x, irr::s32 y );
+		const irr::core::vector3df GetNewCameraPosition( const irr::core::vector3df& currentPos,
+			const Direction& dir );
 	};
 
 
-	Level_::Level_() : 
-		physics( new PhysicsManager ),
+	Level_::Level_() 
+		: physics( new PhysicsManager ),
 		ball( nullptr ),
 		soundSystem( new SoundSystem ),
 		lightDir( nullptr ),
@@ -130,6 +130,7 @@ namespace Tuatara
 		rightWall( nullptr ),
 		frontWall( nullptr ),
 		backWall( nullptr ),
+		cameraRotation( 0.0f ),
 		inTrigger( false )
 	{
 	}
@@ -139,23 +140,23 @@ namespace Tuatara
 		// to prevent user from hearing sounds as level is deleted
 		soundSystem->PausePlayback();
 
-		// memory cleanup
+		// clean up vent information
 		BOOST_FOREACH( VentInfo *v, vents )
 		{
 			delete v;
 		}
 
+		// clean up level blocks
 		std::for_each( levelBlocks.begin(), levelBlocks.end(), []( std::pair<NodePos, irr::scene::IMeshSceneNode*> p )
 		{
 			p.second->remove();
 		});
-		levelBlocks.clear();
 
+		// clean up transparent level blocks
 		std::for_each( levelTransBlocks.begin(), levelTransBlocks.end(), []( std::pair<NodePos, irr::scene::IMeshSceneNode*> p )
 		{
 			p.second->remove();
 		});
-		levelTransBlocks.clear();
 
 		auto safeDelete = []( irr::scene::ISceneNode *node )
 		{
@@ -268,9 +269,11 @@ namespace Tuatara
 
 			return false;
 		}
+
 	}
 
-	bool Level_::LoadLevelData( irr::io::IFileSystem *fileSystem, const std::string& levelFile, irr::scene::ISceneManager *smgr )
+	bool Level_::LoadLevelData( irr::io::IFileSystem *fileSystem, const std::string& levelFile,
+		irr::scene::ISceneManager *smgr )
 	{
 		using namespace irr;
 		using namespace std;
@@ -347,11 +350,74 @@ namespace Tuatara
 					trigger.prompt = (char*)levelReader->getAttributeValueSafe( "prompt" );
 					triggers.push_back(trigger);
 				}
+				//else if( name == "helpText\0" )
+				//{
+				//	std::string text = levelReader->getAttributeValue( "text" );
+				//	if( text.length() > 0 )
+				//	{
+				//		helpText.reset( new HelpText( guienv, 5, 5, 375, 85, text ) );
+				//	}
+				//}
 			}
 		}
 
 		delete levelReader;
 		return true;
+	}
+
+	void Level_::AdjustWallVisibility( const irr::core::vector3df& cameraPos )
+	{
+		// axisValue is the desired camera position vector component, zeroAxisValue is true if testing for the <0 cases
+		// and false otherwise, wall is the scene node whose visibility is being adjusted
+		auto setVisibility = [&]( float axisValue, bool zeroAxisValue, irr::scene::ISceneNode *wall )
+		{
+			if( (zeroAxisValue && axisValue < 0) || (!zeroAxisValue && axisValue > levelSize) )
+			{
+				wall->setVisible( false );
+			}
+			else
+			{
+				wall->setVisible( true );
+			}
+		};
+
+		setVisibility( cameraPos.X, true, leftWall );
+		setVisibility( cameraPos.Y, true, bottomWall );
+		setVisibility( cameraPos.Z, true, frontWall );
+		setVisibility( cameraPos.X, false, rightWall );
+		setVisibility( cameraPos.Y, false, topWall );
+		setVisibility( cameraPos.Z, false, backWall );
+	}
+
+	Direction Level_::CalcDirection( const float& x, const float& y, const float& z ) const
+	{
+		// calculate the direction of the vent based on it's position on the cube's wall
+		if( z == 0 )
+		{
+			return FORWARD;
+		}
+		else if( z == levelSize )
+		{
+			return BACKWARD;
+		}
+		else if( x == 0 && ( z != 0 && z != levelSize ) )
+		{
+			return RIGHT;
+		}
+		else if( x == levelSize && ( z != 0 && z != levelSize ) )
+		{
+			return LEFT;
+		}
+		else if( y == levelSize )
+		{
+			return DOWN;
+		}
+		else if( y == 0 )
+		{
+			return UP;
+		}
+
+		return NONE;
 	}
 
 	void Level_::CreateBall( irr::scene::ISceneManager *smgr, irr::video::ITexture *ballTex )
@@ -367,13 +433,13 @@ namespace Tuatara
 		smgr->setShadowColor(video::SColor(150,0,0,0));
 		ball->setMaterialFlag( video::EMF_LIGHTING, true );
 		ball->setMaterialTexture( 0, ballTex );
-        // if we need to resize the ball, we can scale it with these two lines:
+		// if we need to resize the ball, we can scale it with these two lines:
 		//ball->setScale(core::vector3df(4,4,4));
-        //ball->setMaterialFlag(video::EMF_NORMALIZE_NORMALS, true);
+		//ball->setMaterialFlag(video::EMF_NORMALIZE_NORMALS, true);
 
 
 		// create the ball's physical counterpart
-		physics->CreateBall( entryX, entryY, entryZ );
+		physics->CreateBall( entryX, entryY, entryZ, soundSystem.get() );
 	}
 
 	void Level_::CreateLights( irr::scene::ISceneManager* smgr )
@@ -390,7 +456,7 @@ namespace Tuatara
 	{
 		// add camera
 		camera = smgr->addCameraSceneNode( 0, 
-			irr::core::vector3df( (float)levelSize / 2, (float)levelSize - 2, -8.f ), 
+			irr::core::vector3df( (float)levelSize / 2, (float)levelSize / 2, -8.f ), 
 			irr::core::vector3df( (float)levelSize / 2, (float)levelSize / 2, levelSize - 1 ) );
 	}
 
@@ -455,8 +521,8 @@ namespace Tuatara
 
 						// create the node in the scene and set its properties
 						scene::ISceneNode* parent;
-						parent = GetParentWall(static_cast<float>(x), static_cast<float>(cubeLevel), static_cast<float>(z));
-						scene::IMeshSceneNode *node = smgr->addCubeSceneNode( 1.f, parent, -1, 
+						parent = GetParentWall( static_cast<float>(x), static_cast<float>(cubeLevel), static_cast<float>(z) );
+						scene::IMeshSceneNode *node = smgr->addCubeSceneNode( BLOCK_HALF_EXTENT * 2, parent, -1, 
 							core::vector3df( static_cast<float>(x), static_cast<float>(cubeLevel),
 							static_cast<float>(z) ) );
 						node->setMaterialFlag( video::EMF_LIGHTING, false );
@@ -465,13 +531,13 @@ namespace Tuatara
 						// store the NodePos and ISceneNode
 						levelBlocks.insert( make_pair( nodePos, node ) );
 
-						// create transparent node in scene...
+						// create transparent node in scene
 						scene::IMeshSceneNode *transNode = smgr->addCubeSceneNode( 1.f, 0, -1, 
 							core::vector3df( static_cast<float>(x), static_cast<float>(cubeLevel),
 							static_cast<float>(z) ) );
 						transNode->setMaterialFlag( video::EMF_LIGHTING, true );
 						transNode->setMaterialTexture( 0, transTex );
-						transNode->setMaterialType(video::EMT_TRANSPARENT_ALPHA_CHANNEL);
+						transNode->setMaterialType( video::EMT_TRANSPARENT_ALPHA_CHANNEL );
 
 						levelTransBlocks.insert( make_pair( nodePos, transNode ) );
 					}
@@ -512,7 +578,9 @@ namespace Tuatara
 				normal.Y = -1.f;
 				break;
 			default:
+#if defined(_DEBUG) | defined(DEBUG)
 				printf( "CreateVents: bad direction sent to normalGenerator lambda.\n" );
+#endif
 			}
 
 			return normal.normalize();
@@ -531,6 +599,7 @@ namespace Tuatara
 
 	void Level_::CreateVentSounds()
 	{
+		// go through all the vents and create a sound for it in 3D space
 		std::for_each( vents.begin(), vents.end(), [&]( VentInfo *v )
 		{
 			soundSystem->CreateVentSound( v->x, v->y, v->z );
@@ -541,12 +610,14 @@ namespace Tuatara
 	{
 		using namespace std;
 
+		// if a filename was indeed supplied, store it (to eventually be sent to the sound system for
+		// sound creation)
 		if( !value.length() == 0 )
 		{
 			soundFilenameMap.insert( make_pair<string, string>( key, value ) );
 		}
 	}
-	
+
 	void Level_::HandleMouseClick( irr::s32 x, irr::s32 y )
 	{
 		if (inTrigger)
@@ -557,71 +628,58 @@ namespace Tuatara
 
 	void Level_::ApplyImpulseToBall( Direction dir, const float& x, const float& y, const float& z )
 	{
-		physics->ApplyImpulseToBall( dir, x, y, z );
+		if( dir == UP )
+		{
+			physics->ApplyImpulseToBall( dir, x, y, z );
+		}
+		else
+		{
+			switch( dir )
+			{
+			case FORWARD:
+				{
+					auto forwardVec = irr::core::vector3df( 0.f, 0.f, IMPULSE_VALUE );
+					forwardVec.rotateXZBy( cameraRotation );
+					physics->ApplyImpulseToBall( dir, forwardVec.X, 0, forwardVec.Z );
+				}
+				break;
+			case BACKWARD:
+				{
+					auto backwardVec = irr::core::vector3df( 0.f, 0.f, -IMPULSE_VALUE );
+					backwardVec.rotateXZBy( cameraRotation );
+					physics->ApplyImpulseToBall( dir, backwardVec.X, 0, backwardVec.Z );
+				}
+				break;
+			case LEFT:
+				{
+					auto leftVec = irr::core::vector3df( -IMPULSE_VALUE, 0.f, 0.f );
+					leftVec.rotateXZBy( cameraRotation );
+					physics->ApplyImpulseToBall( dir, leftVec.X, 0, leftVec.Z );
+				}
+				break;
+			case RIGHT:
+				{
+					auto rightVec = irr::core::vector3df( IMPULSE_VALUE, 0.f, 0.f );
+					rightVec.rotateXZBy( cameraRotation );
+					physics->ApplyImpulseToBall( dir, rightVec.X, 0, rightVec.Z );
+				}
+				break;
+			default:
+#if defined(_DEBUG) | defined(DEBUG)
+				printf( "Bad direction sent to ApplyImpulseToBall in Level_\n" );
+#endif
+			}
+		}		
 	}
 
 	void Level_::ApplyDirectionToCamera( Direction dir )
 	{
-		// OLD Functionality:
-		//camera->setTarget( GetNewCameraTarget( camera->getAbsolutePosition(),
-		//	camera->getTarget(), dir ) );
+		using namespace irr::core;
 
-		// New idea:
-		irr::core::vector3df pos = camera->getPosition();
-		switch (dir)
-		{
-		case RIGHT:
-			pos.rotateXZBy( 10, irr::core::vector3df( (float)levelSize / 2, pos.Y, (float)levelSize / 2 ) );
-			break;
-		case LEFT:
-			pos.rotateXZBy( -10, irr::core::vector3df( (float)levelSize / 2, pos.Y, (float)levelSize / 2 ) );
-			break;
-		case UP:
-			if (pos.Y < levelSize + 3 ) pos.Y  = pos.Y + 1;
-			break;
-		case DOWN:
-			if (pos.Y > -3 ) pos.Y  = pos.Y - 1;
-			break;
-		}
-		camera->setPosition( pos );
+		// adjust camera position based on direction
+		camera->setPosition( GetNewCameraPosition( camera->getPosition(), dir ) );
 
-		if ( pos.X < 0 ) leftWall->setVisible(false); else leftWall->setVisible(true);
-		if ( pos.Y < 0 ) bottomWall->setVisible(false); else bottomWall->setVisible(true);
-		if ( pos.Z < 0 ) frontWall->setVisible(false); else frontWall->setVisible(true);
-		if ( pos.X > levelSize ) rightWall->setVisible(false); else rightWall->setVisible(true);
-		if ( pos.Y > levelSize ) topWall->setVisible(false); else topWall->setVisible(true);
-		if ( pos.Z > levelSize ) backWall->setVisible(false); else backWall->setVisible(true);
-	}
-
-	Direction Level_::CalcDirection( const float& x, const float& y, const float& z )
-	{
-		// calculate the direction of the vent based on it's position on the cube's wall
-		if( z == 0 )
-		{
-			return FORWARD;
-		}
-		else if( z == levelSize )
-		{
-			return BACKWARD;
-		}
-		else if( x == 0 && ( z != 0 && z != levelSize ) )
-		{
-			return RIGHT;
-		}
-		else if( x == levelSize && ( z != 0 && z != levelSize ) )
-		{
-			return LEFT;
-		}
-		else if( y == levelSize )
-		{
-			return DOWN;
-		}
-		else if( y == 0 )
-		{
-			return UP;
-		}
-
-		return NONE;
+		AdjustWallVisibility( camera->getPosition() );
 	}
 
 	void Level_::CheckForLocationTrigger( irr::core::vector3df ballPosition )
@@ -681,31 +739,69 @@ namespace Tuatara
 		levelBlocks.erase( iter );
 	}
 
-	irr::scene::ISceneNode* Level_::GetParentWall(float x, float y, float z)
+const irr::core::vector3df Level_::GetNewCameraPosition( const irr::core::vector3df& currentPos, 
+		const Direction& dir )
 	{
-		// Finds the parent node for a new wall block based on location
-		irr::scene::ISceneNode* parent = 0;
-		if (z == 0)
+		using namespace irr::core;
+		auto pos = currentPos;
+
+		// rotate or tilt up/down based on direction
+		switch (dir)
+		{
+		case RIGHT:
+			pos.rotateXZBy( 10, vector3df( static_cast<float>(levelSize / 2), pos.Y, static_cast<float>(levelSize / 2) ) );
+			cameraRotation += 10.f;
+			break;
+		case LEFT:
+			pos.rotateXZBy( -10, vector3df( static_cast<float>(levelSize / 2), pos.Y, static_cast<float>(levelSize / 2) ) );
+			cameraRotation -= 10.f;
+			break;
+		case UP:
+			if (pos.Y < levelSize + 3 )
+			{
+				++pos.Y;
+			}
+			break;
+		case DOWN:
+			if (pos.Y > -3 )
+			{
+				--pos.Y;
+			}
+			break;
+		default:
+
+#if defined(_DEBUG) | defined(DEBUG)
+			printf( "Bad camera direction sent to ApplyDirectionToCamera.\n" );
+#endif
+		}
+
+		return pos;
+	}
+
+	irr::scene::ISceneNode* Level_::GetParentWall( const float& x, const float& y, const float& z )
+	{
+		irr::scene::ISceneNode* parent = nullptr;
+		if( z == 0 )
 		{
 			parent = frontWall;
 		}
-		else if (x == levelSize)
+		else if( x == levelSize )
 		{
 			parent = rightWall;
 		}
-		else if (x == 0)
+		else if( x == 0 )
 		{
 			parent = leftWall;
 		}
-		else if (z == levelSize)
+		else if( z == levelSize )
 		{
 			parent = backWall;
 		}
-		else if (y == levelSize)
+		else if( y == levelSize )
 		{
 			parent = topWall;
 		}
-		else if (y == 0)
+		else if( y == 0 )
 		{
 			parent = bottomWall;
 		}
@@ -730,8 +826,8 @@ namespace Tuatara
 	}
 
 
-
-	//public implementation
+	// *********************
+	// public implementation
 	Level::Level() : level_( new Level_ )
 	{
 	}
@@ -740,7 +836,7 @@ namespace Tuatara
 	{		
 	}
 
-	bool Level::InitLevel( irr::scene::ISceneManager *smgr, irr::io::IFileSystem *fileSystem, const std::string& levelFile, 
+	bool Level::InitLevel( irr::scene::ISceneManager* smgr, irr::io::IFileSystem *fileSystem, const std::string& levelFile, 
 		irr::video::ITexture *wall, irr::video::ITexture *ballTex, irr::video::ITexture *exitTex,
 		irr::video::ITexture *ventTex, irr::video::ITexture *ventFXTex, irr::video::ITexture *transTex )
 	{

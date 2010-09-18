@@ -25,6 +25,9 @@ namespace Tuatara
 	};
 
 	const int levelSize = 9;
+	const float IMPULSE_VALUE = 0.6f;
+	const float BLOCK_HALF_EXTENT = 0.5f;
+	const float BALL_RADIUS = 0.25f;
 }
 
 #endif

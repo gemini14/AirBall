@@ -89,13 +89,16 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="BallContactListener.cpp" />
     <ClCompile Include="FontHandler.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameExit.cpp" />
     <ClCompile Include="GameState.cpp" />
     <ClCompile Include="GameStateEventReceiver.cpp" />
     <ClCompile Include="GUIButton.cpp" />
+    <ClCompile Include="HelpText.cpp" />
     <ClCompile Include="Level.cpp" />
+    <ClCompile Include="LightSoundSystem.cpp" />
     <ClCompile Include="PhysicsManager.cpp" />
     <ClCompile Include="ScreenBase.cpp" />
     <ClCompile Include="SoundSystem.cpp" />
@@ -108,6 +111,7 @@
     <ClCompile Include="VentParticles.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BallContactListener.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="EnumsConstants.h" />
     <ClInclude Include="FontHandler.h" />
@@ -116,7 +120,9 @@
     <ClInclude Include="GameState.h" />
     <ClInclude Include="GameStateEventReceiver.h" />
     <ClInclude Include="GUIButton.h" />
+    <ClInclude Include="HelpText.h" />
     <ClInclude Include="Level.h" />
+    <ClInclude Include="LightSoundSystem.h" />
     <ClInclude Include="PhysicsManager.h" />
     <ClInclude Include="ScreenBase.h" />
     <ClInclude Include="SoundSystem.h" />
@@ -133,10 +139,12 @@
     <None Include="art\ball.png" />
     <None Include="art\Ball125.x" />
     <None Include="art\Ball250.x" />
+    <None Include="art\bowlingballtexsm.png" />
+    <None Include="art\glowy.png" />
     <None Include="art\menuBackground.png" />
     <None Include="art\pauseBackground.png" />
-    <None Include="art\sphere.x" />
     <None Include="art\tileTransparent.png" />
+    <None Include="art\TriggerPopUp.png" />
     <None Include="fmodex.dll" />
     <None Include="fmodexL.dll" />
     <None Include="Irrlicht.dll" />
@@ -160,6 +168,7 @@
     <None Include="pala.ttf" />
     <None Include="sound\jet.ogg" />
     <None Include="sound\level_0_bg.ogg" />
+    <None Include="sound\menuBackMusic.ogg" />
     <None Include="sound\vent.ogg" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

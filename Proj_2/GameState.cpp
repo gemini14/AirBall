@@ -75,10 +75,10 @@ namespace Tuatara
 		levelComplete = level->StepSimulation();
 
 		game->manager->driver->beginScene( true, true, video::SColor(255, 100, 101, 140) );
-			// draw 3D Scene:
+			// draw 3D scene:
 			game->manager->smgr->drawAll();
-			// draw GUI (if there is any):
-			game->manager->device->getGUIEnvironment()->drawAll();
+			// draw GUI:
+			game->manager->guienv->drawAll();
 		game->manager->driver->endScene();
 
 		if( levelComplete )
