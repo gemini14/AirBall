@@ -13,6 +13,7 @@
 #include "PhysicsManager.h"
 #include "SoundSystem.h"
 #include "VentParticles.h"
+#include "Trigger.h"
 
 
 namespace Tuatara
@@ -23,21 +24,6 @@ namespace Tuatara
 	struct Level_ : boost::noncopyable
 	{
 		// Definitions ////
-		enum TriggerType
-		{
-			triggerLocation,
-			triggerNamed,
-		};
-
-		struct Trigger // simple trigger mechanism for tutorials
-		{
-			TriggerType type;
-			irr::core::vector3di blockLoc;	// some triggers are based on ball location
-			std::string name;				// some triggers are on specific named events
-			std::string prompt;				// the text to display
-			bool triggered;					// has it already been triggered?
-		};
-		
 		struct VentInfo
 		{
 			float x;
@@ -74,7 +60,11 @@ namespace Tuatara
 		BuildingBlockMap levelTransBlocks;
 		SoundFilenameMap soundFilenameMap;
 		irr::scene::ISceneNode *topWall, *bottomWall, *leftWall, *rightWall, *frontWall, *backWall;
+		
 		std::vector<Trigger> triggers;
+		bool inTrigger;
+		Trigger* currentTrigger;
+
 
 		float entryX, entryY, entryZ;
 		float exitX, exitY, exitZ;
@@ -98,7 +88,7 @@ namespace Tuatara
 			irr::video::ITexture *ventTex, irr::video::ITexture *ventFXTex, irr::video::ITexture *transTex );
 		bool StepSimulation( float timeDelta );
 
-		bool LoadLevelData( irr::io::IFileSystem *fileSystem, const std::string& levelFile );
+		bool LoadLevelData( irr::io::IFileSystem *fileSystem, const std::string& levelFile, irr::scene::ISceneManager *smgr );
 
 		void CreateBall( irr::scene::ISceneManager *smgr, irr::video::ITexture *ballTex );
 		void CreateCamera( irr::scene::ISceneManager *smgr );
@@ -119,19 +109,28 @@ namespace Tuatara
 		void RemoveBlock( float x, float y, float z );
 		irr::scene::ISceneNode* GetParentWall( float x, float y, float z);
 		void CheckForLocationTrigger(irr::core::vector3df ballPosition);
+		Trigger* FindNamedTrigger(std::string name);
 
+		void HandleMouseClick( irr::s32 x, irr::s32 y );
 		void Pause( bool pause );
 		void PlayJetSound();
-
-		const irr::core::vector3df GetNewCameraTarget( const irr::core::vector3df& currentPos,
-			const irr::core::vector3df& target, const Direction& dir );
-		const irr::core::vector3df GetCameraLookVector();
-		const irr::core::vector3df GetCameraUpVector();
 	};
 
 
-	Level_::Level_() : physics( new PhysicsManager ), ball( nullptr ), soundSystem( new SoundSystem ), lightDir( nullptr ), lightAmb( nullptr ),
-		camera( nullptr ), topWall( nullptr ), bottomWall( nullptr ), leftWall( nullptr ), rightWall( nullptr ), frontWall( nullptr ), backWall( nullptr )
+	Level_::Level_() : 
+		physics( new PhysicsManager ),
+		ball( nullptr ),
+		soundSystem( new SoundSystem ),
+		lightDir( nullptr ),
+		lightAmb( nullptr ),
+		camera( nullptr ),
+		topWall( nullptr ),
+		bottomWall( nullptr ),
+		leftWall( nullptr ),
+		rightWall( nullptr ),
+		frontWall( nullptr ),
+		backWall( nullptr ),
+		inTrigger( false )
 	{
 	}
 
@@ -192,7 +191,7 @@ namespace Tuatara
 
 		// make sure level data was read in correctly
 		// note that this part can be extended to read in other info like music location
-		if( !LoadLevelData( fileSystem, levelFile ) )
+		if( !LoadLevelData( fileSystem, levelFile, smgr ) )
 		{
 			return false;
 		}
@@ -217,37 +216,61 @@ namespace Tuatara
 	bool Level_::StepSimulation( float timeDelta )
 	{
 		using namespace irr::core;
-		bool levelComplete = physics->StepSimulation( timeDelta );
-		
-		static vector3df lastpos = ball->getPosition();
-		// set ball position:
-		vector3df position = physics->GetBallPosition();
-		ball->setPosition( position );
-
-		// set ball rotation (if there is a valid rotation)
-		static vector3df rotation;
-		if( physics->GetBallRotation( rotation ) ) 
+		if ( inTrigger )
 		{
-			ball->setRotation( rotation );
+			if ( !currentTrigger->Update() ) inTrigger = false;
+			return false;
 		}
+		else
+		{
+			if ( physics->StepSimulation( timeDelta ) )
+			{
+				// if level complete, and there is a trigger, trigger it.
 
-		camera->setTarget( position );
+				// Find trigger
+				Trigger* exitTrigger = FindNamedTrigger("onExit");
 
-		vector3df soundSysVelocity = ( position - lastpos ) / ( 1.f / 60.f );
-		vector3df ballVelocity = physics->GetBallVelocity().normalize();
+				if ( exitTrigger == NULL ) return true; // no trigger, go ahead and exit
+				else
+				{
+					// trigger
+					currentTrigger = exitTrigger;
+					inTrigger = true;
+					exitTrigger->Show();
+					return false;
+				}
+			}
 		
-		soundSystem->Update( position.X, position.Y, position.Z,			// position
-			soundSysVelocity.X, soundSysVelocity.Y, soundSysVelocity.Z,		// velocity
-			ballVelocity.X, ballVelocity.Y, ballVelocity.Z );				// forward vector
+			static vector3df lastpos = ball->getPosition();
+			// set ball position:
+			vector3df position = physics->GetBallPosition();
+			ball->setPosition( position );
 
-		lastpos = position;
+			// set ball rotation (if there is a valid rotation)
+			static vector3df rotation;
+			if( physics->GetBallRotation( rotation ) ) 
+			{
+				ball->setRotation( rotation );
+			}
 
-		CheckForLocationTrigger(position);
+			camera->setTarget( position );
 
-		return levelComplete;
+			vector3df soundSysVelocity = ( position - lastpos ) / ( 1.f / 60.f );
+			vector3df ballVelocity = physics->GetBallVelocity().normalize();
+		
+			soundSystem->Update( position.X, position.Y, position.Z,			// position
+				soundSysVelocity.X, soundSysVelocity.Y, soundSysVelocity.Z,		// velocity
+				ballVelocity.X, ballVelocity.Y, ballVelocity.Z );				// forward vector
+
+			lastpos = position;
+
+			CheckForLocationTrigger(position);
+
+			return false;
+		}
 	}
 
-	bool Level_::LoadLevelData( irr::io::IFileSystem *fileSystem, const std::string& levelFile )
+	bool Level_::LoadLevelData( irr::io::IFileSystem *fileSystem, const std::string& levelFile, irr::scene::ISceneManager *smgr )
 	{
 		using namespace irr;
 		using namespace std;
@@ -306,7 +329,7 @@ namespace Tuatara
 				}
 				else if( name == "trigger\0" )
 				{
-					Trigger trigger;
+					Trigger trigger(smgr);
 					char* eventName = (char*)levelReader->getAttributeValue("event");
 					if ( eventName == 0 )
 					{
@@ -524,6 +547,14 @@ namespace Tuatara
 		}
 	}
 	
+	void Level_::HandleMouseClick( irr::s32 x, irr::s32 y )
+	{
+		if (inTrigger)
+		{
+			currentTrigger->HandleMouseClick( x, y );
+		}
+	}
+
 	void Level_::ApplyImpulseToBall( Direction dir, const float& x, const float& y, const float& z )
 	{
 		physics->ApplyImpulseToBall( dir, x, y, z );
@@ -562,66 +593,6 @@ namespace Tuatara
 		if ( pos.Z > levelSize ) backWall->setVisible(false); else backWall->setVisible(true);
 	}
 
-	const irr::core::vector3df Level_::GetNewCameraTarget( const irr::core::vector3df& currentPos, 
-		const irr::core::vector3df& target, const Direction& dir )
-	{
-		using namespace irr;
-		auto newPos = currentPos;
-		auto newTarget = target;
-
-		switch( dir )
-		{
-		case UP:
-			if( newTarget.Y < levelSize - 2 )
-			{
-				newTarget.Y += 0.5f;
-			}
-			return newTarget;
-
-		case DOWN:
-			if( newTarget.Y > -2 )
-			{
-				newTarget.Y -= 0.5f;
-			}
-			return newTarget;
-
-		case LEFT:
-			newTarget.rotateXZBy( 5.f, currentPos );
-			if( newTarget.X < 3 )
-			{
-				newTarget.X = 2;
-			}
-			return newTarget;
-
-		case RIGHT:
-			newTarget.rotateXZBy( -5.f, currentPos );
-			if( newTarget.Z < 3 )
-			{
-				newTarget.Z = 2;
-			}
-			return newTarget;
-
-		default:
-			return core::vector3df();
-		}
-
-		return core::vector3df();
-	}
-
-	const irr::core::vector3df Level_::GetCameraLookVector()
-	{
-		irr::core::vector3df look( camera->getTarget() );
-		return look.normalize();
-	}
-
-	const irr::core::vector3df Level_::GetCameraUpVector()
-	{
-		irr::core::vector3df up( camera->getUpVector() );
-		return up.normalize();
-	}
-
-
-	
 	Direction Level_::CalcDirection( const float& x, const float& y, const float& z )
 	{
 		// calculate the direction of the vent based on it's position on the cube's wall
@@ -665,11 +636,26 @@ namespace Tuatara
 					 ballGridLoc.Y == triggers[i].blockLoc.Y &&
 					 ballGridLoc.Z == triggers[i].blockLoc.Z )
 				{
-					triggers[i].triggered = true;
-					#pragma message("TODO: Finish handling triggers")
+					currentTrigger = &triggers[i];
+					inTrigger = true;
+					currentTrigger->Show();
 				}
 			}
 		}
+	}
+
+	Trigger* Level_::FindNamedTrigger(std::string name)
+	{
+		for (int i = 0; i < triggers.size(); i++)
+		{
+			if (triggers[i].type == triggerNamed &&
+				triggers[i].triggered == false)
+			{
+				if (triggers[i].name == name)
+					return &triggers[i];
+			}
+		}
+		return NULL;
 	}
 
 	Level_::BuildingBlockMap::iterator Level_::FindBlock( const float& x, const float& y, const float& z )
@@ -759,6 +745,11 @@ namespace Tuatara
 		irr::video::ITexture *ventTex, irr::video::ITexture *ventFXTex, irr::video::ITexture *transTex )
 	{
 		return level_->InitLevel( smgr, fileSystem, levelFile, wall, ballTex, exitTex, ventTex, ventFXTex, transTex );
+	}
+
+	void Level::HandleMouseClick( irr::s32 x, irr::s32 y )
+	{
+		level_->HandleMouseClick( x, y );
 	}
 
 	void Level::ApplyImpulseToBall( Direction dir, const float& x, const float& y, const float& z )
