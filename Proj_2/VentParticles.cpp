@@ -14,8 +14,9 @@ namespace Tuatara
 			irr::core::vector3df(1.0f, 1.0f, 1.0f)); //scale
 
 		irr::f32 gravity = -0.01f; // a good speed, I think.
-		irr::f32 initialVelocity = 0.02f / sqrt(7.0f / distance); // g=-0.01, iV=0.02 makes it go 8 units high. Dividing by sqrt(8/distance) scales to proper distance...
-		irr::f32 maxTime = (initialVelocity / -gravity) * 400; // seems to work out--particles get to end, and just as they turn around, they disappear.
+		irr::f32 initialVelocity = 0.0188f / sqrt(8.0f / distance); // g=-0.01, iV=0.02 makes it go 8 units high. Dividing by sqrt(8/distance) scales to proper distance...
+		initialVelocity *= 1.f+(distance*0.028f); // bugfix, because irr particles don't seem to conform to physics...
+		irr::f32 maxTime = (initialVelocity / -gravity) * 450; // seems to work out--particles get to end, and just as they turn around, they disappear.
 
 		irr::core::vector3df initialDirection = normalDirection * initialVelocity;
 
