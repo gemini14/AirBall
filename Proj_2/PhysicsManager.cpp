@@ -477,6 +477,7 @@ namespace Tuatara
 			break;
 
 		case UP:
+			//if( ball->getPosition
 			impulse.setXYZ( hkVector4( 0, y, 0 ) );
 			break;
 

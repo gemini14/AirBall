@@ -96,30 +96,18 @@ namespace Tuatara
 					return true;
 				}
 			case KEY_KEY_Q:
-				if( !event.KeyInput.PressedDown )
 				{
-					static bool okToExecute = true;
-					static u32 then;
-					static auto Q_Action = [&]()
+					static bool keyWasReleased = true;
+					
+					if( event.KeyInput.PressedDown && keyWasReleased )
 					{
-						gameState->level->ApplyImpulseToBall( UP, 0, 5.5f, 0 );
+						gameState->level->ApplyImpulseToBall( UP, 0, 7.5f, 0 );
 						gameState->level->PlayJetSound();
-
-						then = game->manager->device->getTimer()->getTime();
-						okToExecute = !okToExecute;
-					};
-
-					if( okToExecute )
-					{
-						Q_Action();
+						keyWasReleased = false;
 					}
-					else
+					else if( !event.KeyInput.PressedDown )
 					{
-						u32 now = game->manager->device->getTimer()->getTime();
-						if( (now - then) / 1000.f >= 1.5f )
-						{
-							Q_Action();
-						}
+						keyWasReleased = true;
 					}
 				}
 				return true;
