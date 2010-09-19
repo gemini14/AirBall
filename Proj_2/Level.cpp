@@ -12,7 +12,6 @@
 
 #include "EnumsConstants.h"
 #include "Game.h"
-#include "HelpText.h"
 #include "PhysicsManager.h"
 #include "SoundSystem.h"
 #include "VentParticles.h"
@@ -68,7 +67,6 @@ namespace Tuatara
 		irr::scene::ILightSceneNode* lightAmb;
 		irr::scene::IAnimatedMeshSceneNode *ball;
 
-		//std::shared_ptr<HelpText> helpText;
 		std::vector<Trigger> triggers;
 		bool inTrigger;
 		Trigger* currentTrigger;
@@ -363,14 +361,6 @@ namespace Tuatara
 					trigger.prompt = (char*)levelReader->getAttributeValueSafe( "prompt" );
 					triggers.push_back(trigger);
 				}
-				//else if( name == "helpText\0" )
-				//{
-				//	std::string text = levelReader->getAttributeValue( "text" );
-				//	if( text.length() > 0 )
-				//	{
-				//		helpText.reset( new HelpText( guienv, 5, 5, 375, 85, text ) );
-				//	}
-				//}
 			}
 		}
 
