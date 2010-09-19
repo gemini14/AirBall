@@ -21,11 +21,17 @@ namespace Tuatara
 		FMOD_RESULT result;
 
 		FMOD::Sound *bgmusic;
+		FMOD::Sound *ventSound;
+
 		FMOD::Sound *collision;
 		FMOD::Channel *collisionChannel;
+
 		FMOD::Sound *jet;
-		FMOD::Sound *ventSound;
-		
+		FMOD::Channel *jetChannel;
+
+		//FMOD::Sound *roll;
+		//FMOD::Channel *rollChannel;
+
 		struct VentPoint
 		{
 			float x, y, z;
@@ -34,29 +40,30 @@ namespace Tuatara
 
 		FMOD_System();
 		~FMOD_System();
-		
+
 		void ErrorCheck( const FMOD_RESULT& result );
 		void DisplayError( const FMOD_RESULT& result );
-		
+
 		bool SoundSystemInitOK() const;
 		void CreateSounds( const SoundFilenameMap& soundFilenames );
 		void CreateVentSound( const float& x, const float& y, const float& z );
-		
+
 		void StartPlayingLoopingSounds();
+		bool IsPlaying( FMOD::Channel *channel );
 		void PlayCollisionSound();
 		void PlayJetSound();
 		void PausePlayback();
 		void ResumePlayback();
 
 		void Update( const float& posX, const float& posY, const float& posZ, 
-			 const float& velocityX, const float& velocityY, const float& velocityZ, 
-			  const float& forwardX, const float& forwardY, const float& forwardZ );
+			const float& velocityX, const float& velocityY, const float& velocityZ, 
+			const float& forwardX, const float& forwardY, const float& forwardZ );
 	};
 
 	///// private implementation /////
 
 	FMOD_System::FMOD_System() : init( false ), system( nullptr ), bgmusic( nullptr ), collision( nullptr ),
-		jet( nullptr ), ventSound( nullptr )
+		jet( nullptr ), ventSound( nullptr ), collisionChannel( nullptr ), jetChannel( nullptr )
 	{
 		ErrorCheck( FMOD::System_Create( &system ) );
 
@@ -117,7 +124,7 @@ namespace Tuatara
 		{
 			return ( soundFilenames.find( key ) != soundFilenames.end() ) ? true : false;
 		};
-		
+
 		if( isPresent( "bgmusic" ) )
 		{
 			ErrorCheck( system->createStream( soundFilenames.at("bgmusic").c_str(), FMOD_LOOP_NORMAL | FMOD_CREATESTREAM,
@@ -127,6 +134,7 @@ namespace Tuatara
 		if( isPresent( "jet" ) )
 		{
 			ErrorCheck( system->createSound( soundFilenames.at( "jet" ).c_str(), FMOD_DEFAULT, nullptr, &jet ) );
+			jet->setDefaults( 44100, 0.5f, 0.f, 128 );
 		}
 		if( isPresent( "vent" ) )
 		{
@@ -167,13 +175,23 @@ namespace Tuatara
 		}
 	}
 
+	bool FMOD_System::IsPlaying( FMOD::Channel *channel )
+	{
+		bool playing;
+		if( channel != nullptr )
+		{
+			channel->isPlaying( &playing );
+			return playing;
+		}
+
+		return false;
+	}
+
 	void FMOD_System::PlayCollisionSound()
 	{
 		if( collision != nullptr )
 		{
-			bool playing;
-			collisionChannel->isPlaying( &playing );
-			if( !playing )
+			if( !IsPlaying( collisionChannel ) )
 			{
 				system->playSound( FMOD_CHANNEL_FREE, collision, false, &collisionChannel );
 			}
@@ -184,7 +202,10 @@ namespace Tuatara
 	{
 		if( jet != nullptr )
 		{
-			system->playSound( FMOD_CHANNEL_FREE, jet, false, nullptr );
+			if( !IsPlaying( jetChannel ) )
+			{
+				system->playSound( FMOD_CHANNEL_FREE, jet, false, &jetChannel );
+			}
 		}
 	}
 
@@ -203,8 +224,8 @@ namespace Tuatara
 	}
 
 	void FMOD_System::Update( const float& posX, const float& posY, const float& posZ, 
-			 const float& velocityX, const float& velocityY, const float& velocityZ, 
-			  const float& forwardX, const float& forwardY, const float& forwardZ )
+		const float& velocityX, const float& velocityY, const float& velocityZ, 
+		const float& forwardX, const float& forwardY, const float& forwardZ )
 	{
 		FMOD_VECTOR position = { posX, posY, posZ };
 		FMOD_VECTOR velocity = { velocityX, velocityY, velocityZ };
@@ -215,7 +236,7 @@ namespace Tuatara
 
 
 	///// public implementation /////
-	
+
 	SoundSystem::SoundSystem() : system( new FMOD_System )
 	{		
 	}
@@ -265,8 +286,8 @@ namespace Tuatara
 	}
 
 	void SoundSystem::Update( const float& posX, const float& posY, const float& posZ, 
-			 const float& velocityX, const float& velocityY, const float& velocityZ, 
-			  const float& forwardX, const float& forwardY, const float& forwardZ )
+		const float& velocityX, const float& velocityY, const float& velocityZ, 
+		const float& forwardX, const float& forwardY, const float& forwardZ )
 	{
 		system->Update( posX, posY, posZ, velocityX, velocityY, velocityZ, forwardX, forwardY, forwardZ );
 	}
