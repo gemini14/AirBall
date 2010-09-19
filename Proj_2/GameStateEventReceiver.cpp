@@ -46,25 +46,29 @@ namespace Tuatara
 			case KEY_KEY_W:
 				{
 					gameState->level->ApplyImpulseToBall( FORWARD );
-					gameState->level->PlayJetSound();
+					if (!gameState->level->IsJetPlaying())
+						gameState->level->PlayJetSound();
 					return true;
 				}
 			case KEY_KEY_A:
 				{
 					gameState->level->ApplyImpulseToBall( LEFT );
-					gameState->level->PlayJetSound();
+					if (!gameState->level->IsJetPlaying())
+						gameState->level->PlayJetSound();
 					return true;
 				}
 			case KEY_KEY_S:
 				{
 					gameState->level->ApplyImpulseToBall( BACKWARD );
-					gameState->level->PlayJetSound();
+					if (!gameState->level->IsJetPlaying())
+						gameState->level->PlayJetSound();
 					return true;
 				}
 			case KEY_KEY_D:
 				{
 					gameState->level->ApplyImpulseToBall( RIGHT );
-					gameState->level->PlayJetSound();
+					if (!gameState->level->IsJetPlaying())
+						gameState->level->PlayJetSound();
 					return true;
 				}
 			case KEY_KEY_Q:

@@ -30,6 +30,7 @@ namespace Tuatara
 		void StartPlayingLoopingSounds();
 		void PlayCollisionSound();
 		void PlayJetSound();
+		bool JetCheck();
 		void PausePlayback();
 		void ResumePlayback();
 		

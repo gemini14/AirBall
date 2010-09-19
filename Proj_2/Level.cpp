@@ -108,6 +108,7 @@ namespace Tuatara
 		void PlayJetSound();
 		void RemoveBlock( float x, float y, float z );
 		bool StepSimulation( float timeDelta );
+		bool IsJetPlaying();
 	};
 
 
@@ -700,6 +701,11 @@ namespace Tuatara
 		soundSystem->PlayJetSound();
 	}
 
+	bool Level_::IsJetPlaying()
+	{
+		return soundSystem->JetCheck();
+	}
+
 	void Level_::RemoveBlock( float x, float y, float z )
 	{
 		// remove block (and its entry in the map) if it matches the x, y, z coordinates
@@ -778,6 +784,11 @@ namespace Tuatara
 	void Level::PlayJetSound()
 	{
 		level_->PlayJetSound();
+	}
+
+	bool Level::IsJetPlaying()
+	{
+		return (level_->IsJetPlaying());
 	}
 
 	bool Level::StepSimulation( float timeDelta )

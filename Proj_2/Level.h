@@ -34,6 +34,7 @@ namespace Tuatara
 			irr::video::ITexture *ventTex, irr::video::ITexture *ventFXTex, irr::video::ITexture *transTex );
 		void Pause( bool pause );
 		void PlayJetSound();
+		bool IsJetPlaying();
 		bool StepSimulation( float timeDelta = 0 );
 	};
 

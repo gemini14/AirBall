@@ -24,6 +24,11 @@ namespace Tuatara
 		FMOD::Sound *collision;
 		FMOD::Sound *jet;
 		FMOD::Sound *ventSound;
+
+		//jet channel
+		FMOD::Channel *JetChan;
+		//roll channel
+		FMOD::Channel *RollChan;
 		
 		struct VentPoint
 		{
@@ -44,6 +49,7 @@ namespace Tuatara
 		void StartPlayingLoopingSounds();
 		void PlayCollisionSound();
 		void PlayJetSound();
+		bool JetCheck();
 		void PausePlayback();
 		void ResumePlayback();
 
@@ -178,8 +184,25 @@ namespace Tuatara
 	{
 		if( jet != nullptr )
 		{
-			system->playSound( FMOD_CHANNEL_FREE, jet, false, nullptr );
+			system->playSound( FMOD_CHANNEL_FREE, jet, false, &JetChan );
+			JetChan->setVolume(0.5f);
 		}
+	}
+
+	//simple check to see if jet sound is already playing
+	//checks channel assigned to the jet sound
+	bool FMOD_System::JetCheck()
+	{
+		bool play;
+
+		//check the channel
+		JetChan->isPlaying(&play);
+
+		//is playing, return true
+		if (play)
+			return true;
+		else
+			return false;
 	}
 
 	void FMOD_System::PausePlayback()
@@ -246,6 +269,11 @@ namespace Tuatara
 	void SoundSystem::PlayJetSound()
 	{
 		system->PlayJetSound();
+	}
+
+	bool SoundSystem::JetCheck()
+	{
+		return system->JetCheck();
 	}
 
 	void SoundSystem::PausePlayback()
