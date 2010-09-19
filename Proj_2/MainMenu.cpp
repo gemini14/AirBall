@@ -35,7 +35,7 @@ namespace Tuatara
 	void MainMenu::Enter( Game *game )
 	{
 		soundSystem->StartPlayback( true );
-		soundSystem->AdjustVolume( 0.2f );
+		soundSystem->AdjustVolume( 0.1f );
 		ScreenBase::Enter( game );
 	}
 

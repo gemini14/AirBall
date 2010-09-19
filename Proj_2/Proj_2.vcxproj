@@ -96,7 +96,6 @@
     <ClCompile Include="GameState.cpp" />
     <ClCompile Include="GameStateEventReceiver.cpp" />
     <ClCompile Include="GUIButton.cpp" />
-    <ClCompile Include="HelpText.cpp" />
     <ClCompile Include="Level.cpp" />
     <ClCompile Include="LightSoundSystem.cpp" />
     <ClCompile Include="PhysicsManager.cpp" />
@@ -120,7 +119,6 @@
     <ClInclude Include="GameState.h" />
     <ClInclude Include="GameStateEventReceiver.h" />
     <ClInclude Include="GUIButton.h" />
-    <ClInclude Include="HelpText.h" />
     <ClInclude Include="Level.h" />
     <ClInclude Include="LightSoundSystem.h" />
     <ClInclude Include="PhysicsManager.h" />

@@ -22,6 +22,7 @@ namespace Tuatara
 
 		FMOD::Sound *bgmusic;
 		FMOD::Sound *collision;
+		FMOD::Channel *collisionChannel;
 		FMOD::Sound *jet;
 		FMOD::Sound *ventSound;
 		
@@ -131,7 +132,7 @@ namespace Tuatara
 		{
 			ErrorCheck( system->createSound( soundFilenames.at( "vent" ).c_str(), FMOD_3D | FMOD_LOOP_NORMAL,
 				nullptr, &ventSound ) );
-			ventSound->setDefaults( 44100, 0.02f, 0.f, 128 );
+			ventSound->setDefaults( 44100, 0.3f, 0.f, 128 );
 		}
 		if( isPresent( "collision" ) )
 		{
@@ -170,7 +171,12 @@ namespace Tuatara
 	{
 		if( collision != nullptr )
 		{
-			system->playSound( FMOD_CHANNEL_FREE, collision, false, nullptr );
+			bool playing;
+			collisionChannel->isPlaying( &playing );
+			if( !playing )
+			{
+				system->playSound( FMOD_CHANNEL_FREE, collision, false, &collisionChannel );
+			}
 		}
 	}
 

@@ -123,9 +123,6 @@
     <ClCompile Include="BallContactListener.cpp">
       <Filter>Source Files\Physics</Filter>
     </ClCompile>
-    <ClCompile Include="HelpText.cpp">
-      <Filter>Source Files\Level</Filter>
-    </ClCompile>
     <ClCompile Include="Trigger.cpp">
       <Filter>Source Files\Level</Filter>
     </ClCompile>
@@ -193,9 +190,6 @@
     </ClInclude>
     <ClInclude Include="BallContactListener.h">
       <Filter>Header Files\Physics</Filter>
-    </ClInclude>
-    <ClInclude Include="HelpText.h">
-      <Filter>Header Files\Level</Filter>
     </ClInclude>
     <ClInclude Include="Trigger.h">
       <Filter>Header Files\Level</Filter>

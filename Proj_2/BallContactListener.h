@@ -6,6 +6,8 @@
 
 #include <Physics/Dynamics/Collide/ContactListener/hkpContactListener.h>
 
+#include "EnumsConstants.h"
+
 
 namespace Tuatara
 {
@@ -15,6 +17,8 @@ namespace Tuatara
 	{
 	
 		SoundSystem *soundSystem;
+
+		bool IsOnWall( const float& x, const float& y, const float& z, const hkVector4& velocity );
 
 	public:
 
