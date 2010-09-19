@@ -87,7 +87,8 @@ namespace Tuatara
 		hkpAabbPhantom *exit;
 
 		VentVector vents;
-		
+
+		bool ballInVent;
 		bool levelComplete;
 
 		// functions
@@ -102,7 +103,7 @@ namespace Tuatara
 			const int& strength, bool isVent = true );
 
 		bool StepSimulation( float timeDelta );
-		
+
 		void ApplyImpulseToBall( Direction dir, const float& x = 0, const float& y = 0, const float& z = 0 );
 		irr::core::vector3df GetBallPosition() const;
 		bool GetBallRotation( irr::core::vector3df& rotationVector ) const;
@@ -110,16 +111,16 @@ namespace Tuatara
 
 		virtual void postSimulationCallback( hkpWorld* world );
 	};
-	
+
 	static void HK_CALL errorReport(const char* msg, void* userArgGivenToInit)
 	{
 		printf("%s", msg);
 	}
-	
+
 
 	///// private implementation /////
 
-	Physics_Manager::Physics_Manager() : levelComplete( false )
+	Physics_Manager::Physics_Manager() : levelComplete( false ), ballInVent( false )
 	{
 		// initialize base system and memory
 		hkMemoryRouter *memoryRouter = hkMemoryInitUtil::initDefault();
@@ -221,53 +222,53 @@ namespace Tuatara
 		hkBaseSystem::quit();
 		hkMemoryInitUtil::quit();
 	}
-	
+
 	void Physics_Manager::AdjustAabbForExit( hkAabb &info, const Direction& dir )
 	{
 		hkVector4 min( info.m_min ), max( info.m_max );
 		switch( dir )
+		{
+		case FORWARD:
 			{
-			case FORWARD:
-				{
-					info.m_min = hkVector4( min(0), min(1), min(2) - 2.f );
-					info.m_max = hkVector4( max(0), max(1), max(2) - 2.f );
-				}
-				break;
-			case BACKWARD:
-				{
-					info.m_min = hkVector4( min(0), min(1), min(2) + 2.f );
-					info.m_max = hkVector4( max(0), max(1), max(2) + 2.f );
-				}
-				break;
-			case LEFT:
-				{
-					info.m_min = hkVector4( min(0) + 2.f, min(1), min(2) );
-					info.m_max = hkVector4( max(0) + 2.f, max(1), max(2) );
-				}
-				break;
-			case RIGHT:
-				{
-					info.m_min = hkVector4( min(0) - 2.f, min(1), min(2) );
-					info.m_max = hkVector4( max(0) - 2.f, max(1), max(2) );
-				}
-				break;
-			case UP:
-				{
-					info.m_min = hkVector4( min(0), min(1) - 2.f, min(2) );
-					info.m_max = hkVector4( max(0), max(1) - 2.f, max(2) );
-				}
-				break;
-			case DOWN:
-				{
-					info.m_min = hkVector4( min(0), min(1) + 2.f, min(2) );
-					info.m_max = hkVector4( max(0), max(1) + 2.f, max(2) );
-				}
-				break;
-			default:
-				printf( "AdjustAabbForExit: bad direction sent.\n" );
+				info.m_min = hkVector4( min(0), min(1), min(2) - 2.f );
+				info.m_max = hkVector4( max(0), max(1), max(2) - 2.f );
 			}
+			break;
+		case BACKWARD:
+			{
+				info.m_min = hkVector4( min(0), min(1), min(2) + 2.f );
+				info.m_max = hkVector4( max(0), max(1), max(2) + 2.f );
+			}
+			break;
+		case LEFT:
+			{
+				info.m_min = hkVector4( min(0) + 2.f, min(1), min(2) );
+				info.m_max = hkVector4( max(0) + 2.f, max(1), max(2) );
+			}
+			break;
+		case RIGHT:
+			{
+				info.m_min = hkVector4( min(0) - 2.f, min(1), min(2) );
+				info.m_max = hkVector4( max(0) - 2.f, max(1), max(2) );
+			}
+			break;
+		case UP:
+			{
+				info.m_min = hkVector4( min(0), min(1) - 2.f, min(2) );
+				info.m_max = hkVector4( max(0), max(1) - 2.f, max(2) );
+			}
+			break;
+		case DOWN:
+			{
+				info.m_min = hkVector4( min(0), min(1) + 2.f, min(2) );
+				info.m_max = hkVector4( max(0), max(1) + 2.f, max(2) );
+			}
+			break;
+		default:
+			printf( "AdjustAabbForExit: bad direction sent.\n" );
+		}
 	}
-	
+
 	void Physics_Manager::CreateBlock( const float& x, const float& y, const float& z)
 	{
 		hkVector4 buildingBlockSize( BLOCK_HALF_EXTENT, BLOCK_HALF_EXTENT, BLOCK_HALF_EXTENT );
@@ -286,11 +287,11 @@ namespace Tuatara
 
 		buildingBlock->removeReference();
 	}
-	
+
 	void Physics_Manager::CreateBall( const float& entryX, const float& entryY, const float& entryZ, SoundSystem *sound )
 	{
 		hkReal radius = BALL_RADIUS;
-		hkReal sphereMass = 4.f;
+		hkReal sphereMass = 3.f;
 		hkReal maxVelocity = 3.f;
 
 		hkpRigidBodyCinfo info;
@@ -309,7 +310,7 @@ namespace Tuatara
 		info.m_contactPointCallbackDelay = 0;
 
 		ball = new hkpRigidBody( info );
-		
+
 		ball->setMaxLinearVelocity(maxVelocity);
 
 		world->addEntity( ball );
@@ -477,9 +478,15 @@ namespace Tuatara
 			break;
 
 		case UP:
-			//if( ball->getPosition
-			impulse.setXYZ( hkVector4( 0, y, 0 ) );
-			break;
+			if( ball->getPosition()(1) <= BLOCK_HALF_EXTENT + BALL_RADIUS + 0.02f || ballInVent )
+			{
+				impulse.setXYZ( hkVector4( 0, y, 0 ) );
+				break;
+			}
+			else
+			{
+				return;
+			}
 
 		default:
 			printf( "ApplyImpulseToBall: Bad direction sent.\n" );
@@ -488,7 +495,7 @@ namespace Tuatara
 
 		ball->applyLinearImpulse( impulse );
 	}
-	
+
 	irr::core::vector3df Physics_Manager::GetBallPosition() const
 	{
 		hkVector4 ballPos = ball->getPosition();
@@ -502,7 +509,7 @@ namespace Tuatara
 		{
 			return false;
 		}
-		
+
 		static hkVector4 originalAxis;
 		ballRotation.getAxis( originalAxis );
 		irr::core::vector3df axis( originalAxis( 0 ), originalAxis( 1 ), originalAxis( 2 ) );
@@ -526,6 +533,7 @@ namespace Tuatara
 
 	void Physics_Manager::postSimulationCallback( hkpWorld* world )
 	{
+		bool isInVent = false;
 		BOOST_FOREACH( Vent *v, vents )
 		{
 			// calculate impulse vector based on vent direction
@@ -575,6 +583,7 @@ namespace Tuatara
 					// add apply the impulse to it
 					if ( rigidBody )
 					{
+						isInVent = true;
 						rigidBody->applyLinearImpulse( impulse() );
 					}
 				}
@@ -595,6 +604,8 @@ namespace Tuatara
 				}
 			}
 		}
+
+		ballInVent = isInVent;
 	}
 
 

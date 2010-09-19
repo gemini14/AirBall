@@ -101,7 +101,7 @@ namespace Tuatara
 					
 					if( event.KeyInput.PressedDown && keyWasReleased )
 					{
-						gameState->level->ApplyImpulseToBall( UP, 0, 7.5f, 0 );
+						gameState->level->ApplyImpulseToBall( UP, 0, 5.5f, 0 );
 						gameState->level->PlayJetSound();
 						keyWasReleased = false;
 					}
