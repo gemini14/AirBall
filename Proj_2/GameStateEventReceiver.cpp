@@ -45,6 +45,12 @@ namespace Tuatara
 		{
 			switch( event.KeyInput.Key )
 			{
+			#ifdef _DEBUG
+			case KEY_RETURN:
+				if ( event.KeyInput.Control )
+					gameState->level->EndLevel(true);
+				return true;
+			#endif
 			case KEY_ESCAPE:
 				game->stateMachine->ChangeState( MainMenu::Instance() );
 				return true;

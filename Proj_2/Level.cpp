@@ -73,6 +73,10 @@ namespace Tuatara
 		bool inTrigger;
 		Trigger* currentTrigger;
 
+		#ifdef _DEBUG
+		bool endLevelEarly;
+		#endif
+		
 		std::shared_ptr<SoundSystem> soundSystem;
 		std::shared_ptr<PhysicsManager> physics;
 
@@ -99,6 +103,7 @@ namespace Tuatara
 			irr::video::ITexture *ventTex );
 		void CreateVentSounds();
 		void CreateWallNodes( irr::scene::ISceneManager* smgr );
+		void EndLevel(bool inWin);
 		BuildingBlockMap::iterator FindBlock( const float& x, const float& y, const float& z );
 		irr::scene::ISceneNode* GetParentWall( const float& x, const float& y, const float& z );
 		bool InitLevel( irr::scene::ISceneManager *smgr, irr::io::IFileSystem *fileSystem, const std::string& levelFile, 
@@ -133,6 +138,9 @@ namespace Tuatara
 		cameraRotation( 0.0f ),
 		inTrigger( false )
 	{
+		#ifdef _DEBUG
+		endLevelEarly = false;
+		#endif
 	}
 
 	Level_::~Level_()
@@ -217,6 +225,11 @@ namespace Tuatara
 	bool Level_::StepSimulation( float timeDelta )
 	{
 		using namespace irr::core;
+
+		#ifdef _DEBUG
+		if (endLevelEarly) return true;
+		#endif
+
 		if ( inTrigger )
 		{
 			if ( !currentTrigger->Update() ) inTrigger = false;
@@ -606,6 +619,13 @@ namespace Tuatara
 		});
 	}
 
+	void Level_::EndLevel(bool inWin)
+	{
+		#ifdef _DEBUG
+		endLevelEarly = true;
+		#endif
+	}
+
 	void Level_::AddPairToSoundFilenameMap( const std::string& key, const std::string& value )
 	{
 		using namespace std;
@@ -871,5 +891,10 @@ const irr::core::vector3df Level_::GetNewCameraPosition( const irr::core::vector
 	void Level::PlayJetSound()
 	{
 		level_->PlayJetSound();
+	}
+
+	void Level::EndLevel( bool inWin )
+	{
+		level_->EndLevel(inWin);
 	}
 }

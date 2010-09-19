@@ -34,6 +34,7 @@ namespace Tuatara
 		void Pause( bool pause );
 		bool StepSimulation( float timeDelta = 0 );
 		void PlayJetSound();
+		void EndLevel(bool inWin);
 	};
 
 }
