@@ -19,6 +19,7 @@ namespace Tuatara
 		FMOD::System *system;
 		bool init;
 		FMOD_RESULT result;
+		FMOD_VECTOR ballPosition;
 
 		FMOD::Sound *bgmusic;
 		FMOD::Sound *ventSound;
@@ -29,8 +30,8 @@ namespace Tuatara
 		FMOD::Sound *jet;
 		FMOD::Channel *jetChannel;
 
-		//FMOD::Sound *roll;
-		//FMOD::Channel *rollChannel;
+		FMOD::Sound *roll;
+		FMOD::Channel *rollChannel;
 
 		struct VentPoint
 		{
@@ -52,6 +53,7 @@ namespace Tuatara
 		bool IsPlaying( FMOD::Channel *channel );
 		void PlayCollisionSound();
 		void PlayJetSound();
+		void PlayRollSound();
 		void PausePlayback();
 		void ResumePlayback();
 
@@ -63,7 +65,8 @@ namespace Tuatara
 	///// private implementation /////
 
 	FMOD_System::FMOD_System() : init( false ), system( nullptr ), bgmusic( nullptr ), collision( nullptr ),
-		jet( nullptr ), ventSound( nullptr ), collisionChannel( nullptr ), jetChannel( nullptr )
+		jet( nullptr ), ventSound( nullptr ), collisionChannel( nullptr ), jetChannel( nullptr ), roll( nullptr ),
+		rollChannel( nullptr )
 	{
 		ErrorCheck( FMOD::System_Create( &system ) );
 
@@ -93,6 +96,7 @@ namespace Tuatara
 			safeDelete( bgmusic );
 			safeDelete( jet );
 			safeDelete( ventSound );
+			safeDelete( roll );
 
 			system->release();
 		}
@@ -133,8 +137,8 @@ namespace Tuatara
 		}
 		if( isPresent( "jet" ) )
 		{
-			ErrorCheck( system->createSound( soundFilenames.at( "jet" ).c_str(), FMOD_DEFAULT, nullptr, &jet ) );
-			jet->setDefaults( 44100, 0.5f, 0.f, 128 );
+			ErrorCheck( system->createSound( soundFilenames.at( "jet" ).c_str(), FMOD_3D, nullptr, &jet ) );
+			jet->setDefaults( 44100, 1.f, 0.f, 128 );
 		}
 		if( isPresent( "vent" ) )
 		{
@@ -144,8 +148,13 @@ namespace Tuatara
 		}
 		if( isPresent( "collision" ) )
 		{
-			ErrorCheck( system->createSound( soundFilenames.at( "collision" ).c_str(), FMOD_DEFAULT, nullptr, &collision ) );
-			collision->setDefaults( 44100, 0.2f, 0.f, 128 );
+			ErrorCheck( system->createSound( soundFilenames.at( "collision" ).c_str(), FMOD_3D, nullptr, &collision ) );
+			collision->setDefaults( 44100, 0.9f, 0.f, 128 );
+		}
+		if( isPresent( "roll" ) )
+		{
+			ErrorCheck( system->createSound( soundFilenames.at( "roll" ).c_str(), FMOD_3D, nullptr, &roll ) );
+			roll->setDefaults( 44100, 1.f, 0.f, 128 );
 		}
 	}
 
@@ -193,7 +202,9 @@ namespace Tuatara
 		{
 			if( !IsPlaying( collisionChannel ) )
 			{
-				system->playSound( FMOD_CHANNEL_FREE, collision, false, &collisionChannel );
+				system->playSound( FMOD_CHANNEL_FREE, collision, true, &collisionChannel );
+				collisionChannel->set3DAttributes( &ballPosition, nullptr );
+				collisionChannel->setPaused( false );
 			}
 		}
 	}
@@ -204,7 +215,22 @@ namespace Tuatara
 		{
 			if( !IsPlaying( jetChannel ) )
 			{
-				system->playSound( FMOD_CHANNEL_FREE, jet, false, &jetChannel );
+				system->playSound( FMOD_CHANNEL_FREE, jet, true, &jetChannel );
+				jetChannel->set3DAttributes( &ballPosition, nullptr );
+				jetChannel->setPaused( false );
+			}
+		}
+	}
+
+	void FMOD_System::PlayRollSound()
+	{
+		if( roll != nullptr )
+		{
+			if( !IsPlaying( rollChannel ) && !IsPlaying( collisionChannel ) )
+			{
+				system->playSound( FMOD_CHANNEL_FREE, roll, true, &rollChannel );
+				rollChannel->set3DAttributes( &ballPosition, nullptr );
+				rollChannel->setPaused( false );
 			}
 		}
 	}
@@ -224,13 +250,15 @@ namespace Tuatara
 	}
 
 	void FMOD_System::Update( const float& posX, const float& posY, const float& posZ, 
-		const float& velocityX, const float& velocityY, const float& velocityZ, 
-		const float& forwardX, const float& forwardY, const float& forwardZ )
+		const float& forwardX, const float& forwardY, const float& forwardZ, 
+		const float& ballPosX, const float& ballPosY, const float& ballPosZ )
 	{
 		FMOD_VECTOR position = { posX, posY, posZ };
-		FMOD_VECTOR velocity = { velocityX, velocityY, velocityZ };
 		FMOD_VECTOR forward = { forwardX, forwardY, forwardZ };
-		system->set3DListenerAttributes( 0, &position, &velocity, &forward, nullptr );
+		system->set3DListenerAttributes( 0, &position, nullptr, &forward, nullptr );
+		ballPosition.x = ballPosX;
+		ballPosition.y = ballPosY;
+		ballPosition.z = ballPosZ;
 		system->update();
 	}
 
@@ -275,6 +303,11 @@ namespace Tuatara
 		system->PlayJetSound();
 	}
 
+	void SoundSystem::PlayRollSound()
+	{
+		system->PlayRollSound();
+	}
+
 	void SoundSystem::PausePlayback()
 	{
 		system->PausePlayback();
@@ -286,9 +319,9 @@ namespace Tuatara
 	}
 
 	void SoundSystem::Update( const float& posX, const float& posY, const float& posZ, 
-		const float& velocityX, const float& velocityY, const float& velocityZ, 
-		const float& forwardX, const float& forwardY, const float& forwardZ )
+		const float& forwardX, const float& forwardY, const float& forwardZ, 
+		const float& ballPosX, const float& ballPosY, const float& ballPosZ )
 	{
-		system->Update( posX, posY, posZ, velocityX, velocityY, velocityZ, forwardX, forwardY, forwardZ );
+		system->Update( posX, posY, posZ, forwardX, forwardY, forwardZ, ballPosX, ballPosY, ballPosZ );
 	}
 }

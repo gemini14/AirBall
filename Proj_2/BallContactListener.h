@@ -16,6 +16,10 @@ namespace Tuatara
 	class BallContactListener : public hkReferencedObject, public hkpContactListener
 	{
 	
+		float maximum;
+		float minimum;
+		float positionBuffer;
+
 		SoundSystem *soundSystem;
 
 		bool IsOnWall( const float& x, const float& y, const float& z, const hkVector4& velocity );

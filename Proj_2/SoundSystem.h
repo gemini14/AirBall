@@ -26,17 +26,18 @@ namespace Tuatara
 		bool SoundSystemInitOK() const;
 		void CreateSounds( const SoundFilenameMap& soundFilenameMap );
 		void CreateVentSound( const float& x, const float& y, const float& z );
-		
+
 		void StartPlayingLoopingSounds();
 		void PlayCollisionSound();
 		void PlayJetSound();
+		void PlayRollSound();
 		void PausePlayback();
 		void ResumePlayback();
-		
+
 		void Update( const float& posX, const float& posY, const float& posZ, 
-			 const float& velocityX, const float& velocityY, const float& velocityZ, 
-			  const float& forwardX, const float& forwardY, const float& forwardZ );
-		
+			const float& forwardX, const float& forwardY, const float& forwardZ, 
+			const float& ballPosX, const float& ballPosY, const float& ballPosZ );
+
 	};
 }
 

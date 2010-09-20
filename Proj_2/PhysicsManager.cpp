@@ -303,6 +303,7 @@ namespace Tuatara
 		info.m_inertiaTensor = massProperties.m_inertiaTensor;
 		info.m_shape = new hkpSphereShape( radius );
 		info.m_friction = 0.85f;
+		info.m_allowedPenetrationDepth = 0.f;
 		info.m_position = hkVector4( entryX, entryY, entryZ );
 
 		info.m_motionType = hkpMotion::MOTION_SPHERE_INERTIA;
@@ -581,10 +582,13 @@ namespace Tuatara
 					// get the body
 					hkpRigidBody* rigidBody = hkpGetRigidBody( v->phantom->getOverlappingCollidables()[i] );
 					// add apply the impulse to it
-					if ( rigidBody )
+					if ( rigidBody && rigidBody == ball )
 					{
+						rigidBody->getLinearVelocity();
 						isInVent = true;
 						rigidBody->applyLinearImpulse( impulse() );
+						rigidBody->getLinearVelocity();
+						rigidBody->getPosition();
 					}
 				}
 			}

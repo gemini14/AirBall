@@ -10,6 +10,7 @@
   <collisionSound file="sound/collision.ogg"></collisionSound>
   <ventSound file="sound/vent.ogg"></ventSound>
   <jetSound></jetSound>
+  <rollSound file="sound/roll.ogg"></rollSound>
 
   <trigger x="5" y="1" z="4" prompt="If you can't reach the exit, an air vent can help push you toward it. Remember you can still use jump, too."></trigger>
   <trigger event="onExit" prompt="You did it!"></trigger>

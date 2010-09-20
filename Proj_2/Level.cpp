@@ -263,16 +263,25 @@ namespace Tuatara
 			if( physics->GetBallRotation( rotation ) ) 
 			{
 				ball->setRotation( rotation );
+
+				if( position.Y <= BLOCK_HALF_EXTENT + BALL_RADIUS + 0.02f && 
+					( abs( physics->GetBallVelocity().X ) >= 0.1f || abs( physics->GetBallVelocity().Z ) >= 0.1f ) )
+				{
+					soundSystem->PlayRollSound();
+				}
 			}
 
 			camera->setTarget( position );
 
-			vector3df soundSysVelocity = ( position - lastpos ) / ( 1.f / 60.f );
-			vector3df ballVelocity = physics->GetBallVelocity().normalize();
+			//vector3df soundSysVelocity = ( position - lastpos ) / ( 1.f / 60.f );
+			//vector3df ballVelocity = physics->GetBallVelocity().normalize();
+			vector3df listenerPos = camera->getPosition();
+			vector3df forward = camera->getTarget();
+			forward.normalize();
 		
-			soundSystem->Update( position.X, position.Y, position.Z,			// position
-				soundSysVelocity.X, soundSysVelocity.Y, soundSysVelocity.Z,		// velocity
-				ballVelocity.X, ballVelocity.Y, ballVelocity.Z );				// forward vector
+			soundSystem->Update( listenerPos.X, listenerPos.Y, listenerPos.Z,			// position
+				forward.X, forward.Y, forward.Z,		// forward
+				position.X, position.Y, position.Z );				// ball pos
 
 			lastpos = position;
 
@@ -340,6 +349,10 @@ namespace Tuatara
 				else if( name == "jetSound\0" )
 				{
 					AddPairToSoundFilenameMap( "jet", levelReader->getAttributeValueSafe( "file" ) );
+				}
+				else if( name == "rollSound\0" )
+				{
+					AddPairToSoundFilenameMap( "roll", levelReader->getAttributeValueSafe( "file" ) );
 				}
 				else if( name == "trigger\0" )
 				{
