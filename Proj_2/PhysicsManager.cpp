@@ -226,42 +226,43 @@ namespace Tuatara
 	void Physics_Manager::AdjustAabbForExit( hkAabb &info, const Direction& dir )
 	{
 		hkVector4 min( info.m_min ), max( info.m_max );
+		const float ADJUSTMENT_VALUE = 1.5f;
 		switch( dir )
 		{
 		case FORWARD:
 			{
-				info.m_min = hkVector4( min(0), min(1), min(2) - 2.f );
-				info.m_max = hkVector4( max(0), max(1), max(2) - 2.f );
+				info.m_min = hkVector4( min(0), min(1), min(2) - ADJUSTMENT_VALUE );
+				info.m_max = hkVector4( max(0), max(1), max(2) - ADJUSTMENT_VALUE );
 			}
 			break;
 		case BACKWARD:
 			{
-				info.m_min = hkVector4( min(0), min(1), min(2) + 2.f );
-				info.m_max = hkVector4( max(0), max(1), max(2) + 2.f );
+				info.m_min = hkVector4( min(0), min(1), min(2) + ADJUSTMENT_VALUE );
+				info.m_max = hkVector4( max(0), max(1), max(2) + ADJUSTMENT_VALUE );
 			}
 			break;
 		case LEFT:
 			{
-				info.m_min = hkVector4( min(0) + 2.f, min(1), min(2) );
-				info.m_max = hkVector4( max(0) + 2.f, max(1), max(2) );
+				info.m_min = hkVector4( min(0) + ADJUSTMENT_VALUE, min(1), min(2) );
+				info.m_max = hkVector4( max(0) + ADJUSTMENT_VALUE, max(1), max(2) );
 			}
 			break;
 		case RIGHT:
 			{
-				info.m_min = hkVector4( min(0) - 2.f, min(1), min(2) );
-				info.m_max = hkVector4( max(0) - 2.f, max(1), max(2) );
+				info.m_min = hkVector4( min(0) - ADJUSTMENT_VALUE, min(1), min(2) );
+				info.m_max = hkVector4( max(0) - ADJUSTMENT_VALUE, max(1), max(2) );
 			}
 			break;
 		case UP:
 			{
-				info.m_min = hkVector4( min(0), min(1) - 2.f, min(2) );
-				info.m_max = hkVector4( max(0), max(1) - 2.f, max(2) );
+				info.m_min = hkVector4( min(0), min(1) - ADJUSTMENT_VALUE, min(2) );
+				info.m_max = hkVector4( max(0), max(1) - ADJUSTMENT_VALUE, max(2) );
 			}
 			break;
 		case DOWN:
 			{
-				info.m_min = hkVector4( min(0), min(1) + 2.f, min(2) );
-				info.m_max = hkVector4( max(0), max(1) + 2.f, max(2) );
+				info.m_min = hkVector4( min(0), min(1) + ADJUSTMENT_VALUE, min(2) );
+				info.m_max = hkVector4( max(0), max(1) + ADJUSTMENT_VALUE, max(2) );
 			}
 			break;
 		default:
@@ -292,7 +293,7 @@ namespace Tuatara
 	{
 		hkReal radius = BALL_RADIUS;
 		hkReal sphereMass = 3.f;
-		hkReal maxVelocity = 3.f;
+		hkReal maxVelocity = 2.f;
 
 		hkpRigidBodyCinfo info;
 		hkpMassProperties massProperties;
@@ -584,11 +585,18 @@ namespace Tuatara
 					// add apply the impulse to it
 					if ( rigidBody && rigidBody == ball )
 					{
-						rigidBody->getLinearVelocity();
 						isInVent = true;
-						rigidBody->applyLinearImpulse( impulse() );
-						rigidBody->getLinearVelocity();
-						rigidBody->getPosition();
+						if( v->direction == UP )
+						{
+							float proportion = rigidBody->getPosition()(1) / v->strength;
+							hkVector4 impulseVec = impulse();
+							impulseVec.mul4( proportion );
+							rigidBody->applyLinearImpulse( impulseVec );
+						}
+						else
+						{
+							rigidBody->applyLinearImpulse( impulse() );
+						}
 					}
 				}
 			}

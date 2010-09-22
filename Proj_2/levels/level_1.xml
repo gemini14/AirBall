@@ -10,6 +10,6 @@
   <jetSound></jetSound>
   <rollSound file="sound/roll.ogg"></rollSound>
 
-  <trigger x="5" y="1" z="4" prompt="Use Q to jump toward an exit."></trigger>
+  <trigger x="5" y="1" z="4" prompt="Now try performing a running jump to reach the exit (hit Space to jump)."></trigger>
   <trigger event="onExit" prompt="You did it!"></trigger>
 </level>

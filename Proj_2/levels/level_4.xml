@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<level>
+  <entry x="8" y="3" z="1"></entry>
+  <exit x="0" y="8" z="6"></exit>
+
+  <vent x="1" y="0" z="6" strength="8"></vent>
+  <vent x="1" y="0" z="5" strength="8"></vent>
+  <vent x="2" y="0" z="6" strength="7"></vent>
+  <vent x="2" y="0" z="5" strength="7"></vent>
+  <vent x="3" y="0" z="6" strength="6"></vent>
+  <vent x="3" y="0" z="5" strength="6"></vent>
+  <vent x="4" y="0" z="6" strength="5"></vent>
+  <vent x="4" y="0" z="5" strength="5"></vent>
+  <vent x="5" y="0" z="6" strength="4"></vent>
+  <vent x="5" y="0" z="5" strength="4"></vent>
+  <vent x="6" y="0" z="6" strength="3"></vent>
+  <vent x="6" y="0" z="5" strength="3"></vent>
+  <vent x="6" y="0" z="4" strength="2"></vent>
+  <vent x="6" y="0" z="3" strength="2"></vent>
+  <vent x="7" y="0" z="4" strength="1"></vent>
+  <vent x="7" y="0" z="3" strength="1"></vent>
+    
+  <bgmusic file=""></bgmusic>
+  <collisionSound file="sound/collision.ogg"></collisionSound>
+  <ventSound file="sound/vent.ogg"></ventSound>
+  <jetSound file="sound/jet.ogg"></jetSound>
+  <rollSound file="sound/roll.ogg"></rollSound>
+
+  <trigger x="8" y="1" z="1" prompt="Sometimes you'll want to look at the level in a different way.  Try hitting Left/Right to rotate around the level and Up/Down to look up and down."></trigger>
+</level>

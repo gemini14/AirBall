@@ -51,6 +51,7 @@ namespace Tuatara
 					gameState->level->EndLevel(true);
 				return true;
 			#endif
+
 			case KEY_ESCAPE:
 				game->stateMachine->ChangeState( MainMenu::Instance() );
 				return true;
@@ -95,7 +96,7 @@ namespace Tuatara
 					gameState->level->PlayJetSound();
 					return true;
 				}
-			case KEY_KEY_Q:
+			case KEY_SPACE:
 				{
 					static bool keyWasReleased = true;
 					

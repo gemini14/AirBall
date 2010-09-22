@@ -154,7 +154,8 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="levels\level_2.xml" />
-    <None Include="levels\level_3.xml">
+    <None Include="levels\level_3.xml" />
+    <None Include="levels\level_4.xml">
       <SubType>Designer</SubType>
     </None>
     <None Include="media\defaultButton.png" />
