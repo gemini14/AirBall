@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<level>
+  <entry x="5" y="3" z="4"></entry>
+  <exit x="5" y="2" z="9"></exit>
+
+  <vent x="5" y="0" z="8" strength="1"></vent>
+  <vent x="5" y="0" z="7" strength="1"></vent>
+  <vent x="4" y="0" z="8" strength="1"></vent>
+  <vent x="6" y="0" z="8" strength="1"></vent>
+  <vent x="4" y="0" z="7" strength="1"></vent>
+  <vent x="6" y="0" z="7" strength="1"></vent>
+
+  <bgmusic file=""></bgmusic>
+  <collisionSound file="sound/collision.ogg"></collisionSound>
+  <ventSound file="sound/vent.ogg"></ventSound>
+  <jetSound file="sound/jet.ogg"></jetSound>
+  <rollSound file="sound/roll.ogg"></rollSound>
+
+  <trigger x="5" y="1" z="4" prompt="In addition to jumping, air vents can also help you reach the exit.  Just roll the ball over them to get blown around!"></trigger>
+  <trigger event="onExit" prompt="Well done!"></trigger>
+</level>
