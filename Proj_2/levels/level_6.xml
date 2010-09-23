@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<level>
+  <entry x="6" y="3" z="1"></entry>
+  <exit x="1" y="0" z="8"></exit>
+
+  <vent x="0" y="1" z="7" strength="8"></vent>
+  <vent x="0" y="2" z="7" strength="8"></vent>
+  <vent x="0" y="3" z="7" strength="8"></vent>
+  <vent x="0" y="4" z="7" strength="8"></vent>
+  <vent x="0" y="1" z="6" strength="8"></vent>
+  <vent x="0" y="2" z="6" strength="8"></vent>
+  <vent x="0" y="3" z="6" strength="8"></vent>
+  <vent x="0" y="4" z="6" strength="8"></vent>
+  <vent x="0" y="1" z="5" strength="6"></vent>
+  <vent x="0" y="2" z="5" strength="6"></vent>
+  <vent x="0" y="3" z="5" strength="6"></vent>
+  <vent x="0" y="4" z="5" strength="6"></vent>
+  <vent x="0" y="1" z="4" strength="6"></vent>
+  <vent x="0" y="2" z="4" strength="6"></vent>
+  <vent x="0" y="3" z="4" strength="6"></vent>
+  <vent x="0" y="4" z="4" strength="6"></vent>
+  <vent x="0" y="1" z="3" strength="6"></vent>
+  <vent x="0" y="2" z="3" strength="6"></vent>
+  <vent x="0" y="3" z="3" strength="6"></vent>
+  <vent x="0" y="4" z="3" strength="6"></vent>
+  <vent x="0" y="1" z="2" strength="6"></vent>
+  <vent x="0" y="2" z="2" strength="6"></vent>
+  <vent x="0" y="3" z="2" strength="6"></vent>
+  <vent x="0" y="4" z="2" strength="6"></vent>
+  <vent x="0" y="1" z="1" strength="6"></vent>
+  <vent x="0" y="2" z="1" strength="6"></vent>
+  <vent x="0" y="3" z="1" strength="6"></vent>
+  <vent x="0" y="4" z="1" strength="6"></vent>
+
+  <vent x="2" y="1" z="9" strength="8"></vent>
+  <vent x="2" y="2" z="9" strength="8"></vent>
+  <vent x="2" y="3" z="9" strength="8"></vent>
+  <vent x="2" y="4" z="9" strength="8"></vent>
+  <vent x="3" y="1" z="9" strength="8"></vent>
+  <vent x="3" y="2" z="9" strength="8"></vent>
+  <vent x="3" y="3" z="9" strength="8"></vent>
+  <vent x="3" y="4" z="9" strength="8"></vent>
+
+  <vent x="6" y="9" z="7" strength="8"></vent>
+  <vent x="5" y="9" z="7" strength="8"></vent>
+  <vent x="4" y="9" z="7" strength="8"></vent>
+  <vent x="6" y="9" z="6" strength="8"></vent>
+  <vent x="5" y="9" z="6" strength="8"></vent>
+  <vent x="4" y="9" z="6" strength="8"></vent>
+  
+  <vent x="8" y="0" z="5" strength="5"></vent>
+  <vent x="7" y="0" z="5" strength="5"></vent>
+  <vent x="8" y="0" z="4" strength="4"></vent>
+  <vent x="7" y="0" z="4" strength="4"></vent>
+  <vent x="8" y="0" z="3" strength="3"></vent>
+  <vent x="7" y="0" z="3" strength="3"></vent>
+  <vent x="8" y="0" z="2" strength="2"></vent>
+  <vent x="7" y="0" z="2" strength="2"></vent>
+  <vent x="8" y="0" z="1" strength="1"></vent>
+  <vent x="7" y="0" z="1" strength="1"></vent>
+
+  <vent x="8" y="0" z="8" strength="1"></vent>
+  <vent x="7" y="0" z="8" strength="2"></vent>
+  <vent x="6" y="0" z="8" strength="3"></vent>
+  <vent x="5" y="0" z="8" strength="4"></vent>
+  <vent x="4" y="0" z="8" strength="5"></vent>
+  
+  <bgmusic file=""></bgmusic>
+  <collisionSound file="sound/collision.ogg"></collisionSound>
+  <ventSound file="sound/vent.ogg"></ventSound>
+  <jetSound file="sound/jet.ogg"></jetSound>
+  <rollSound file="sound/roll.ogg"></rollSound>
+</level>

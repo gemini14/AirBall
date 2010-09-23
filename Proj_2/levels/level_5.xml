@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<level>
+  <entry x="8" y="3" z="8"></entry>
+  <exit x="3" y="5" z="0"></exit>
+
+  <vent x="3" y="0" z="1" strength="4"></vent>
+  <vent x="3" y="0" z="2" strength="4"></vent>
+  <vent x="3" y="0" z="3" strength="4"></vent>
+  <vent x="3" y="0" z="4" strength="4"></vent>
+  <vent x="3" y="0" z="5" strength="4"></vent>
+  <vent x="3" y="0" z="6" strength="4"></vent>
+  <vent x="3" y="0" z="7" strength="4"></vent>
+  <vent x="3" y="0" z="8" strength="4"></vent>
+  <vent x="4" y="0" z="8" strength="3"></vent>
+  <vent x="5" y="0" z="8" strength="2"></vent>
+  <vent x="6" y="0" z="8" strength="1"></vent>
+
+  <vent x="3" y="4" z="9" strength="8"></vent>
+  
+  <bgmusic file=""></bgmusic>
+  <collisionSound file="sound/collision.ogg"></collisionSound>
+  <ventSound file="sound/vent.ogg"></ventSound>
+  <jetSound file="sound/jet.ogg"></jetSound>
+  <rollSound file="sound/roll.ogg"></rollSound>
+
+  <trigger x="8" y="1" z="8" prompt="Vents don't just have to come out of the floor--they can show up on any wall."></trigger>
+  <trigger event="onExit" prompt="Great job!  Now it's time for a bit of a challenge..."></trigger>
+</level>

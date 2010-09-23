@@ -3,13 +3,13 @@
 <level>
   <entry x="5" y="3" z="4"></entry>
   <exit x="5" y="2" z="9"></exit>
-  
+
   <bgmusic file=""></bgmusic>
   <collisionSound file="sound/collision.ogg"></collisionSound>
   <ventSound file="sound/vent.ogg"></ventSound>
-  <jetSound></jetSound>
+  <jetSound file="sound/jet.ogg"></jetSound>
   <rollSound file="sound/roll.ogg"></rollSound>
 
   <trigger x="5" y="1" z="4" prompt="Now try performing a running jump to reach the exit (hit Space to jump)."></trigger>
-  <trigger event="onExit" prompt="You did it!"></trigger>
+  <trigger event="onExit" prompt="You did it!  Keep in mind that jumping can only be done on the ground or over an air vent."></trigger>
 </level>

@@ -154,7 +154,7 @@ namespace Tuatara
 		if( isPresent( "roll" ) )
 		{
 			ErrorCheck( system->createSound( soundFilenames.at( "roll" ).c_str(), FMOD_3D, nullptr, &roll ) );
-			roll->setDefaults( 44100, 1.f, 0.f, 128 );
+			roll->setDefaults( 44100, 2.f, 0.f, 128 );
 		}
 	}
 
