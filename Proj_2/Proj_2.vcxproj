@@ -163,7 +163,9 @@
     <None Include="levels\level_6.xml">
       <SubType>Designer</SubType>
     </None>
-    <None Include="levels\level_5.xml" />
+    <None Include="levels\level_5.xml">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="media\defaultButton.png" />
     <None Include="media\defaultHoverButton.png" />
     <None Include="media\exit.png" />
