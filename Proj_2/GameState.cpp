@@ -38,6 +38,8 @@ namespace Tuatara
 	{
 		using namespace irr;
 
+		DisplayLoadingScreen( game );
+		
 		paused = false;
 
 		// set event receiver on entry (replaces any current receiver)
@@ -79,10 +81,10 @@ namespace Tuatara
 		levelComplete = level->StepSimulation();
 
 		game->manager->driver->beginScene( true, true, video::SColor(255, 100, 101, 140) );
-			// draw 3D scene:
-			game->manager->smgr->drawAll();
-			// draw GUI:
-			game->manager->guienv->drawAll();
+		// draw 3D scene:
+		game->manager->smgr->drawAll();
+		// draw GUI:
+		game->manager->guienv->drawAll();
 		game->manager->driver->endScene();
 
 		if( levelComplete )
@@ -124,5 +126,18 @@ namespace Tuatara
 		{
 			level->Pause( paused );
 		}
+	}
+
+	void GameState::DisplayLoadingScreen( Game *game )
+	{
+		using namespace irr;
+
+		static video::ITexture *loadingScreen = game->manager->driver->getTexture( "loadingScreen.png" );
+				
+		game->manager->driver->beginScene( true, true, video::SColor(255, 255, 255, 255) );
+		
+		game->manager->driver->draw2DImage( loadingScreen, core::vector2d<s32>(0,0) );
+		
+		game->manager->driver->endScene();
 	}
 }

@@ -295,5 +295,8 @@
     <None Include="levels\level_5.xml">
       <Filter>Resource Files\levels</Filter>
     </None>
+    <None Include="art\loadingScreen.png">
+      <Filter>Resource Files\art</Filter>
+    </None>
   </ItemGroup>
 </Project>

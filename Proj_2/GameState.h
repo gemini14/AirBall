@@ -37,6 +37,7 @@ namespace Tuatara
 		Level *level;
 
 		void ResetGameState( Game *game );
+		void DisplayLoadingScreen( Game *game );
 
 	public:
 
