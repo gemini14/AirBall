@@ -93,20 +93,22 @@ namespace Tuatara
 		Direction CalcDirection( const float& x, const float& y, const float& z ) const;
 		void CreateBall( irr::scene::ISceneManager *smgr, irr::video::ITexture *ballTex );
 		void CreateCamera( irr::scene::ISceneManager *smgr );
-		void CreateExit( irr::video::ITexture *exitTex );
+		void CreateExit( irr::video::ITexture *exitTex, irr::video::ITexture *exitTransTex );
 		void CreateLights( irr::scene::ISceneManager* smgr );
 		void CreatePhysicsBlocks();
 		void CreateRenderBlocks( irr::scene::ISceneManager *smgr, irr::video::ITexture *wall, irr::video::ITexture *transTex );
 		void CreateVents( irr::scene::ISceneManager *smgr, irr::video::ITexture *particleTex,
-			irr::video::ITexture *ventTex );
+			irr::video::ITexture *ventTex, irr::video::ITexture *ventTransTex );
 		void CreateVentSounds();
 		void CreateWallNodes( irr::scene::ISceneManager* smgr );
 		void EndLevel(bool inWin);
 		BuildingBlockMap::iterator FindBlock( const float& x, const float& y, const float& z );
+		BuildingBlockMap::iterator FindTransparentBlock( const float& x, const float& y, const float& z );
 		irr::scene::ISceneNode* GetParentWall( const float& x, const float& y, const float& z );
 		bool InitLevel( irr::scene::ISceneManager *smgr, irr::io::IFileSystem *fileSystem, const std::string& levelFile, 
 			irr::video::ITexture *wall, irr::video::ITexture *ballTex, irr::video::ITexture *exitTex,
-			irr::video::ITexture *ventTex, irr::video::ITexture *ventFXTex, irr::video::ITexture *transTex );
+			irr::video::ITexture *ventTex, irr::video::ITexture *ventFXTex, irr::video::ITexture *transTex,
+			irr::video::ITexture *ventTransTex, irr::video::ITexture *exitTransTex);
 		bool LoadLevelData( irr::io::IFileSystem *fileSystem, const std::string& levelFile, irr::scene::ISceneManager *smgr );
 		void Pause( bool pause );
 		void PlayJetSound();
@@ -186,7 +188,8 @@ namespace Tuatara
 
 	bool Level_::InitLevel( irr::scene::ISceneManager *smgr, irr::io::IFileSystem *fileSystem, const std::string& levelFile, 
 		irr::video::ITexture *wall, irr::video::ITexture *ballTex, irr::video::ITexture *exitTex,
-		irr::video::ITexture *ventTex, irr::video::ITexture *ventFXTex, irr::video::ITexture *transTex )
+		irr::video::ITexture *ventTex, irr::video::ITexture *ventFXTex, irr::video::ITexture *transTex,
+		irr::video::ITexture *ventTransTex, irr::video::ITexture *exitTransTex)
 	{
 		using namespace irr;
 		using namespace std;
@@ -208,8 +211,8 @@ namespace Tuatara
 		CreateBall( smgr, ballTex );
 		CreateLights( smgr );
 		CreateRenderBlocks( smgr, wall, transTex );
-		CreateVents( smgr, ventFXTex, ventTex );
-		CreateExit( exitTex );
+		CreateVents( smgr, ventFXTex, ventTex, ventTransTex );
+		CreateExit( exitTex, exitTransTex );
 		// creating physics blocks is last because the exit has to be removed
 		CreatePhysicsBlocks();
 
@@ -487,10 +490,11 @@ namespace Tuatara
 		backWall = smgr->addEmptySceneNode();
 	}
 
-	void Level_::CreateExit( irr::video::ITexture *exitTex )
+	void Level_::CreateExit( irr::video::ITexture *exitTex, irr::video::ITexture *exitTransTex )
 	{
 		// set the texture for the exit block so that the player can find it
 		FindBlock( exitX, exitY, exitZ )->second->setMaterialTexture( 0, exitTex );
+		FindTransparentBlock( exitX, exitY, exitZ )->second->setMaterialTexture( 0, exitTransTex );
 		physics->CreatePhantom( exitX, exitY, exitZ, CalcDirection( exitX, exitY, exitZ ), 1, false );
 	}
 
@@ -564,7 +568,7 @@ namespace Tuatara
 	}
 
 	void Level_::CreateVents( irr::scene::ISceneManager *smgr, irr::video::ITexture *particleTex,
-		irr::video::ITexture *ventTex )
+		irr::video::ITexture *ventTex, irr::video::ITexture *ventTransTex )
 	{
 		using namespace irr::core;
 
@@ -607,6 +611,7 @@ namespace Tuatara
 			// for each vent, set the correct texture, create its physical counterpart, and add the
 			// particle system
 			FindBlock( v->x, v->y, v->z )->second->setMaterialTexture( 0, ventTex );
+			FindTransparentBlock( v->x, v->y, v->z )->second->setMaterialTexture( 0, ventTransTex );
 			physics->CreatePhantom( v->x, v->y, v->z, v->direction, v->strength );
 			v->particle.reset( new VentParticles(smgr, particleTex, vector3df( v->x, v->y, v->z ), 
 				normalGenerator( v->direction ), static_cast<float>(v->strength) ) );
@@ -749,6 +754,16 @@ namespace Tuatara
 		});
 	}	
 
+	Level_::BuildingBlockMap::iterator Level_::FindTransparentBlock( const float& x, const float& y, const float& z )
+	{
+		// return the iterator to the block entry that matches the x, y, z coordinates, if any
+		return std::find_if( levelTransBlocks.begin(), levelTransBlocks.end(), 
+			[=](std::pair<NodePos, irr::scene::IMeshSceneNode*> pair)->bool
+		{
+			return pair.first.x == x && pair.first.y == y && pair.first.z == z;
+		});
+	}
+
 	void Level_::RemoveBlock( float x, float y, float z )
 	{
 		// remove block (and its entry in the map) if it matches the x, y, z coordinates
@@ -861,9 +876,21 @@ const irr::core::vector3df Level_::GetNewCameraPosition( const irr::core::vector
 
 	bool Level::InitLevel( irr::scene::ISceneManager* smgr, irr::io::IFileSystem *fileSystem, const std::string& levelFile, 
 		irr::video::ITexture *wall, irr::video::ITexture *ballTex, irr::video::ITexture *exitTex,
-		irr::video::ITexture *ventTex, irr::video::ITexture *ventFXTex, irr::video::ITexture *transTex )
+		irr::video::ITexture *ventTex, irr::video::ITexture *ventFXTex, irr::video::ITexture *transTex,
+		irr::video::ITexture *ventTransTex, irr::video::ITexture *exitTransTex)
 	{
-		return level_->InitLevel( smgr, fileSystem, levelFile, wall, ballTex, exitTex, ventTex, ventFXTex, transTex );
+		return level_->InitLevel( 
+			smgr, 
+			fileSystem, 
+			levelFile, 
+			wall, 
+			ballTex, 
+			exitTex, 
+			ventTex, 
+			ventFXTex, 
+			transTex, 
+			ventTransTex, 
+			exitTransTex );
 	}
 
 	void Level::HandleMouseClick( irr::s32 x, irr::s32 y )

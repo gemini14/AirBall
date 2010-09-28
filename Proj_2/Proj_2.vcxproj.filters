@@ -307,5 +307,11 @@
     <None Include="art\creditsScreen.png">
       <Filter>Resource Files\art</Filter>
     </None>
+    <None Include="art\exitTransparent.png">
+      <Filter>Resource Files\art</Filter>
+    </None>
+    <None Include="art\tileVentTransparent.png">
+      <Filter>Resource Files\art</Filter>
+    </None>
   </ItemGroup>
 </Project>
