@@ -643,11 +643,12 @@ namespace Tuatara
 			irr::scene::IMeshManipulator* man = smgr->getMeshManipulator();
 
 			int axis;
+			float zfix = 0;
 			if (  v->x == 0 ||  v->x == levelSize ) axis = 0;
-			else if ( v->y == 0 || v->y == levelSize ) axis = 1;
+			else if ( v->y == 0 || v->y == levelSize ) { axis = 1; zfix = 0.5; }
 			else axis = 2;
 
-			man->makePlanarTextureMapping( mesh->getMeshBuffer(0), 1, 1, axis, irr::core::vector3df(0, 0, 0.5));
+			man->makePlanarTextureMapping( mesh->getMeshBuffer(0), 1, 1, axis, irr::core::vector3df(0, 0, zfix));
 			transNode->setMaterialTexture( 0, ventTransTex );
 
 			// and set up the physics block:

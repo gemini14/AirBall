@@ -171,12 +171,12 @@
     <None Include="levels\level_5.xml">
       <SubType>Designer</SubType>
     </None>
-    <None Include="media\defaultButton.png" />
-    <None Include="media\defaultHoverButton.png" />
-    <None Include="media\exit.png" />
-    <None Include="media\tile.png" />
-    <None Include="media\tileVent.png" />
-    <None Include="media\ventSmoke.png" />
+    <None Include="art\defaultButton.png" />
+    <None Include="art\defaultHoverButton.png" />
+    <None Include="art\exit.png" />
+    <None Include="art\tile.png" />
+    <None Include="art\tileVent.png" />
+    <None Include="art\ventSmoke.png" />
     <None Include="pala.ttf" />
     <None Include="sound\jet.ogg" />
     <None Include="sound\level_0_bg.ogg" />
