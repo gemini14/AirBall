@@ -177,10 +177,14 @@
     <None Include="art\tile.png" />
     <None Include="art\tileVent.png" />
     <None Include="art\ventSmoke.png" />
+    <None Include="levels\level_7.xml" />
+    <None Include="levels\level_8.xml" />
     <None Include="pala.ttf" />
+    <None Include="sound\collision.ogg" />
     <None Include="sound\jet.ogg" />
     <None Include="sound\level_0_bg.ogg" />
     <None Include="sound\menuBackMusic.ogg" />
+    <None Include="sound\roll.ogg" />
     <None Include="sound\vent.ogg" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
