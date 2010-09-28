@@ -214,24 +214,6 @@
     <None Include="levels\level_0.xml">
       <Filter>Resource Files\levels</Filter>
     </None>
-    <None Include="media\defaultButton.png">
-      <Filter>Resource Files\art</Filter>
-    </None>
-    <None Include="media\defaultHoverButton.png">
-      <Filter>Resource Files\art</Filter>
-    </None>
-    <None Include="media\tile.png">
-      <Filter>Resource Files\art</Filter>
-    </None>
-    <None Include="media\exit.png">
-      <Filter>Resource Files\art</Filter>
-    </None>
-    <None Include="media\tileVent.png">
-      <Filter>Resource Files\art</Filter>
-    </None>
-    <None Include="media\ventSmoke.png">
-      <Filter>Resource Files\art</Filter>
-    </None>
     <None Include="levels\level_1.xml">
       <Filter>Resource Files\levels</Filter>
     </None>
@@ -298,17 +280,23 @@
     <None Include="art\skybox.png">
       <Filter>Resource Files\art</Filter>
     </None>
-    <None Include="sound\collision.ogg">
-      <Filter>Resource Files\sound</Filter>
+    <None Include="art\ventSmoke.png">
+      <Filter>Resource Files\art</Filter>
     </None>
-    <None Include="sound\roll.ogg">
-      <Filter>Resource Files\sound</Filter>
+    <None Include="art\tileVent.png">
+      <Filter>Resource Files\art</Filter>
     </None>
-    <None Include="levels\level_7.xml">
-      <Filter>Resource Files\levels</Filter>
+    <None Include="art\tile.png">
+      <Filter>Resource Files\art</Filter>
     </None>
-    <None Include="levels\level_8.xml">
-      <Filter>Resource Files\levels</Filter>
+    <None Include="art\exit.png">
+      <Filter>Resource Files\art</Filter>
+    </None>
+    <None Include="art\defaultHoverButton.png">
+      <Filter>Resource Files\art</Filter>
+    </None>
+    <None Include="art\defaultButton.png">
+      <Filter>Resource Files\art</Filter>
     </None>
   </ItemGroup>
 </Project>
