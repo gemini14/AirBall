@@ -12,10 +12,10 @@ namespace Tuatara
 	{
 		// Create buttons:
 		newGameButton = new GUIButton(MAINMENU_BUTTON_NEWGAME, L"New Game", this);
-		newGameButton->location = irr::core::rect<irr::s32>( 200, 600, 400, 700 );
+		newGameButton->location = irr::core::rect<irr::s32>( 800, 500, 1000, 600 );
 		
 		exitButton = new GUIButton(MAINMENU_BUTTON_EXIT, L"Exit Game", this);
-		exitButton->location = irr::core::rect<irr::s32>( 624, 600, 824, 700 );
+		exitButton->location = irr::core::rect<irr::s32>( 800, 650, 1000, 750 );
 
 		// Add them to list (base class then knows about them)
 		buttonList[MAINMENU_BUTTON_NEWGAME] = newGameButton;
