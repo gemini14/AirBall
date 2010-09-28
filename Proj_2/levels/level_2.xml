@@ -15,7 +15,7 @@
   <collisionSound file="sound/collision.ogg"></collisionSound>
   <ventSound file="sound/vent.ogg"></ventSound>
   <jetSound file="sound/jet.ogg"></jetSound>
-  <rollSound file="sound/roll.ogg"></rollSound>
+  <rollSound file=""></rollSound>
 
   <trigger x="5" y="1" z="4" prompt="In addition to jumping, you can reach exits by using air vents.  Just roll the ball over them to get blown around!"></trigger>
   <trigger event="onExit" prompt="Well done!"></trigger>

@@ -22,7 +22,7 @@
   <collisionSound file="sound/collision.ogg"></collisionSound>
   <ventSound file="sound/vent.ogg"></ventSound>
   <jetSound file="sound/jet.ogg"></jetSound>
-  <rollSound file="sound/roll.ogg"></rollSound>
+  <rollSound file=""></rollSound>
 
   <trigger x="8" y="1" z="8" prompt="Vents don't just have to come out of the floor--they can show up on any wall."></trigger>
   <trigger event="onExit" prompt="Great job!  Now it's time for a bit of a challenge..."></trigger>

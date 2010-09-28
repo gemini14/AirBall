@@ -138,18 +138,18 @@ namespace Tuatara
 		if( isPresent( "jet" ) )
 		{
 			ErrorCheck( system->createSound( soundFilenames.at( "jet" ).c_str(), FMOD_3D, nullptr, &jet ) );
-			jet->setDefaults( 44100, 1.f, 0.f, 128 );
+			jet->setDefaults( 44100, 0.75f, 0.f, 128 );
 		}
 		if( isPresent( "vent" ) )
 		{
 			ErrorCheck( system->createSound( soundFilenames.at( "vent" ).c_str(), FMOD_3D | FMOD_LOOP_NORMAL,
 				nullptr, &ventSound ) );
-			ventSound->setDefaults( 44100, 0.3f, 0.f, 128 );
+			ventSound->setDefaults( 44100, 0.5f, 0.f, 128 );
 		}
 		if( isPresent( "collision" ) )
 		{
 			ErrorCheck( system->createSound( soundFilenames.at( "collision" ).c_str(), FMOD_3D, nullptr, &collision ) );
-			collision->setDefaults( 44100, 0.9f, 0.f, 128 );
+			collision->setDefaults( 44100, 5.f, 0.f, 128 );
 		}
 		if( isPresent( "roll" ) )
 		{

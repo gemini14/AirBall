@@ -70,5 +70,5 @@
   <collisionSound file="sound/collision.ogg"></collisionSound>
   <ventSound file="sound/vent.ogg"></ventSound>
   <jetSound file="sound/jet.ogg"></jetSound>
-  <rollSound file="sound/roll.ogg"></rollSound>
+  <rollSound file=""></rollSound>
 </level>
