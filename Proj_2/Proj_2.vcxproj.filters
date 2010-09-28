@@ -208,12 +208,6 @@
     <None Include="pala.ttf">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="media\mainMenuButton.png">
-      <Filter>Resource Files\art</Filter>
-    </None>
-    <None Include="media\returnToGameButton.png">
-      <Filter>Resource Files\art</Filter>
-    </None>
     <None Include="levels\config.txt">
       <Filter>Resource Files\levels</Filter>
     </None>
@@ -256,12 +250,6 @@
     <None Include="art\menuBackground.png">
       <Filter>Resource Files\art</Filter>
     </None>
-    <None Include="art\pauseBackground.png">
-      <Filter>Resource Files\art</Filter>
-    </None>
-    <None Include="art\Ball125.x">
-      <Filter>Resource Files\art</Filter>
-    </None>
     <None Include="art\Ball250.x">
       <Filter>Resource Files\art</Filter>
     </None>
@@ -270,12 +258,6 @@
     </None>
     <None Include="sound\jet.ogg">
       <Filter>Resource Files\sound</Filter>
-    </None>
-    <None Include="art\bowlingballtexsm.png">
-      <Filter>Resource Files\art</Filter>
-    </None>
-    <None Include="art\glowy.png">
-      <Filter>Resource Files\art</Filter>
     </None>
     <None Include="sound\menuBackMusic.ogg">
       <Filter>Resource Files\sound</Filter>
