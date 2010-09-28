@@ -146,6 +146,7 @@
     <None Include="art\loadingScreen.png" />
     <None Include="art\menuBackground.png" />
     <None Include="art\pauseBackground.png" />
+    <None Include="art\skybox.png" />
     <None Include="art\tileTransparent.png" />
     <None Include="art\tileVentTransparent.png" />
     <None Include="art\TriggerPopUp.png" />

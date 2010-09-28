@@ -313,5 +313,8 @@
     <None Include="art\tileVentTransparent.png">
       <Filter>Resource Files\art</Filter>
     </None>
+    <None Include="art\skybox.png">
+      <Filter>Resource Files\art</Filter>
+    </None>
   </ItemGroup>
 </Project>

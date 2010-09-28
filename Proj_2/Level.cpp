@@ -62,6 +62,7 @@ namespace Tuatara
 		VentVector vents;
 
 		irr::scene::ISceneNode *topWall, *bottomWall, *leftWall, *rightWall, *frontWall, *backWall;
+		irr::scene::ISceneNode *skybox;
 		irr::scene::ICameraSceneNode *camera;
 		irr::scene::ILightSceneNode* lightDir;
 		irr::scene::ILightSceneNode* lightAmb;
@@ -108,7 +109,7 @@ namespace Tuatara
 		bool InitLevel( irr::scene::ISceneManager *smgr, irr::io::IFileSystem *fileSystem, const std::string& levelFile, 
 			irr::video::ITexture *wall, irr::video::ITexture *ballTex, irr::video::ITexture *exitTex,
 			irr::video::ITexture *ventTex, irr::video::ITexture *ventFXTex, irr::video::ITexture *transTex,
-			irr::video::ITexture *ventTransTex, irr::video::ITexture *exitTransTex);
+			irr::video::ITexture *ventTransTex, irr::video::ITexture *exitTransTex, irr::video::ITexture *skyboxTex );
 		bool LoadLevelData( irr::io::IFileSystem *fileSystem, const std::string& levelFile, irr::scene::ISceneManager *smgr );
 		void Pause( bool pause );
 		void PlayJetSound();
@@ -119,6 +120,7 @@ namespace Tuatara
 		void HandleMouseClick( irr::s32 x, irr::s32 y );
 		const irr::core::vector3df GetNewCameraPosition( const irr::core::vector3df& currentPos,
 			const Direction& dir );
+		void CreateSkybox( irr::scene::ISceneManager *smgr, irr::video::ITexture *skyboxTex );
 	};
 
 
@@ -136,7 +138,8 @@ namespace Tuatara
 		frontWall( nullptr ),
 		backWall( nullptr ),
 		cameraRotation( 0.0f ),
-		inTrigger( false )
+		inTrigger( false ),
+		skybox( nullptr )
 	{
 		#ifdef _DEBUG
 		endLevelEarly = false;
@@ -184,12 +187,13 @@ namespace Tuatara
 		safeDelete( frontWall );
 		safeDelete( backWall );
 		safeDelete( camera );
+		safeDelete( skybox );
 	}
 
 	bool Level_::InitLevel( irr::scene::ISceneManager *smgr, irr::io::IFileSystem *fileSystem, const std::string& levelFile, 
 		irr::video::ITexture *wall, irr::video::ITexture *ballTex, irr::video::ITexture *exitTex,
 		irr::video::ITexture *ventTex, irr::video::ITexture *ventFXTex, irr::video::ITexture *transTex,
-		irr::video::ITexture *ventTransTex, irr::video::ITexture *exitTransTex)
+		irr::video::ITexture *ventTransTex, irr::video::ITexture *exitTransTex, irr::video::ITexture *skyboxTex )
 	{
 		using namespace irr;
 		using namespace std;
@@ -215,12 +219,18 @@ namespace Tuatara
 		CreateExit( exitTex, exitTransTex );
 		// creating physics blocks is last because the exit has to be removed
 		CreatePhysicsBlocks();
+		CreateSkybox( smgr, skyboxTex );
 
 		soundSystem->CreateSounds( soundFilenameMap );
 		CreateVentSounds();
 		soundSystem->StartPlayingLoopingSounds();
 
 		return true;
+	}
+
+	void Level_::CreateSkybox( irr::scene::ISceneManager *smgr, irr::video::ITexture *skyboxTex )
+	{
+		skybox = smgr->addSkyBoxSceneNode( skyboxTex, skyboxTex, skyboxTex, skyboxTex, skyboxTex, skyboxTex );
 	}
 
 	bool Level_::StepSimulation( float timeDelta )
@@ -877,7 +887,7 @@ const irr::core::vector3df Level_::GetNewCameraPosition( const irr::core::vector
 	bool Level::InitLevel( irr::scene::ISceneManager* smgr, irr::io::IFileSystem *fileSystem, const std::string& levelFile, 
 		irr::video::ITexture *wall, irr::video::ITexture *ballTex, irr::video::ITexture *exitTex,
 		irr::video::ITexture *ventTex, irr::video::ITexture *ventFXTex, irr::video::ITexture *transTex,
-		irr::video::ITexture *ventTransTex, irr::video::ITexture *exitTransTex)
+		irr::video::ITexture *ventTransTex, irr::video::ITexture *exitTransTex, irr::video::ITexture *skyboxTex )
 	{
 		return level_->InitLevel( 
 			smgr, 
@@ -890,7 +900,8 @@ const irr::core::vector3df Level_::GetNewCameraPosition( const irr::core::vector
 			ventFXTex, 
 			transTex, 
 			ventTransTex, 
-			exitTransTex );
+			exitTransTex,
+			skyboxTex );
 	}
 
 	void Level::HandleMouseClick( irr::s32 x, irr::s32 y )
