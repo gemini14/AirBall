@@ -93,7 +93,7 @@ namespace Tuatara
 		Direction CalcDirection( const float& x, const float& y, const float& z ) const;
 		void CreateBall( irr::scene::ISceneManager *smgr, irr::video::ITexture *ballTex );
 		void CreateCamera( irr::scene::ISceneManager *smgr );
-		void CreateExit( irr::video::ITexture *exitTex, irr::video::ITexture *exitTransTex );
+		void CreateExit( irr::scene::ISceneManager* smgr, irr::video::ITexture *exitTex, irr::video::ITexture *exitTransTex );
 		void CreateLights( irr::scene::ISceneManager* smgr );
 		void CreatePhysicsBlocks();
 		void CreateRenderBlocks( irr::scene::ISceneManager *smgr, irr::video::ITexture *wall, irr::video::ITexture *transTex );
@@ -212,7 +212,7 @@ namespace Tuatara
 		CreateLights( smgr );
 		CreateRenderBlocks( smgr, wall, transTex );
 		CreateVents( smgr, ventFXTex, ventTex, ventTransTex );
-		CreateExit( exitTex, exitTransTex );
+		CreateExit( smgr, exitTex, exitTransTex );
 		// creating physics blocks is last because the exit has to be removed
 		CreatePhysicsBlocks();
 
@@ -490,11 +490,25 @@ namespace Tuatara
 		backWall = smgr->addEmptySceneNode();
 	}
 
-	void Level_::CreateExit( irr::video::ITexture *exitTex, irr::video::ITexture *exitTransTex )
+	void Level_::CreateExit( irr::scene::ISceneManager* smgr, irr::video::ITexture *exitTex, irr::video::ITexture *exitTransTex )
 	{
 		// set the texture for the exit block so that the player can find it
 		FindBlock( exitX, exitY, exitZ )->second->setMaterialTexture( 0, exitTex );
-		FindTransparentBlock( exitX, exitY, exitZ )->second->setMaterialTexture( 0, exitTransTex );
+
+		// set up the transparent block, as well:
+		irr::scene::IMeshSceneNode* transNode = FindTransparentBlock( exitX, exitY, exitZ )->second;
+		irr::scene::IMesh *mesh = transNode->getMesh();
+		irr::scene::IMeshManipulator* man = smgr->getMeshManipulator();
+
+		int axis;
+		if ( exitX == 0 || exitX == levelSize ) axis = 0;
+		else if ( exitY == 0 || exitY == levelSize ) axis = 1;
+		else axis = 2;
+
+		man->makePlanarTextureMapping( mesh->getMeshBuffer(0), 1, 1, axis, irr::core::vector3df(0, 0, 0));
+		transNode->setMaterialTexture( 0, exitTransTex );
+
+		// finally, create the physics object:
 		physics->CreatePhantom( exitX, exitY, exitZ, CalcDirection( exitX, exitY, exitZ ), 1, false );
 	}
 
@@ -610,8 +624,23 @@ namespace Tuatara
 		{
 			// for each vent, set the correct texture, create its physical counterpart, and add the
 			// particle system
+			// set up render block
 			FindBlock( v->x, v->y, v->z )->second->setMaterialTexture( 0, ventTex );
-			FindTransparentBlock( v->x, v->y, v->z )->second->setMaterialTexture( 0, ventTransTex );
+
+			// set up the transparent block, as well:
+			irr::scene::IMeshSceneNode* transNode = FindTransparentBlock( v->x, v->y, v->z )->second;
+			irr::scene::IMesh *mesh = transNode->getMesh();
+			irr::scene::IMeshManipulator* man = smgr->getMeshManipulator();
+
+			int axis;
+			if (  v->x == 0 ||  v->x == levelSize ) axis = 0;
+			else if ( v->y == 0 || v->y == levelSize ) axis = 1;
+			else axis = 2;
+
+			man->makePlanarTextureMapping( mesh->getMeshBuffer(0), 1, 1, axis, irr::core::vector3df(0, 0, 0.5));
+			transNode->setMaterialTexture( 0, ventTransTex );
+
+			// and set up the physics block:
 			physics->CreatePhantom( v->x, v->y, v->z, v->direction, v->strength );
 			v->particle.reset( new VentParticles(smgr, particleTex, vector3df( v->x, v->y, v->z ), 
 				normalGenerator( v->direction ), static_cast<float>(v->strength) ) );
