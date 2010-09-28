@@ -63,9 +63,12 @@ namespace Tuatara
 		static video::ITexture *tileVent = game->manager->driver->getTexture( "tileVent.png" );
 		static video::ITexture *ventSmoke = game->manager->driver->getTexture( "ventSmoke.png" );
 		static video::ITexture *tileTransparent = game->manager->driver->getTexture( "tileTransparent.png" );
+		static video::ITexture *ventTransparent = game->manager->driver->getTexture( "tileVentTransparent.png" );
+		static video::ITexture *exitTransparent = game->manager->driver->getTexture( "exitTransparent.png" );
 		
 		bool levelCreatedOK = level->InitLevel( game->manager->smgr, game->manager->device->getFileSystem(),
-			levelFilenameGenerator( currentLevel ), tile, ball, exit, tileVent, ventSmoke, tileTransparent );
+			levelFilenameGenerator( currentLevel ), tile, ball, exit, tileVent, ventSmoke, tileTransparent,
+			ventTransparent, exitTransparent);
 
 		if( !levelCreatedOK )
 		{
