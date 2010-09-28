@@ -1,6 +1,8 @@
 #include "Credits.h"
 
+
 #include "MainMenu.h"
+
 
 namespace Tuatara
 {
@@ -29,10 +31,6 @@ namespace Tuatara
 	{
 		using namespace irr;
 
-		game->manager->font->ChangeFontSize( 16 );
-		game->manager->font->ChangeFontForElement( gui::EGDF_TOOLTIP );
-		game->manager->font->ChangeFontColor( gui::EGDC_BUTTON_TEXT, video::SColor( 255, 255, 255, 255 ) );
-
 		ScreenBase::Exit( game );
 	}
 
@@ -53,9 +51,10 @@ namespace Tuatara
 		default:
 			return false;
 		}
+		return false;
 	}
 
 	Credits::~Credits()
-	{		
+	{
 	}
 }
