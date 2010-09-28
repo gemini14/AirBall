@@ -298,5 +298,17 @@
     <None Include="art\skybox.png">
       <Filter>Resource Files\art</Filter>
     </None>
+    <None Include="sound\collision.ogg">
+      <Filter>Resource Files\sound</Filter>
+    </None>
+    <None Include="sound\roll.ogg">
+      <Filter>Resource Files\sound</Filter>
+    </None>
+    <None Include="levels\level_7.xml">
+      <Filter>Resource Files\levels</Filter>
+    </None>
+    <None Include="levels\level_8.xml">
+      <Filter>Resource Files\levels</Filter>
+    </None>
   </ItemGroup>
 </Project>

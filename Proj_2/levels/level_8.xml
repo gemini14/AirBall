@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<level>
+  <entry x="1" y="3" z="1"></entry>
+  <exit x="5" y="9" z="5"></exit>
+
+  <!--vents blowing up to ceiling-->
+  <vent x="5" y="0" z="5" strength="7"></vent>
+  <vent x="4" y="0" z="5" strength="7"></vent>
+  <vent x="6" y="0" z="5" strength="7"></vent>
+  <vent x="5" y="0" z="4" strength="7"></vent>
+  <vent x="4" y="0" z="4" strength="7"></vent>
+  <vent x="6" y="0" z="4" strength="7"></vent>
+  <vent x="5" y="0" z="6" strength="7"></vent>
+  <vent x="4" y="0" z="6" strength="7"></vent>
+  <vent x="6" y="0" z="6" strength="7"></vent>
+
+  <!--staircase-->
+  <vent x="3" y="0" z="4" strength="6"></vent>
+  <vent x="2" y="0" z="4" strength="5"></vent>
+  <vent x="1" y="0" z="4" strength="4"></vent>
+  <vent x="1" y="0" z="5" strength="3"></vent>
+  <vent x="1" y="0" z="6" strength="2"></vent>
+
+  <!--downdraft-->
+  <vent x="5" y="9" z="5" strength="1"></vent>
+  <vent x="4" y="9" z="5" strength="1"></vent>
+  <vent x="6" y="9" z="5" strength="1"></vent>
+  <vent x="5" y="9" z="4" strength="1"></vent>
+  <vent x="4" y="9" z="4" strength="1"></vent>
+  <vent x="6" y="9" z="4" strength="1"></vent>
+  <vent x="5" y="9" z="6" strength="1"></vent>
+  <vent x="4" y="9" z="6" strength="1"></vent>
+  <vent x="6" y="9" z="6" strength="1"></vent>
+  
+  <bgmusic file=""></bgmusic>
+  <collisionSound file="sound/collision.ogg"></collisionSound>
+  <ventSound file="sound/vent.ogg"></ventSound>
+  <jetSound file="sound/jet.ogg"></jetSound>
+  <rollSound file=""></rollSound>
+</level>

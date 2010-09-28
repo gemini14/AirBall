@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <level>
-  <entry x="6" y="3" z="1"></entry>
+  <entry x="8" y="3" z="1"></entry>
   <exit x="1" y="0" z="8"></exit>
 
   <vent x="0" y="1" z="7" strength="8"></vent>
@@ -71,4 +71,7 @@
   <ventSound file="sound/vent.ogg"></ventSound>
   <jetSound file="sound/jet.ogg"></jetSound>
   <rollSound file=""></rollSound>
+
+  <trigger x="8" y="2" z="1" prompt="Don't forget to use the ball's shadow to see over which point on the ground it is."></trigger>
+  <trigger event="onExit" prompt="Remember, a gentle hand is often the key to victory."></trigger>
 </level>

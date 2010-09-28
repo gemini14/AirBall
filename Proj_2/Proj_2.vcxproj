@@ -171,6 +171,8 @@
     <None Include="levels\level_5.xml">
       <SubType>Designer</SubType>
     </None>
+    <None Include="levels\level_7.xml" />
+    <None Include="levels\level_8.xml" />
     <None Include="media\defaultButton.png" />
     <None Include="media\defaultHoverButton.png" />
     <None Include="media\exit.png" />
@@ -178,9 +180,11 @@
     <None Include="media\tileVent.png" />
     <None Include="media\ventSmoke.png" />
     <None Include="pala.ttf" />
+    <None Include="sound\collision.ogg" />
     <None Include="sound\jet.ogg" />
     <None Include="sound\level_0_bg.ogg" />
     <None Include="sound\menuBackMusic.ogg" />
+    <None Include="sound\roll.ogg" />
     <None Include="sound\vent.ogg" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

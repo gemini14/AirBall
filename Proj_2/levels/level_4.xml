@@ -28,5 +28,5 @@
   <rollSound file=""></rollSound>
 
   <trigger x="8" y="1" z="1" prompt="Sometimes you'll want to look at the level in a different way.  Try hitting Left/Right to rotate around the level and Up/Down to look up and down."></trigger>
-  <trigger event="onExit" prompt="You rotated right out of that level!"></trigger>
+  <trigger event="onExit" prompt="Many times you'll find that looking at a level from all directions will help you beat it."></trigger>
 </level>
