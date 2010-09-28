@@ -1,5 +1,6 @@
 #include "GameState.h"
 
+#include "Credits.h"
 
 namespace Tuatara
 {
@@ -112,7 +113,8 @@ namespace Tuatara
 	void GameState::ResetGameState( Game *game )
 	{
 		currentLevel = 0;
-		game->stateMachine->ChangeState( MainMenu::Instance() );
+		//game->stateMachine->ChangeState( MainMenu::Instance() );
+		game->stateMachine->ChangeState( Credits::Instance() );
 	}
 
 	void GameState::Pause( bool pause )

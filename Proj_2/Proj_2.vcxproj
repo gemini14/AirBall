@@ -90,6 +90,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="BallContactListener.cpp" />
+    <ClCompile Include="Credits.cpp" />
     <ClCompile Include="FontHandler.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameExit.cpp" />
@@ -111,6 +112,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BallContactListener.h" />
+    <ClInclude Include="Credits.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="EnumsConstants.h" />
     <ClInclude Include="FontHandler.h" />
@@ -138,6 +140,7 @@
     <None Include="art\Ball125.x" />
     <None Include="art\Ball250.x" />
     <None Include="art\bowlingballtexsm.png" />
+    <None Include="art\creditsScreen.png" />
     <None Include="art\glowy.png" />
     <None Include="art\loadingScreen.png" />
     <None Include="art\menuBackground.png" />
@@ -154,7 +157,9 @@
     <None Include="levels\level_1.xml">
       <SubType>Designer</SubType>
     </None>
-    <None Include="levels\level_2.xml" />
+    <None Include="levels\level_2.xml">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="levels\level_3.xml">
       <SubType>Designer</SubType>
     </None>

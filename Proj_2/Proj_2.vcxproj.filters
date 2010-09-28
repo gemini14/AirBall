@@ -126,6 +126,9 @@
     <ClCompile Include="Trigger.cpp">
       <Filter>Source Files\Level</Filter>
     </ClCompile>
+    <ClCompile Include="Credits.cpp">
+      <Filter>Source Files\States</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="IrrManager.h">
@@ -193,6 +196,9 @@
     </ClInclude>
     <ClInclude Include="Trigger.h">
       <Filter>Header Files\Level</Filter>
+    </ClInclude>
+    <ClInclude Include="Credits.h">
+      <Filter>Header Files\States</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -296,6 +302,9 @@
       <Filter>Resource Files\levels</Filter>
     </None>
     <None Include="art\loadingScreen.png">
+      <Filter>Resource Files\art</Filter>
+    </None>
+    <None Include="art\creditsScreen.png">
       <Filter>Resource Files\art</Filter>
     </None>
   </ItemGroup>

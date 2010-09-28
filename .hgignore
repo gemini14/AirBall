@@ -34,3 +34,4 @@ ipch/
 [Bb]uild[Ll]og.*
 *.[Pp]ublish.xml
 [Ll]ocal[Ff]iles/
+glob:Proj_2/Airball.smp
