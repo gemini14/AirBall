@@ -518,11 +518,12 @@ namespace Tuatara
 		irr::scene::IMeshManipulator* man = smgr->getMeshManipulator();
 
 		int axis;
+		float zfix = 0;
 		if ( exitX == 0 || exitX == levelSize ) axis = 0;
-		else if ( exitY == 0 || exitY == levelSize ) axis = 1;
+		else if ( exitY == 0 || exitY == levelSize ) { axis = 1; zfix = 0.5; }
 		else axis = 2;
 
-		man->makePlanarTextureMapping( mesh->getMeshBuffer(0), 1, 1, axis, irr::core::vector3df(0, 0, 0));
+		man->makePlanarTextureMapping( mesh->getMeshBuffer(0), 1, 1, axis, irr::core::vector3df(0, 0, zfix));
 		transNode->setMaterialTexture( 0, exitTransTex );
 
 		// finally, create the physics object:
