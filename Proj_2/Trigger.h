@@ -26,6 +26,7 @@ namespace Tuatara
 		void HandleMouseClick( irr::s32 x, irr::s32 y );
 		void Show();
 		void Close();
+		void CloseNow();
 		bool Update();
 
 	private:

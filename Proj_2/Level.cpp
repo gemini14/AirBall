@@ -148,6 +148,13 @@ namespace Tuatara
 
 	Level_::~Level_()
 	{
+		// if we are in a trigger, get rid of it.
+		if ( inTrigger )
+		{
+			currentTrigger->CloseNow(); // close right away
+			inTrigger = false;
+		}
+		
 		// to prevent user from hearing sounds as level is deleted
 		soundSystem->PausePlayback();
 

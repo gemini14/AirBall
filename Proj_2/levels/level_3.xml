@@ -21,5 +21,5 @@
   <jetSound file="sound/jet.ogg"></jetSound>
   <rollSound file=""></rollSound>
 
-  <trigger x="5" y="1" z="4" prompt="The closer you are to the bottom of a floor air vent, the weaker it will be.  Try using weaker vents to reach higher spots over stronger vents.  Don't forget that jumping can temporarily counteract the effects of gravity."></trigger>
+  <trigger x="5" y="1" z="4" prompt="The closer you are to the bottom of a floor air vent, the weaker it will be.  Try using weaker vents to reach higher spots over stronger vents.  Don't forget you can jump!"></trigger>
 </level>
