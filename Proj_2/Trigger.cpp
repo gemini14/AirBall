@@ -1,5 +1,8 @@
 #include "Trigger.h"
 #include "EnumsConstants.h"
+#include <boost/lexical_cast.hpp>
+#include <boost/random.hpp>
+#include <string>
 #include <stdlib.h>
 
 #define	FINAL_X_SIZE	696
@@ -18,8 +21,21 @@ namespace Tuatara
 		this->smgr = smgr;
 		GUIEnv = smgr->getGUIEnvironment();
 
-		tex = smgr->getVideoDriver()->getTexture("TriggerPopup.png");
+		// get a random number for which popup to show:
+		boost::mt19937 rng;
+		unsigned int seed = static_cast<unsigned int>(std::time(0));
+		rng.seed(seed);
+		boost::uniform_int<>five(1, 5);
+		boost::variate_generator<boost::mt19937&, boost::uniform_int<> > getrand(rng, five);
+		int i = getrand();
+
+		// get texture:
+		std::string textureName = "PopUp";
+		textureName.append(boost::lexical_cast<std::string>(i));
+		textureName.append(".png");
+		tex = smgr->getVideoDriver()->getTexture(textureName.c_str());
 		
+		// create the image:
 		img = GUIEnv->addImage(irr::core::rect<irr::s32>(-2, -2, 1, 1) );
 		img->setUseAlphaChannel(true);
 		img->setImage(tex);
@@ -44,6 +60,17 @@ namespace Tuatara
 	{
 		currentStep = NUM_STEPS;
 		currentState = closing;
+	}
+
+	void Trigger::CloseNow()
+	{
+		if (promptShown)
+		{
+			text->remove();
+			promptShown = false;
+		}
+		img->setRelativePosition(irr::core::rect<irr::s32>(-2, -2, 1, 1) );
+		currentState = unknown;
 	}
 
 	void Trigger::HandleMouseClick( irr::s32 x, irr::s32 y )
@@ -87,10 +114,10 @@ namespace Tuatara
 				mbstowcs( convertedText, prompt.c_str(), size + 1 ); 
 				irr::core::rect<irr::s32> imgLoc = img->getAbsolutePosition();
 				irr::core::rect<irr::s32> loc(
-					imgLoc.UpperLeftCorner.X + (148 + 20),
-					imgLoc.UpperLeftCorner.Y + (123 + 20),
-					imgLoc.LowerRightCorner.X - (111 + 20),
-					imgLoc.LowerRightCorner.Y - (108 + 20) );
+					imgLoc.UpperLeftCorner.X + (219),
+					imgLoc.UpperLeftCorner.Y + (179),
+					imgLoc.LowerRightCorner.X - (219),
+					imgLoc.LowerRightCorner.Y - (148) );
 
 				text = GUIEnv->addStaticText( convertedText, loc ); 
 				text->setWordWrap(true);
