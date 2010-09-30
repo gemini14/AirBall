@@ -328,5 +328,8 @@
     <None Include="levels\level_9.xml">
       <Filter>Resource Files\levels</Filter>
     </None>
+    <None Include="levels\level_10.xml">
+      <Filter>Resource Files\levels</Filter>
+    </None>
   </ItemGroup>
 </Project>

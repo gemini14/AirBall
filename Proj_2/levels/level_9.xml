@@ -60,6 +60,16 @@
   <vent x="7" y="0" z="8" strength="2"></vent>
   <vent x="8" y="0" z="8" strength="2"></vent>
   <vent x="6" y="0" z="8" strength="1"></vent>
+  
+  <!--shortcut prevention -->
+  <vent x="3" y="0" z="3" strength="1"></vent>
+  <vent x="3" y="0" z="4" strength="1"></vent>
+  <vent x="3" y="0" z="5" strength="1"></vent>
+  <vent x="5" y="0" z="3" strength="1"></vent>
+  <vent x="5" y="0" z="4" strength="1"></vent>
+  <vent x="5" y="0" z="5" strength="1"></vent>
+  <vent x="4" y="0" z="3" strength="1"></vent>
+  <vent x="4" y="0" z="5" strength="1"></vent>
 
   <!--ceiling downdraft-->
   <vent x="4" y="9" z="4" strength="8"></vent>

@@ -5,7 +5,7 @@
 namespace Tuatara
 {
 
-	GameState::GameState() : gameEventRcvr( new GameStateEventReceiver ), currentLevel( 0 )
+	GameState::GameState() : gameEventRcvr( new GameStateEventReceiver ), currentLevel( 9 )
 	{
 		using namespace std;
 
