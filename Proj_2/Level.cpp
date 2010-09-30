@@ -857,10 +857,9 @@ const irr::core::vector3df Level_::GetNewCameraPosition( const irr::core::vector
 			}
 			break;
 		default:
-
-#if defined(_DEBUG) | defined(DEBUG)
+			#if defined(_DEBUG) | defined(DEBUG)
 			printf( "Bad camera direction sent to ApplyDirectionToCamera.\n" );
-#endif
+			#endif
 			break;
 		}
 

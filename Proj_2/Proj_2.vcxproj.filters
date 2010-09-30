@@ -223,9 +223,6 @@
     <None Include="fmodexL.dll">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="sound\level_0_bg.ogg">
-      <Filter>Resource Files\sound</Filter>
-    </None>
     <None Include="art\ball.png">
       <Filter>Resource Files\art</Filter>
     </None>
@@ -309,9 +306,6 @@
     </None>
     <None Include="art\PopUp3.png">
       <Filter>Resource Files\art</Filter>
-    </None>
-    <None Include="sound\roll.ogg">
-      <Filter>Resource Files\sound</Filter>
     </None>
     <None Include="art\PopUp4.png">
       <Filter>Resource Files\art</Filter>

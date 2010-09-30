@@ -79,8 +79,12 @@ namespace Tuatara
 		hkJobQueue *jobQueue;
 
 		hkpWorld *world;
+		
+		// Havok debugger variables
+		#if defined(_DEBUG) | defined(DEBUG)
 		hkVisualDebugger *vdb;
 		hkpPhysicsContext *context;
+		#endif
 
 		hkpRigidBody *ball;
 		BallContactListener *ballListener;
@@ -114,7 +118,9 @@ namespace Tuatara
 
 	static void HK_CALL errorReport(const char* msg, void* userArgGivenToInit)
 	{
+		#if defined(_DEBUG) | defined(DEBUG)
 		printf("%s", msg);
+		#endif
 	}
 
 
@@ -173,7 +179,7 @@ namespace Tuatara
 		// register all modules we will run multi-threaded with job queue
 		world->registerWithJobQueue( jobQueue );
 
-
+		#if defined(_DEBUG) | defined(DEBUG)
 		// now initialize the visual debugger
 		hkArray<hkProcessContext*> contexts;
 
@@ -191,6 +197,7 @@ namespace Tuatara
 		// init the debugger
 		vdb = new hkVisualDebugger( contexts );
 		vdb->serve();
+		#endif
 
 		world->addWorldPostSimulationListener( this );
 	}
@@ -211,10 +218,12 @@ namespace Tuatara
 		ball->removeReference();
 
 		world->removeReference();
+		
+		#if defined(_DEBUG) | defined(DEBUG)
 		vdb->removeReference();
-
 		// context is deleted only after finished using VDB
 		context->removeReference();
+		#endif
 
 		delete jobQueue;
 		threadPool->removeReference();
@@ -266,7 +275,10 @@ namespace Tuatara
 			}
 			break;
 		default:
+			#if defined(_DEBUG) | defined(DEBUG)
 			printf( "AdjustAabbForExit: bad direction sent.\n" );
+			#endif
+			break;
 		}
 	}
 
@@ -398,7 +410,9 @@ namespace Tuatara
 				}
 				break;
 			default:
+				#if defined(_DEBUG) | defined(DEBUG)
 				printf( "CreateVent: bad direction sent.\n" );
+				#endif
 				return hkVector4( 0.f, 0.f, 0.f);
 			}
 
@@ -446,9 +460,11 @@ namespace Tuatara
 		// step the world
 		world->stepDeltaTime( timestep );
 
+		#if defined(_DEBUG) | defined(DEBUG)
 		// step the visual debugger after synchronizing the timer data
 		context->syncTimers( threadPool );
 		vdb->step();
+		#endif
 
 		// clear accumulated timer data in this thread and all slave threads
 		hkMonitorStream::getInstance().reset();
@@ -491,7 +507,9 @@ namespace Tuatara
 			}
 
 		default:
+			#if defined(_DEBUG) | defined(DEBUG)
 			printf( "ApplyImpulseToBall: Bad direction sent.\n" );
+			#endif
 			break;
 		}
 
@@ -564,7 +582,9 @@ namespace Tuatara
 					y -= impulseValue;
 					break;
 				default:
+					#if defined(_DEBUG) | defined(DEBUG)
 					printf( "postSimulationCallback: bad direction in vent structure.\n" );
+					#endif
 					return hkVector4( 0, 0, 0);
 				}
 
