@@ -10,6 +10,6 @@
   <jetSound file="sound/jet.ogg"></jetSound>
   <rollSound file=""></rollSound>
 
-  <trigger x="5" y="1" z="4" prompt="Use the WASD keys to move the ball. Aim for the exit straight ahead."></trigger>
-  <trigger event="onExit" prompt="Nice job!  Left click or hit Enter to continue."></trigger>
+  <trigger x="5" y="1" z="4" prompt="Use the WASD keys to move the ball. Aim for the exit straight ahead.  Left click or hit Enter to continue."></trigger>
+  <trigger event="onExit" prompt="Nice job!"></trigger>
 </level>
