@@ -16,8 +16,13 @@ namespace Tuatara
 		windowRect.addInternalPoint( windowWidth, windowHeight );
 
 		// add archives to Irr device's file system
+		/*
+		// this is for debugging and development, not final release
 		manager->device->getFileSystem()->addFileArchive( "art\\" );
 		manager->device->getFileSystem()->addFileArchive( "levels\\" );
+		*/
+		manager->device->getFileSystem()->addFileArchive( "art.zip" );
+		manager->device->getFileSystem()->addFileArchive( "levels.zip" );
 
 		// create the FSM
 		stateMachine = std::make_shared<StateMachine<Game>>( this );
