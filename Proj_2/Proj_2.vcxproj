@@ -189,9 +189,7 @@
     <None Include="sound\background_2.mp3" />
     <None Include="sound\collision.ogg" />
     <None Include="sound\jet.ogg" />
-    <None Include="sound\level_0_bg.ogg" />
     <None Include="sound\menuBackMusic.ogg" />
-    <None Include="sound\roll.ogg" />
     <None Include="sound\vent.ogg" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
