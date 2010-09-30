@@ -136,6 +136,8 @@ namespace Tuatara
 		*smgr = (*device)->getSceneManager();
 		*guienv = (*device)->getGUIEnvironment();
 
+		(*device)->setWindowCaption( L"Airball" );
+
 		return true;
 	}
 

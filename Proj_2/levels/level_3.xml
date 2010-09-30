@@ -15,7 +15,7 @@
   <vent x="1" y="0" z="8" strength="1"></vent>
   <vent x="1" y="0" z="7" strength="1"></vent>
 
-  <bgmusic file=""></bgmusic>
+  <bgmusic file="sound/background_1.mp3"></bgmusic>
   <collisionSound file="sound/collision.ogg"></collisionSound>
   <ventSound file="sound/vent.ogg"></ventSound>
   <jetSound file="sound/jet.ogg"></jetSound>

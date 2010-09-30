@@ -64,7 +64,7 @@
   <!--ceiling downdraft-->
   <vent x="4" y="9" z="4" strength="8"></vent>
 
-  <bgmusic file=""></bgmusic>
+  <bgmusic file="sound/background_2.mp3"></bgmusic>
   <collisionSound file="sound/collision.ogg"></collisionSound>
   <ventSound file="sound/vent.ogg"></ventSound>
   <jetSound file="sound/jet.ogg"></jetSound>

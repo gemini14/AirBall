@@ -133,7 +133,7 @@ namespace Tuatara
 		{
 			ErrorCheck( system->createStream( soundFilenames.at("bgmusic").c_str(), FMOD_LOOP_NORMAL | FMOD_CREATESTREAM,
 				nullptr, &bgmusic ) );
-			bgmusic->setDefaults( 44100, 0.5f, 0.f, 128 );
+			bgmusic->setDefaults( 44100, 0.025f, 0.f, 128 );
 		}
 		if( isPresent( "jet" ) )
 		{
