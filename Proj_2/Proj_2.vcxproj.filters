@@ -208,9 +208,6 @@
     <None Include="pala.ttf">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="levels\config.txt">
-      <Filter>Resource Files\levels</Filter>
-    </None>
     <None Include="levels\level_0.xml">
       <Filter>Resource Files\levels</Filter>
     </None>
@@ -330,6 +327,9 @@
     </None>
     <None Include="levels\level_10.xml">
       <Filter>Resource Files\levels</Filter>
+    </None>
+    <None Include="config.txt">
+      <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>
 </Project>

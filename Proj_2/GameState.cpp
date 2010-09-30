@@ -10,7 +10,7 @@ namespace Tuatara
 		using namespace std;
 
 		// get the total number of levels from the config.txt file (invalid file will return user to menu)
-		ifstream config( "levels//config.txt" );
+		ifstream config( "config.txt" );
 		string property, value;
 		config >> property >> value;
 		if( property == "[NumberOfLevels]" )
