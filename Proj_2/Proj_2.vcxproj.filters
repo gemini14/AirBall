@@ -313,16 +313,19 @@
     <None Include="art\PopUp5.png">
       <Filter>Resource Files\art</Filter>
     </None>
-    <None Include="levels\level_7.xml">
-      <Filter>Resource Files\levels</Filter>
-    </None>
     <None Include="sound\background_1.mp3">
       <Filter>Resource Files\sound</Filter>
     </None>
     <None Include="sound\background_2.mp3">
       <Filter>Resource Files\sound</Filter>
     </None>
+    <None Include="levels\level_7.xml">
+      <Filter>Resource Files\levels</Filter>
+    </None>
     <None Include="levels\level_8.xml">
+      <Filter>Resource Files\levels</Filter>
+    </None>
+    <None Include="levels\level_9.xml">
       <Filter>Resource Files\levels</Filter>
     </None>
   </ItemGroup>

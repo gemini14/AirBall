@@ -23,16 +23,9 @@ namespace Tuatara
 		{
 			switch(event.MouseInput.Event)
 			{
-			case EMIE_LMOUSE_LEFT_UP: // only case currently handled...
+			case EMIE_LMOUSE_LEFT_UP:
 				gameState->level->HandleMouseClick( event.MouseInput.X, event.MouseInput.Y );
 				break;
-
-			// could add more:
-			//case EMIE_LMOUSE_PRESSED_DOWN:
-			//	break;
-
-			//case EMIE_MOUSE_MOVED:
-			//	break;
 
 			default:
 				// We won't use the wheel
@@ -55,6 +48,7 @@ namespace Tuatara
 				return true;
 
 			case KEY_ESCAPE:
+				gameState->ResetGameState( game );
 				game->stateMachine->ChangeState( MainMenu::Instance() );
 				return true;
 
