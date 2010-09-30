@@ -161,7 +161,7 @@
     <None Include="levels\level_1.xml">
       <SubType>Designer</SubType>
     </None>
-    <None Include="levels\level_10.xml" />
+    <None Include="levels\level_9.xml" />
     <None Include="levels\level_2.xml">
       <SubType>Designer</SubType>
     </None>
@@ -183,7 +183,7 @@
     <None Include="art\tile.png" />
     <None Include="art\tileVent.png" />
     <None Include="art\ventSmoke.png" />
-    <None Include="levels\level_9.xml" />
+    <None Include="levels\level_10.xml" />
     <None Include="levels\level_8.xml" />
     <None Include="levels\level_7.xml" />
     <None Include="pala.ttf" />
