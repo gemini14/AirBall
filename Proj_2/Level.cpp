@@ -633,6 +633,7 @@ namespace Tuatara
 #if defined(_DEBUG) | defined(DEBUG)
 				printf( "CreateVents: bad direction sent to normalGenerator lambda.\n" );
 #endif
+				break;
 			}
 
 			return normal.normalize();
@@ -744,6 +745,7 @@ namespace Tuatara
 #if defined(_DEBUG) | defined(DEBUG)
 				printf( "Bad direction sent to ApplyImpulseToBall in Level_\n" );
 #endif
+				break;
 			}
 		}		
 	}
@@ -859,6 +861,7 @@ const irr::core::vector3df Level_::GetNewCameraPosition( const irr::core::vector
 #if defined(_DEBUG) | defined(DEBUG)
 			printf( "Bad camera direction sent to ApplyDirectionToCamera.\n" );
 #endif
+			break;
 		}
 
 		return pos;
